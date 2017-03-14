@@ -1,0 +1,101 @@
+body {
+    -webkit-text-size-adjust: none;
+}
+
+h1 {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 140%;
+    margin: 5px 0px 15px 0px;
+    padding: 0px;
+}
+
+#Wrapper .content {
+    min-width: 300px;
+    width: auto;
+    padding: 5px;
+}
+
+#Top {
+    padding: 0px 5px 0px 5px;
+}
+
+#Top .content {
+    min-width: 310px;
+    width: auto;
+}
+
+#Bottom .content {
+    min-width: 310px;
+    width: auto;
+}
+
+.header {
+    padding: 5px;
+}
+
+.cell {
+    padding: 5px;
+    word-break: break-all;
+}
+
+.cell_ops {
+    padding: 6px;
+}
+
+.subtle {
+    padding: 5px;
+}
+
+.inner {
+    padding: 5px;
+    word-break: break-all;
+}
+
+.caution {
+    padding: 5px;
+}
+
+.sl {
+    width: 210px;
+}
+
+.ml {
+    width: 210px;
+}
+
+.mll {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.mle {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.tall {
+    height: 220px;
+}
+
+img {
+    max-width: 100%;
+}
+
+.imgly {
+    max-width: 100%;
+}
+
+.markdown_body>p>img {
+    max-width: 100%;
+}
+
+.editor_syntax_label_left {
+    display: none;
+}
+
+.editor_syntax_label_right {
+    display: none;
+}
