@@ -33,15 +33,33 @@ class ProfileViewController: UITableViewController {
         }.addDisposableTo(disposeBag)
         
         tableView.rx.itemSelected.subscribe(onNext: {[weak self] indexPath in
-            guard let strongSelf = self else { return }
-            strongSelf.tableView.deselectRow(at: indexPath, animated: true)
+            guard let `self` = self else { return }
+            `self`.tableView.deselectRow(at: indexPath, animated: true)
+            
+            switch indexPath.row {
+            case 0:
+                if Account.shared.isLoggedIn.value {
+                    guard let nav = self.drawerViewController?.centerViewController as? UINavigationController else {
+                        return
+                    }
+                    self.drawerViewController?.isOpenDrawer = false
+                    TimelineViewController.show(from: nav, userHref: Account.shared.user.value?.href)
+                }else {
+                    `self`.showLoginView()
+                }
+                
+            default: break
+            }
             
         }).addDisposableTo(disposeBag)
     }
 
     @IBAction func loginButtonAction(_ sender: Any) {
-        
-        drawerViewController?.performSegue(withIdentifier: LoginViewController.segueId, sender: sender)
+        showLoginView()
+    }
+    
+    func showLoginView() {
+        drawerViewController?.performSegue(withIdentifier: LoginViewController.segueId, sender: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -58,5 +76,6 @@ class ProfileViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
 }
+
+

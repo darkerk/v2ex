@@ -14,6 +14,7 @@ enum API {
     case login(usernameKey: String, passwordKey: String, username: String, password: String, once: String)
     case topics(nodeHref: String)
     case topicDetails(href: String, page: Int)
+    case timeline(userHref: String)
 }
 
 extension API: TargetType {
@@ -36,6 +37,8 @@ extension API: TargetType {
                 return href.components(separatedBy: "#").first ?? ""
             }
             return href
+        case let .timeline(userHref):
+            return userHref
         default:
             return ""
         }

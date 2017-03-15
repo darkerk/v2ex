@@ -42,10 +42,7 @@ class TopicDetailsViewController: UITableViewController {
         }
         
         dataSource.titleForHeaderInSection = {(ds, sectionIndex) in
-            if sectionIndex == 0 {
-                return viewModel.countTime.value
-            }
-            return nil
+            return sectionIndex == 0 ? viewModel.countTime.value : nil
         }
       
         viewModel.updateTopic.asObservable().bindTo(headerView.rx.topic).addDisposableTo(disposeBag)
@@ -88,7 +85,7 @@ extension TopicDetailsViewController {
             }
             viewModel?.fetchMoreComments()
         case .comment:
-            print("11111111")
+            print("点击评论....")
         }
     }
 }

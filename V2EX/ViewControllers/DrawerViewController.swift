@@ -54,13 +54,6 @@ class DrawerViewController: UIViewController {
         }
     }
     
-    private var statusBar: UIView? {
-        if let key = String(data: Data(bytes: [0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x42, 0x61, 0x72]), encoding: String.Encoding.ascii) {
-            return UIApplication.shared.value(forKey: key) as? UIView
-        }
-        return nil
-    }
-    
     private var isAnimatingDrawer = false
     private var startingPanX: CGFloat = 0
     
