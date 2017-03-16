@@ -39,9 +39,9 @@ class TopicDetailsViewModel {
                 self.countTime.value = data.countTime
                 self.currentPage = data.currentPage
                 if data.currentPage > 1 {
-                    self.sections.value = [TopicDetailsSection(type: .more, comments: [Comment()]), TopicDetailsSection(type: .comment, comments: data.comments)]
+                    self.sections.value = [TopicDetailsSection(type: .more, comments: [Comment()]), TopicDetailsSection(type: .data, comments: data.comments)]
                 }else {
-                    self.sections.value = [TopicDetailsSection(type: .comment, comments: data.comments)]
+                    self.sections.value = [TopicDetailsSection(type: .data, comments: data.comments)]
                 }
             }
 

@@ -18,7 +18,7 @@ struct Topic {
     var replyCount: String = "0"
     
     var creatTime: String = ""
-    
+
     init(title: String = "", href: String = "", owner: User? = nil, node: Node? = nil, lastReplyTime: String = "", lastReplyUser: User? = nil, replyCount: String = "0", creatTime: String = "") {
         self.title = title
         self.href = href

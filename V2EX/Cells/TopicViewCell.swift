@@ -18,6 +18,8 @@ class TopicViewCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var countLabel: UILabel!
     
+    var avatarTap: (() -> Void)?
+    
     var topic: Topic? {
         willSet {
             if let model = newValue {
@@ -41,6 +43,14 @@ class TopicViewCell: UITableViewCell {
         
         countLabel.clipsToBounds = true
         countLabel.layer.cornerRadius = 9
+        
+        avatarView.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(avatarTapAction(_:)))
+        avatarView.addGestureRecognizer(tap)
+    }
+    
+    func avatarTapAction(_ sender: Any) {
+        avatarTap?()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

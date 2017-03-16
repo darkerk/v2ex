@@ -15,6 +15,10 @@
 		CA2EEC8D1E78D69000F723E8 /* TimelineHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2EEC8C1E78D69000F723E8 /* TimelineHeaderView.swift */; };
 		CA2EEC8F1E78DBD000F723E8 /* TimelineTopicViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2EEC8E1E78DBD000F723E8 /* TimelineTopicViewCell.swift */; };
 		CA2EEC911E78DBEC00F723E8 /* TimelineReplyViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2EEC901E78DBEC00F723E8 /* TimelineReplyViewCell.swift */; };
+		CA2EEC951E790B6700F723E8 /* AllPostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2EEC941E790B6700F723E8 /* AllPostsViewController.swift */; };
+		CA2EEC971E7910A000F723E8 /* AllPostsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2EEC961E7910A000F723E8 /* AllPostsViewModel.swift */; };
+		CA2EEC991E79388600F723E8 /* AllPostsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2EEC981E79388600F723E8 /* AllPostsSection.swift */; };
+		CA2EEC9D1E7942BE00F723E8 /* InfiniteScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2EEC9C1E7942BE00F723E8 /* InfiniteScrollView.swift */; };
 		CA353E9B1E69478F0006D37B /* TopicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA353E9A1E69478F0006D37B /* TopicViewModel.swift */; };
 		CA353E9D1E694FD90006D37B /* NodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA353E9C1E694FD90006D37B /* NodeViewModel.swift */; };
 		CA353E9F1E6953AF0006D37B /* NodesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA353E9E1E6953AF0006D37B /* NodesViewController.swift */; };
@@ -64,6 +68,10 @@
 		CA2EEC8C1E78D69000F723E8 /* TimelineHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineHeaderView.swift; sourceTree = "<group>"; };
 		CA2EEC8E1E78DBD000F723E8 /* TimelineTopicViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineTopicViewCell.swift; sourceTree = "<group>"; };
 		CA2EEC901E78DBEC00F723E8 /* TimelineReplyViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineReplyViewCell.swift; sourceTree = "<group>"; };
+		CA2EEC941E790B6700F723E8 /* AllPostsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllPostsViewController.swift; sourceTree = "<group>"; };
+		CA2EEC961E7910A000F723E8 /* AllPostsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllPostsViewModel.swift; sourceTree = "<group>"; };
+		CA2EEC981E79388600F723E8 /* AllPostsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllPostsSection.swift; sourceTree = "<group>"; };
+		CA2EEC9C1E7942BE00F723E8 /* InfiniteScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteScrollView.swift; sourceTree = "<group>"; };
 		CA353E9A1E69478F0006D37B /* TopicViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicViewModel.swift; sourceTree = "<group>"; };
 		CA353E9C1E694FD90006D37B /* NodeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeViewModel.swift; sourceTree = "<group>"; };
 		CA353E9E1E6953AF0006D37B /* NodesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodesViewController.swift; sourceTree = "<group>"; };
@@ -151,6 +159,7 @@
 				CA353EA41E696D9F0006D37B /* LoginViewModel.swift */,
 				CA3FFAE41E6FDBD300470DAD /* TopicDetailsViewModel.swift */,
 				CA864BCB1E77E61E00997D4E /* TimelineViewModel.swift */,
+				CA2EEC961E7910A000F723E8 /* AllPostsViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -181,6 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				CA360AB51E67FFD400DED2FD /* ReusableView.swift */,
+				CA2EEC9C1E7942BE00F723E8 /* InfiniteScrollView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -196,6 +206,7 @@
 				CA864BC41E77DAA600997D4E /* Reply.swift */,
 				CA2DB6E51E6E95D200E585B8 /* TopicDetailsSection.swift */,
 				CA864BC91E77E39F00997D4E /* TimelineSection.swift */,
+				CA2EEC981E79388600F723E8 /* AllPostsSection.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -240,6 +251,7 @@
 				CA353E9E1E6953AF0006D37B /* NodesViewController.swift */,
 				CA2DB6E31E6E92AA00E585B8 /* TopicDetailsViewController.swift */,
 				CA864BC61E77DCBE00997D4E /* TimelineViewController.swift */,
+				CA2EEC941E790B6700F723E8 /* AllPostsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -426,11 +438,15 @@
 				CA2EEC8D1E78D69000F723E8 /* TimelineHeaderView.swift in Sources */,
 				CA2EEC911E78DBEC00F723E8 /* TimelineReplyViewCell.swift in Sources */,
 				CA2DB6E41E6E92AA00E585B8 /* TopicDetailsViewController.swift in Sources */,
+				CA2EEC991E79388600F723E8 /* AllPostsSection.swift in Sources */,
+				CA2EEC971E7910A000F723E8 /* AllPostsViewModel.swift in Sources */,
 				CA353E9D1E694FD90006D37B /* NodeViewModel.swift in Sources */,
 				CA864BBB1E779DCD00997D4E /* ProfileViewController.swift in Sources */,
 				CA864BCC1E77E61E00997D4E /* TimelineViewModel.swift in Sources */,
 				CA864BB41E77864D00997D4E /* HUD.swift in Sources */,
 				CA90CD911E66AD7400CD0B98 /* Topic.swift in Sources */,
+				CA2EEC9D1E7942BE00F723E8 /* InfiniteScrollView.swift in Sources */,
+				CA2EEC951E790B6700F723E8 /* AllPostsViewController.swift in Sources */,
 				CA2EEC8F1E78DBD000F723E8 /* TimelineTopicViewCell.swift in Sources */,
 				CA3FFAE51E6FDBD300470DAD /* TopicDetailsViewModel.swift in Sources */,
 				CA90CD951E66ADEC00CD0B98 /* Node.swift in Sources */,

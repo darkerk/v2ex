@@ -20,6 +20,7 @@ class TimelineTopicViewCell: UITableViewCell {
                 titleLabel.text = model.title
                 timeLabel.text = model.lastReplyTime
                 countLabel.text = model.replyCount
+                countLabel.isHidden = model.replyCount == "0"
             }
         }
     }

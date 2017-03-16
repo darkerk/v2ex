@@ -23,9 +23,13 @@ class TimelineViewModel {
         API.provider.request(API.timeline(userHref: href)).subscribe(onNext: { response in
             if let data = HTMLParser.shared.timeline(html: response.data) {
                 self.joinTime.value = data.joinTime
-                let topicItems = data.topics.map({SectionTimelineItem.topicItem(topic: $0)})
+                var topicItems = data.topics.map({SectionTimelineItem.topicItem(topic: $0)})
+                if !data.topicPrivacy.isEmpty {
+                    topicItems = [SectionTimelineItem.topicItem(topic: Topic())]
+                }
                 let replyItems = data.replys.map({SectionTimelineItem.replyItem(reply: $0)})
-                self.sections.value = [.topic(title: "创建的主题", items: topicItems), .reply(title: "最近的回复", items: replyItems)]
+                self.sections.value = [.topic(title: "创建的主题", privacy: data.topicPrivacy, moreHref: data.moreTopicHref, items: topicItems),
+                                       .reply(title: "最近的回复", moreHref: data.moreRepliesHref, items: replyItems)]
             }
         }, onError: { error in
             print(error)

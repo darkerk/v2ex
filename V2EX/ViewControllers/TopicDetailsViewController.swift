@@ -34,7 +34,7 @@ class TopicDetailsViewController: UITableViewController {
             case .more:
                 let cell: LoadMoreCommentCell = tv.dequeueReusableCell()
                 return cell
-            case .comment:
+            case .data:
                 let cell: TopicDetailsCommentCell = tv.dequeueReusableCell()
                 cell.comment = item
                 return cell
@@ -84,7 +84,7 @@ extension TopicDetailsViewController {
                 viewModel?.loadMoreActivityIndicator.asObservable().bindTo(cell.activityIndicatorView.rx.isAnimating).addDisposableTo(disposeBag)
             }
             viewModel?.fetchMoreComments()
-        case .comment:
+        case .data:
             print("点击评论....")
         }
     }

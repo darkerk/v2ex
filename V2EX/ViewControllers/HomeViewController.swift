@@ -26,17 +26,21 @@ class HomeViewController: UITableViewController {
         tableView.dataSource = nil
         
         viewModel.defaultNodes.asObservable().subscribe(onNext: {[weak self] nodes in
-            guard let strongSelf = self else { return }
+            guard let `self` = self else { return }
             if let currentNode = nodes.filter({$0.isCurrent}).first {
-                strongSelf.navigationItem.rightBarButtonItem?.title = currentNode.name
+                self.navigationItem.rightBarButtonItem?.title = currentNode.name
             }else {
-                strongSelf.navigationItem.rightBarButtonItem?.title = nil
+                self.navigationItem.rightBarButtonItem?.title = nil
             }
         }).addDisposableTo(disposeBag)
-        
-        viewModel.topicItems.asObservable().bindTo(tableView.rx.items) { (tableView, row, item) in
+
+        viewModel.topicItems.asObservable().bindTo(tableView.rx.items) {[weak self] (tableView, row, item) in
             let cell: TopicViewCell = tableView.dequeueReusableCell()
             cell.topic = item
+            guard let `self` = self else { return cell }
+            cell.avatarTap = {
+                TimelineViewController.show(from: self.navigationController!, user: item.owner)
+            }
             return cell
         }.addDisposableTo(disposeBag)
         
@@ -44,7 +48,6 @@ class HomeViewController: UITableViewController {
             guard let strongSelf = self else { return }
             strongSelf.tableView.deselectRow(at: indexPath, animated: true)
         }).addDisposableTo(disposeBag)
-
     }
     
     @IBAction func leftBarItemAction(_ sender: Any) {

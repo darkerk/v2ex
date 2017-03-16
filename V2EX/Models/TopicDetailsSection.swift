@@ -10,7 +10,7 @@ import Foundation
 import RxDataSources
 
 enum SectionType {
-    case more, comment
+    case more, data
 }
 
 struct TopicDetailsSection {
@@ -56,7 +56,6 @@ extension TopicDetailsSection: Equatable {
     static func == (lhs: TopicDetailsSection, rhs: TopicDetailsSection) -> Bool {
         return lhs.type == rhs.type && lhs.items == rhs.items
     }
-
 }
 
 

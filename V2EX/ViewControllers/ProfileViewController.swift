@@ -43,7 +43,7 @@ class ProfileViewController: UITableViewController {
                         return
                     }
                     self.drawerViewController?.isOpenDrawer = false
-                    TimelineViewController.show(from: nav, userHref: Account.shared.user.value?.href)
+                    TimelineViewController.show(from: nav, user: Account.shared.user.value)
                 }else {
                     `self`.showLoginView()
                 }

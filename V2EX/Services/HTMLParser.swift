@@ -20,7 +20,7 @@ struct HTMLParser {
         guard let html = HTML(html: data, encoding: .utf8) else {
             return []
         }
-
+        
         var nodePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell'][1]/a")
         let infoPath = html.xpath("//body/div[@id='Top']/div[@class='content']//table/tr/td[3]/a[1]")
         if let nameHref = infoPath.first?["href"], nameHref.hasPrefix("/member/") {
@@ -73,15 +73,17 @@ struct HTMLParser {
                 let username = e.xpath(".//td[3]/span[1]/strong/a").first?.content,
                 let topicHref = e.xpath(".//td[3]/span[2]/a[1]").first?["href"],
                 let topicTitle = e.xpath(".//td[3]/span[2]/a[1]").first?.content,
-                let lastReplyTime = e.xpath(".//td[3]/span[3]").first?.content,
-                let lastReplyerHref = e.xpath(".//td[3]/span[3]/strong/a").first?["href"],
-                let lastReplyerName = e.xpath(".//td[3]/span[3]/strong/a").first?.content,
-                let replyCount = e.xpath(".//td[4]/a").first?.content {
+                let lastReplyTime = e.xpath(".//td[3]/span[3]").first?.content {
+                
+                var lastReplyerUser: User?
+                if let lastReplyerHref = e.xpath(".//td[3]/span[3]/strong/a").first?["href"],
+                    let lastReplyerName = e.xpath(".//td[3]/span[3]/strong/a").first?.content {
+                    lastReplyerUser = User(name: lastReplyerName, href: lastReplyerHref, src: "")
+                }
                 
                 let owner = User(name: username, href: userHref, src: userSrc)
                 let node = Node(name: nodeName, href: nodeHref)
-                let lastReplyerUser = User(name: lastReplyerName, href: lastReplyerHref, src: "")
-                
+                let replyCount = e.xpath(".//td[4]/a").first?.content ?? "0"
                 let topic = Topic(title: topicTitle, href: topicHref, owner: owner, node: node, lastReplyTime: lastReplyTime, lastReplyUser: lastReplyerUser, replyCount: replyCount)
                 
                 return topic
@@ -177,29 +179,33 @@ struct HTMLParser {
     }
     
     // MARK: - 个人的主题和回复
-    func timeline(html data: Data) -> (joinTime: String, topics: [Topic], replys: [Reply])? {
+    func timeline(html data: Data) -> (joinTime: String, topicPrivacy: String, topics: [Topic], replys: [Reply], moreTopicHref: String, moreRepliesHref: String)? {
         guard let html = HTML(html: data, encoding: .utf8) else {
             return nil
         }
         
         let joinTimePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='inner'][1]/table/tr/td[3]/span[@class='gray']")
-        
         let joinTime = joinTimePath.first?.content ?? ""
-
-        let topicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][3]/div[@class='cell item']")
+        
+        let privacyPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][2]/div[@class='inner']/table/tr[2]/td")
+        let topicPrivacy = privacyPath.first?.content ?? ""
+        
+        let topicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']//div[@class='cell item']")
         let topicItems = topicPath.flatMap({e -> Topic? in
             if let nodeHref = e.xpath("./table/tr/td[1]/span[1]/a[@class='node']").first?["href"],
                 let nodeName = e.xpath("./table/tr/td[1]/span[1]/a[@class='node']").first?.content,
                 let topicHref = e.xpath("./table/tr/td[1]/span[@class='item_title']/a").first?["href"],
                 let topicTitle = e.xpath("./table/tr/td[1]/span[@class='item_title']/a").first?.content,
-                let lastReplyTime = e.xpath("./table/tr/td[1]/span[3]").first?.content,
-                let lastReplyerHref = e.xpath("./table/tr/td[1]/span[3]/strong/a").first?["href"],
-                let lastReplyerName = e.xpath("./table/tr/td[1]/span[3]/strong/a").first?.content,
-                let replyCount = e.xpath("./table/tr/td[2]/a").first?.content {
+                let lastReplyTime = e.xpath("./table/tr/td[1]/span[3]").first?.content {
+                
+                var lastReplyerUser: User?
+                if let lastReplyerHref = e.xpath("./table/tr/td[1]/span[3]/strong/a").first?["href"],
+                    let lastReplyerName = e.xpath("./table/tr/td[1]/span[3]/strong/a").first?.content {
+                    lastReplyerUser = User(name: lastReplyerName, href: lastReplyerHref, src: "")
+                }
                 
                 let node = Node(name: nodeName, href: nodeHref)
-                let lastReplyerUser = User(name: lastReplyerName, href: lastReplyerHref, src: "")
-                
+                let replyCount = e.xpath("./table/tr/td[2]/a").first?.content ?? "0"
                 let topic = Topic(title: topicTitle, href: topicHref, node: node, lastReplyTime: lastReplyTime, lastReplyUser: lastReplyerUser, replyCount: replyCount)
                 
                 return topic
@@ -207,14 +213,14 @@ struct HTMLParser {
             return nil
         })
         
-        let replyTopicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][4]/div[@class='dock_area']")
-        let replyContentPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][4]//div[@class='reply_content']")
+        let replyTopicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][last()]/div[@class='dock_area']")
+        let replyContentPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][last()]//div[@class='reply_content']")
         
         let replyItems = replyTopicPath.enumerated().flatMap { (i, e) -> Reply? in
             if let time = e.xpath("./table/tr[1]/td/div[@class='fr']/span[@class='fade']").first?.content,
                 let topicTitle = e.xpath("./table/tr[1]/td/span[@class='gray']").first?.content,
                 let topicHref = e.xpath("./table/tr[1]/td/span[@class='gray']/a").first?["href"] {
-
+                
                 let topic = Topic(title: topicTitle, href: topicHref, lastReplyTime: time)
                 var replyContent = ""
                 if i < replyContentPath.count {
@@ -225,7 +231,87 @@ struct HTMLParser {
             }
             return nil
         }
-
-        return (joinTime, topicItems, replyItems)
+        
+        let moreTopicsPath = topicPath.first?.parent?.xpath("./div[@class='inner']/a")
+        let moreTopicHref = moreTopicsPath?.first?["href"] ?? ""
+        
+        let moreRepliesPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][last()]/div[@class='inner'][last()]/a")
+        let moreRepliesHref = moreRepliesPath.first?["href"] ?? ""
+        
+        return (joinTime, topicPrivacy, topicItems, replyItems, moreTopicHref, moreRepliesHref)
+    }
+    
+    // MARK: - 个人的全部主题
+    func profileAllTopics(html data: Data) -> (totalCount: String, topics: [Topic], currentPage: String, totalPage: String)? {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return nil
+        }
+        let totalPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='header']/div[@class='fr f12']/strong[@class='gray']")
+        let totalCount = totalPath.first?.content ?? "0"
+        
+        let topicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='cell item']")
+        let topicItems = topicPath.flatMap({e -> Topic? in
+            if let nodeHref = e.xpath("./table/tr/td[1]/span[1]/a[@class='node']").first?["href"],
+                let nodeName = e.xpath("./table/tr/td[1]/span[1]/a[@class='node']").first?.content,
+                let topicHref = e.xpath("./table/tr/td[1]/span[@class='item_title']/a").first?["href"],
+                let topicTitle = e.xpath("./table/tr/td[1]/span[@class='item_title']/a").first?.content,
+                let lastReplyTime = e.xpath("./table/tr/td[1]/span[3]").first?.content {
+                
+                var lastReplyerUser: User?
+                if let lastReplyerHref = e.xpath("./table/tr/td[1]/span[3]/strong/a").first?["href"],
+                    let lastReplyerName = e.xpath("./table/tr/td[1]/span[3]/strong/a").first?.content {
+                    lastReplyerUser = User(name: lastReplyerName, href: lastReplyerHref, src: "")
+                }
+                
+                let node = Node(name: nodeName, href: nodeHref)
+                let replyCount = e.xpath("./table/tr/td[2]/a").first?.content ?? "0"
+                let topic = Topic(title: topicTitle, href: topicHref, node: node, lastReplyTime: lastReplyTime, lastReplyUser: lastReplyerUser, replyCount: replyCount)
+                
+                return topic
+            }
+            return nil
+        })
+        
+        let pagePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='inner']/table/tr/td[2]/strong")
+        let pageTotal = pagePath.first?.content ?? "1/1"
+        let currentPage = pageTotal.components(separatedBy: "/").first ?? "1"
+        let totalPage = pageTotal.components(separatedBy: "/").last ?? "1"
+        
+        return (totalCount, topicItems, currentPage, totalPage)
+    }
+    
+    // MARK: - 个人的全部回复
+    func profileAllReplies(html data: Data) -> (totalCount: String, replies: [Reply], currentPage: Int, totalPage: Int)? {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return nil
+        }
+        let totalPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='header']/div[@class='fr f12']/strong[@class='gray']")
+        let totalCount = totalPath.first?.content ?? "0"
+        
+        let replyTopicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='dock_area']")
+        let replyContentPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']//div[@class='reply_content']")
+        
+        let replyItems = replyTopicPath.enumerated().flatMap { (i, e) -> Reply? in
+            if let time = e.xpath("./table/tr[1]/td/div[@class='fr']/span[@class='fade']").first?.content,
+                let topicTitle = e.xpath("./table/tr[1]/td/span[@class='gray']").first?.content,
+                let topicHref = e.xpath("./table/tr[1]/td/span[@class='gray']/a").first?["href"] {
+                
+                let topic = Topic(title: topicTitle, href: topicHref, lastReplyTime: time)
+                var replyContent = ""
+                if i < replyContentPath.count {
+                    replyContent = replyContentPath[i].content ?? ""
+                }
+                let reply = Reply(content: replyContent.trimmingCharacters(in: .whitespacesAndNewlines), topic: topic)
+                return reply
+            }
+            return nil
+        }
+        
+        let pagePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='inner']/table/tr/td[2]/strong")
+        let pageTotal = pagePath.first?.content ?? "1/1"
+        let currentPage = pageTotal.components(separatedBy: "/").first ?? "1"
+        let totalPage = pageTotal.components(separatedBy: "/").last ?? "1"
+        
+        return (totalCount, replyItems, Int(currentPage)!, Int(totalPage)!)
     }
 }
