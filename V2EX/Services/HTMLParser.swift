@@ -242,7 +242,7 @@ struct HTMLParser {
     }
     
     // MARK: - 个人的全部主题
-    func profileAllTopics(html data: Data) -> (totalCount: String, topics: [Topic], currentPage: String, totalPage: String)? {
+    func profileAllTopics(html data: Data) -> (totalCount: String, topics: [Topic], currentPage: Int, totalPage: Int)? {
         guard let html = HTML(html: data, encoding: .utf8) else {
             return nil
         }
@@ -277,7 +277,7 @@ struct HTMLParser {
         let currentPage = pageTotal.components(separatedBy: "/").first ?? "1"
         let totalPage = pageTotal.components(separatedBy: "/").last ?? "1"
         
-        return (totalCount, topicItems, currentPage, totalPage)
+        return (totalCount, topicItems, Int(currentPage)!, Int(totalPage)!)
     }
     
     // MARK: - 个人的全部回复
@@ -313,5 +313,38 @@ struct HTMLParser {
         let totalPage = pageTotal.components(separatedBy: "/").last ?? "1"
         
         return (totalCount, replyItems, Int(currentPage)!, Int(totalPage)!)
+    }
+    
+    // MARK: - 消息提醒
+    func notifications(html data: Data) -> (messages: [Message], currentPage: Int, totalPage: Int)? {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return nil
+        }
+        
+        let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='cell']")
+        let items = path.flatMap { e -> Message? in
+            if let userSrc = e.xpath("./table/tr/td[1]/a/img").first?["src"],
+                let userHref = e.xpath("./table/tr/td[1]/a").first?["href"],
+                let userName = e.xpath("./table/tr/td[2]/span[@class='fade']/a[1]/strong").first?.content,
+                let time = e.xpath("./table/tr/td[2]/span[@class='snow']").first?.content,
+                let topicTitle = e.xpath("./table/tr/td[2]/span[@class='fade']").first?.content,
+                let topicHref = e.xpath("./table/tr/td[2]/span[@class='fade']/a[2]").first?["href"],
+                let replyContent = e.xpath("./table/tr/td[2]/div[@class='payload']").first?.content {
+                
+                let sender = User(name: userName, href: userHref, src: userSrc)
+                let topic = Topic(title: topicTitle, href: topicHref)
+                
+                return Message(sender: sender, topic: topic, time: time, content: replyContent)
+            }
+            
+            return nil
+        }
+        
+        let pagePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='inner'][last()]/table/tr/td[2]")
+        let pageTotal = pagePath.first?.content ?? "1/1"
+        let currentPage = pageTotal.components(separatedBy: "/").first ?? "1"
+        let totalPage = pageTotal.components(separatedBy: "/").last ?? "1"
+
+        return (items, Int(currentPage)!, Int(totalPage)!)
     }
 }

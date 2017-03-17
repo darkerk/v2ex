@@ -17,6 +17,7 @@ enum API {
     case timeline(userHref: String)
     case profileTopics(href: String, page: Int)
     case profileReplies(href: String, page: Int)
+    case notifications(page: Int)
 }
 
 extension API: TargetType {
@@ -43,6 +44,8 @@ extension API: TargetType {
             return userHref
         case let .profileTopics(href, _), let .profileReplies(href, _):
             return href
+        case .notifications(_):
+            return "/notifications"
         default:
             return ""
         }
@@ -72,6 +75,8 @@ extension API: TargetType {
             let node = nodeHref.replacingOccurrences(of: "/?tab=", with: "")
             return ["tab": node]
         case let .topicDetails(_, page), let .profileTopics(_, page), let .profileReplies(_, page):
+            return page == 0 ? nil : ["p": page]
+        case let .notifications(page):
             return page == 0 ? nil : ["p": page]
         default:
             return nil

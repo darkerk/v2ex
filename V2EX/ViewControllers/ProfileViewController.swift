@@ -47,7 +47,12 @@ class ProfileViewController: UITableViewController {
                 }else {
                     `self`.showLoginView()
                 }
-                
+            case 1:
+                guard let nav = self.drawerViewController?.centerViewController as? UINavigationController else {
+                    return
+                }
+                self.drawerViewController?.isOpenDrawer = false
+                nav.performSegue(withIdentifier: MessageViewController.segueId, sender: nil)
             default: break
             }
             

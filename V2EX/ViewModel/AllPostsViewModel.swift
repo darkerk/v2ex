@@ -37,8 +37,8 @@ class AllPostsViewModel {
             switch self.type {
             case .topic:
                 if let data = HTMLParser.shared.profileAllTopics(html: response.data) {
-                    self.currentPage = Int(data.currentPage)!
-                    self.totalPage = Int(data.totalPage)!
+                    self.currentPage = data.currentPage
+                    self.totalPage = data.totalPage
                     self.totalCount.value = data.totalCount
                     let topics = data.topics.flatMap({[SectionTimelineItem.topicItem(topic: $0)]})
                     self.items.value.append(contentsOf: topics)

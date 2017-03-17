@@ -54,6 +54,10 @@
 		CA90CD8D1E66717500CD0B98 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA90CD8C1E66717500CD0B98 /* HTMLParser.swift */; };
 		CA90CD911E66AD7400CD0B98 /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA90CD901E66AD7400CD0B98 /* Topic.swift */; };
 		CA90CD951E66ADEC00CD0B98 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA90CD941E66ADEC00CD0B98 /* Node.swift */; };
+		CA9DE8841E7B7F91003BA25F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9DE8831E7B7F91003BA25F /* Message.swift */; };
+		CA9DE8861E7B8674003BA25F /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9DE8851E7B8674003BA25F /* MessageViewController.swift */; };
+		CA9DE8881E7B89CF003BA25F /* MessageViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9DE8871E7B89CF003BA25F /* MessageViewCell.swift */; };
+		CA9DE88A1E7B8B2C003BA25F /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9DE8891E7B8B2C003BA25F /* MessageViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -109,6 +113,10 @@
 		CA90CD8C1E66717500CD0B98 /* HTMLParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
 		CA90CD901E66AD7400CD0B98 /* Topic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
 		CA90CD941E66ADEC00CD0B98 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		CA9DE8831E7B7F91003BA25F /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		CA9DE8851E7B8674003BA25F /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
+		CA9DE8871E7B89CF003BA25F /* MessageViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewCell.swift; sourceTree = "<group>"; };
+		CA9DE8891E7B8B2C003BA25F /* MessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +166,7 @@
 				CA3FFAE41E6FDBD300470DAD /* TopicDetailsViewModel.swift */,
 				CA864BCB1E77E61E00997D4E /* TimelineViewModel.swift */,
 				CA2EEC961E7910A000F723E8 /* AllPostsViewModel.swift */,
+				CA9DE8891E7B8B2C003BA25F /* MessageViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -180,6 +189,7 @@
 				CA6605F51E768C2D00BB19A7 /* LoadMoreCommentCell.swift */,
 				CA2EEC8E1E78DBD000F723E8 /* TimelineTopicViewCell.swift */,
 				CA2EEC901E78DBEC00F723E8 /* TimelineReplyViewCell.swift */,
+				CA9DE8871E7B89CF003BA25F /* MessageViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -202,6 +212,7 @@
 				CA360AAF1E67EF4400DED2FD /* User.swift */,
 				CA3FFAE21E6FA97300470DAD /* Comment.swift */,
 				CA864BC41E77DAA600997D4E /* Reply.swift */,
+				CA9DE8831E7B7F91003BA25F /* Message.swift */,
 				CA2DB6E51E6E95D200E585B8 /* TopicDetailsSection.swift */,
 				CA864BC91E77E39F00997D4E /* TimelineSection.swift */,
 				CA2EEC981E79388600F723E8 /* AllPostsSection.swift */,
@@ -250,6 +261,7 @@
 				CA2DB6E31E6E92AA00E585B8 /* TopicDetailsViewController.swift */,
 				CA864BC61E77DCBE00997D4E /* TimelineViewController.swift */,
 				CA2EEC941E790B6700F723E8 /* AllPostsViewController.swift */,
+				CA9DE8851E7B8674003BA25F /* MessageViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -456,13 +468,17 @@
 				CA3FFAE31E6FA97300470DAD /* Comment.swift in Sources */,
 				CA360AB81E68004400DED2FD /* TopicViewCell.swift in Sources */,
 				CA360AB61E67FFD400DED2FD /* ReusableView.swift in Sources */,
+				CA9DE8841E7B7F91003BA25F /* Message.swift in Sources */,
+				CA9DE8881E7B89CF003BA25F /* MessageViewCell.swift in Sources */,
 				CA864BC51E77DAA600997D4E /* Reply.swift in Sources */,
+				CA9DE8861E7B8674003BA25F /* MessageViewController.swift in Sources */,
 				CA477A781E6660DD000FC1F5 /* AppDelegate.swift in Sources */,
 				CA90CD8D1E66717500CD0B98 /* HTMLParser.swift in Sources */,
 				CA864BBF1E779F2A00997D4E /* ProfileHeaderView.swift in Sources */,
 				CA360AB01E67EF4400DED2FD /* User.swift in Sources */,
 				CA477A8F1E6661B2000FC1F5 /* API.swift in Sources */,
 				CA477A7F1E6660ED000FC1F5 /* DrawerViewController.swift in Sources */,
+				CA9DE88A1E7B8B2C003BA25F /* MessageViewModel.swift in Sources */,
 				CA360AB41E67FFA600DED2FD /* HomeViewController.swift in Sources */,
 				CA353E9F1E6953AF0006D37B /* NodesViewController.swift in Sources */,
 				CA505D9F1E6D2C17004F738C /* ActivityIndicator.swift in Sources */,
