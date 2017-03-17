@@ -41,8 +41,11 @@ class TopicDetailsViewController: UITableViewController {
             }
         }
         
-        dataSource.titleForHeaderInSection = {(ds, sectionIndex) in
-            return sectionIndex == 0 ? viewModel.countTime.value : nil
+        dataSource.titleForHeaderInSection = {[weak viewModel] (ds, sectionIndex) in
+            if sectionIndex == 0, let viewModel = viewModel {
+                return ds[sectionIndex].comments.isEmpty ? "目前尚无回复" : viewModel.countTime.value
+            }
+            return nil
         }
       
         viewModel.updateTopic.asObservable().bindTo(headerView.rx.topic).addDisposableTo(disposeBag)

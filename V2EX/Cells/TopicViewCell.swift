@@ -29,6 +29,7 @@ class TopicViewCell: UITableViewCell {
                 timeLabel.text = model.lastReplyTime
                 countLabel.text = model.replyCount
                 titleLabel.text = model.title
+                countLabel.isHidden = model.replyCount == "0"
             }
         }
     }

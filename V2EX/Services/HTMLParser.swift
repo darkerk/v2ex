@@ -184,7 +184,7 @@ struct HTMLParser {
             return nil
         }
         
-        let joinTimePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='inner'][1]/table/tr/td[3]/span[@class='gray']")
+        let joinTimePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]//table/tr/td[3]/span[@class='gray']")
         let joinTime = joinTimePath.first?.content ?? ""
         
         let privacyPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][2]/div[@class='inner']/table/tr[2]/td")
