@@ -307,6 +307,14 @@ ol {
     text-align: left;
 }
 
+.reply_content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #646464;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
 .topic_content {
     font-size: 15px;
     line-height: 1.6;
@@ -337,6 +345,11 @@ ol {
     font-size: 12px;
     line-height: 100%;
     margin-top: -10px;
+}
+
+.embedded_image {
+    max-width: 100%;
+    image-orientation: from-image;
 }
 
 .markdown_body img {

@@ -996,8 +996,8 @@
                                             <color key="textColor" red="0.58823529411764708" green="0.58823529411764708" blue="0.58823529411764708" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="content" textAlignment="justified" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OBa-og-5Kb">
-                                            <rect key="frame" x="50" y="51.5" width="315" height="48"/>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="content" textAlignment="justified" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OBa-og-5Kb">
+                                            <rect key="frame" x="50" y="46.5" width="315" height="53"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="textColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -1015,7 +1015,7 @@
                                         <constraint firstItem="9uF-1j-cx9" firstAttribute="top" secondItem="A2e-yP-a1I" secondAttribute="top" constant="10" id="goR-df-Svr"/>
                                         <constraint firstItem="Lax-Bs-Fs2" firstAttribute="leading" secondItem="9uF-1j-cx9" secondAttribute="trailing" constant="10" id="huX-IZ-Vj2"/>
                                         <constraint firstItem="H4B-qF-cDv" firstAttribute="top" secondItem="Lax-Bs-Fs2" secondAttribute="bottom" id="ojF-zl-S24"/>
-                                        <constraint firstItem="OBa-og-5Kb" firstAttribute="top" secondItem="H4B-qF-cDv" secondAttribute="bottom" constant="10" id="yAL-Bk-3fa"/>
+                                        <constraint firstItem="OBa-og-5Kb" firstAttribute="top" secondItem="H4B-qF-cDv" secondAttribute="bottom" constant="5" id="yAL-Bk-3fa"/>
                                         <constraint firstItem="9uF-1j-cx9" firstAttribute="leading" secondItem="A2e-yP-a1I" secondAttribute="leading" constant="10" id="yYG-8O-7Lx"/>
                                     </constraints>
                                 </tableViewCellContentView>

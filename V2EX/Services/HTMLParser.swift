@@ -166,7 +166,7 @@ struct HTMLParser {
                 let userHref = e.xpath("./table/tr/td[3]/strong/a").first?["href"],
                 let userName = e.xpath("./table/tr/td[3]/strong/a").first?.content,
                 let time = e.xpath("./table/tr/td[3]/span[1]").first?.content,
-                let text = e.xpath("./table/tr/td[3]/div[@class='reply_content']").first?.content {
+                let text = e.xpath("./table/tr/td[3]/div[@class='reply_content']").first?.toHTML {
                 let thanks = e.xpath("./table/tr/td[3]/span[2]").first?.content ?? "0"
                 let number = e.xpath("./table/tr/td[3]/div[@class='fr']/span[@class='no']").first?.content ?? "0"
                 let user = User(name: userName, href: userHref, src: src)
