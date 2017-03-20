@@ -13,9 +13,20 @@ struct Node {
     var href: String = ""
     var isCurrent: Bool = false
     
-    init(name: String, href: String, isCurrent: Bool = false) {
+    var icon: String = ""
+    var comments: Int = 0
+    
+    init(name: String, href: String, isCurrent: Bool = false, icon: String = "", comments: Int = 0) {
         self.name = name
         self.href = href
         self.isCurrent = isCurrent
+        self.icon = icon
+        self.comments = comments
+    }
+}
+
+extension Node {
+    var iconURLString: String {
+        return "https:" + icon
     }
 }

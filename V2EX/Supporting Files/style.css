@@ -1,5 +1,5 @@
 h1 {
-    font-size: 24px;
+    font-size: 16px;
     font-weight: 500;
     line-height: 100%;
     margin: 5px 0px 20px 0px;
@@ -8,7 +8,7 @@ h1 {
 }
 
 h2 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
     line-height: 100%;
     margin: 20px 0px 20px 0px;
@@ -64,25 +64,6 @@ a:link, a:visited, a:active {
 a:hover {
     color: #4d5256;
     text-decoration: underline;
-}
-
-a.google-signin:link {
-    width: 191px;
-    height: 46px;
-    background-image: url("/static/img/btn_google_signin_light_normal_web@2x.png");
-    background-size: 191px 46px;
-    background-repeat: no-repeat;
-    border: none;
-    text-decoration: none;
-    display: inline-block;
-}
-
-a.google-signin:hover {
-    background-image: url("/static/img/btn_google_signin_light_normal_web@2x.png");
-}
-
-a.google-signin:active {
-    background-image: url("/static/img/btn_google_signin_light_pressed_web@2x.png");
 }
 
 a.dark:link, a.dark:visited, a.dark:active {

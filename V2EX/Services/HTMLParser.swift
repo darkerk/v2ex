@@ -51,48 +51,6 @@ struct HTMLParser {
         return nodes
     }
     
-    // MARK: - 首页话题列表
-    func homeTopics(html data: Data) -> [Topic] {
-        guard let html = HTML(html: data, encoding: .utf8) else {
-            return []
-        }
-        
-        var path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell item']")
-        if Account.shared.isLoggedIn.value {
-            if Account.shared.isDailyRewards {
-                path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][2]/div[@class='cell item']")
-            }else {
-                path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell item']")
-            }
-        }
-        let items = path.flatMap({e -> Topic? in
-            if let userSrc = e.xpath(".//td[1]/a/img").first?["src"],
-                let nodeHref = e.xpath(".//td[3]/span[1]/a").first?["href"],
-                let nodeName = e.xpath(".//td[3]/span[1]/a").first?.content,
-                let userHref = e.xpath(".//td[3]/span[1]/strong/a").first?["href"],
-                let username = e.xpath(".//td[3]/span[1]/strong/a").first?.content,
-                let topicHref = e.xpath(".//td[3]/span[2]/a[1]").first?["href"],
-                let topicTitle = e.xpath(".//td[3]/span[2]/a[1]").first?.content,
-                let lastReplyTime = e.xpath(".//td[3]/span[3]").first?.content {
-                
-                var lastReplyerUser: User?
-                if let lastReplyerHref = e.xpath(".//td[3]/span[3]/strong/a").first?["href"],
-                    let lastReplyerName = e.xpath(".//td[3]/span[3]/strong/a").first?.content {
-                    lastReplyerUser = User(name: lastReplyerName, href: lastReplyerHref, src: "")
-                }
-                
-                let owner = User(name: username, href: userHref, src: userSrc)
-                let node = Node(name: nodeName, href: nodeHref)
-                let replyCount = e.xpath(".//td[4]/a").first?.content ?? "0"
-                let topic = Topic(title: topicTitle, href: topicHref, owner: owner, node: node, lastReplyTime: lastReplyTime, lastReplyUser: lastReplyerUser, replyCount: replyCount)
-                
-                return topic
-            }
-            return nil
-        })
-        return items
-    }
-    
     // MARK: - 登录的用户名key，密码key，once值
     func keyAndOnce(html data: Data) -> (usernameKey: String, passwordKey: String, once: String)? {
         guard let html = HTML(html: data, encoding: .utf8) else {
@@ -134,6 +92,48 @@ struct HTMLParser {
             }
         }
         return nil
+    }
+    
+    // MARK: - 首页话题列表
+    func homeTopics(html data: Data) -> [Topic] {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return []
+        }
+        
+        var path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell item']")
+        if Account.shared.isLoggedIn.value {
+            if Account.shared.isDailyRewards {
+                path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][2]/div[@class='cell item']")
+            }else {
+                path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell item']")
+            }
+        }
+        let items = path.flatMap({e -> Topic? in
+            if let userSrc = e.xpath(".//td[1]/a/img").first?["src"],
+                let nodeHref = e.xpath(".//td[3]/span[1]/a").first?["href"],
+                let nodeName = e.xpath(".//td[3]/span[1]/a").first?.content,
+                let userHref = e.xpath(".//td[3]/span[1]/strong/a").first?["href"],
+                let username = e.xpath(".//td[3]/span[1]/strong/a").first?.content,
+                let topicHref = e.xpath(".//td[3]/span[2]/a[1]").first?["href"],
+                let topicTitle = e.xpath(".//td[3]/span[2]/a[1]").first?.content,
+                let lastReplyTime = e.xpath(".//td[3]/span[3]").first?.content {
+                
+                var lastReplyerUser: User?
+                if let lastReplyerHref = e.xpath(".//td[3]/span[3]/strong/a").first?["href"],
+                    let lastReplyerName = e.xpath(".//td[3]/span[3]/strong/a").first?.content {
+                    lastReplyerUser = User(name: lastReplyerName, href: lastReplyerHref, src: "")
+                }
+                
+                let owner = User(name: username, href: userHref, src: userSrc)
+                let node = Node(name: nodeName, href: nodeHref)
+                let replyCount = e.xpath(".//td[4]/a").first?.content ?? "0"
+                let topic = Topic(title: topicTitle, href: topicHref, owner: owner, node: node, lastReplyTime: lastReplyTime, lastReplyUser: lastReplyerUser, replyCount: replyCount)
+                
+                return topic
+            }
+            return nil
+        })
+        return items
     }
     
     // MARK: - 话题详情
@@ -346,5 +346,68 @@ struct HTMLParser {
         let totalPage = pageTotal.components(separatedBy: "/").last ?? "1"
 
         return (items, Int(currentPage)!, Int(totalPage)!)
+    }
+    
+    // MARK: - 收藏的话题和特别关注
+    func favoriteTopicsAndFollowings(html data: Data) -> (totalPage: Int, topics: [Topic])? {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return nil
+        }
+        
+        let pagePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='cell'][1]/table/tr/td[1]/a")
+        let totalPage = pagePath.count
+        
+        let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='cell item']")
+        let items = path.flatMap({e -> Topic? in
+            if let userSrc = e.xpath("./table/tr/td[1]/a/img").first?["src"],
+                let nodeHref = e.xpath("./table/tr/td[3]/span[@class='small fade']/a[@class='node']").first?["href"],
+                let nodeName = e.xpath("./table/tr/td[3]/span[@class='small fade']/a[@class='node']").first?.content,
+                let userHref = e.xpath("./table/tr/td[3]/span[@class='small fade']/strong[1]/a").first?["href"],
+                let username = e.xpath("./table/tr/td[3]/span[@class='small fade']/strong[1]/a").first?.content,
+                let topicHref = e.xpath("./table/tr/td[3]/span[@class='item_title']/a").first?["href"],
+                let topicTitle = e.xpath("./table/tr/td[3]/span[@class='item_title']/a").first?.content {
+                
+                var lastReplyTime = e.xpath("./table/tr/td[3]/span[@class='small fade']").first?.content ?? ""
+                lastReplyTime = lastReplyTime.components(separatedBy: "•  \(username)  •  ").last ?? ""
+ 
+                var lastReplyerUser: User?
+                if let lastReplyerHref = e.xpath("./table/tr/td[3]/span[@class='small fade']/strong[last()]/a").first?["href"],
+                    let lastReplyerName = e.xpath("./table/tr/td[3]/span[@class='small fade']/strong[last()]/a").first?.content {
+                    lastReplyerUser = User(name: lastReplyerName, href: lastReplyerHref, src: "")
+                }
+                
+                let owner = User(name: username, href: userHref, src: userSrc)
+                let node = Node(name: nodeName, href: nodeHref)
+                let replyCount = e.xpath("./table/tr/td[4]/a").first?.content ?? "0"
+                let topic = Topic(title: topicTitle, href: topicHref, owner: owner, node: node, lastReplyTime: lastReplyTime, lastReplyUser: lastReplyerUser, replyCount: replyCount)
+                
+                return topic
+            }
+            return nil
+        })
+        return (totalPage, items)
+    }
+    
+    // MARK: - 收藏的节点
+    func favoriteNodes(html data: Data) -> [Node]? {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return nil
+        }
+        let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@id='MyNodes']/a[@class='grid_item']")
+        let items = path.flatMap({e -> Node? in
+            if let href = e["href"],
+                let icon = e.xpath("./div/img").first?["src"],
+                let name = e.xpath("./div").first?.content,
+                let comments = e.xpath("./div/span[@class='fade f12']").first?.content {
+                
+                let nodeName = name.replacingOccurrences(of: comments, with: "")
+                let count = comments.trimmingCharacters(in: .whitespacesAndNewlines)
+                
+                return Node(name: nodeName, href: href, icon: icon, comments: Int(count)!)
+            }
+            
+            return nil
+        })
+        return items
     }
 }

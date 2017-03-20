@@ -1,26 +1,27 @@
 //
-//  TimelineTopicViewCell.swift
+//  FavoriteNodeViewCell.swift
 //  V2EX
 //
-//  Created by wgh on 2017/3/15.
+//  Created by wgh on 2017/3/20.
 //  Copyright © 2017年 yitop. All rights reserved.
 //
 
 import UIKit
+import Kingfisher
 
-class TimelineTopicViewCell: UITableViewCell {
-
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var timeLabel: UILabel!
+class FavoriteNodeViewCell: UITableViewCell {
+    
+    @IBOutlet weak var iconView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var countLabel: UILabel!
     
-    var topic: Topic? {
+    var node: Node? {
         willSet {
             if let model = newValue {
-                titleLabel.text = model.title
-                timeLabel.text = model.lastReplyTime
-                countLabel.text = "  \(model.replyCount)  "
-                countLabel.isHidden = model.replyCount == "0"
+                iconView.kf.setImage(with: URL(string: model.iconURLString), placeholder: #imageLiteral(resourceName: "slide_menu_setting"))
+                nameLabel.text = model.name
+                countLabel.text = "  \(model.comments)  "
+                countLabel.isHidden = model.comments == 0
             }
         }
     }
@@ -28,6 +29,7 @@ class TimelineTopicViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
         countLabel.clipsToBounds = true
         countLabel.layer.cornerRadius = 9
     }

@@ -16,6 +16,10 @@ class ProfileViewController: UITableViewController {
     
     private let disposeBag = DisposeBag()
     
+    var navController: UINavigationController? {
+        return drawerViewController?.centerViewController as? UINavigationController
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,24 +39,26 @@ class ProfileViewController: UITableViewController {
         tableView.rx.itemSelected.subscribe(onNext: {[weak self] indexPath in
             guard let `self` = self else { return }
             `self`.tableView.deselectRow(at: indexPath, animated: true)
-            
+            guard let nav = self.navController else {
+                return
+            }
             switch indexPath.row {
             case 0:
                 if Account.shared.isLoggedIn.value {
-                    guard let nav = self.drawerViewController?.centerViewController as? UINavigationController else {
-                        return
-                    }
                     self.drawerViewController?.isOpenDrawer = false
                     TimelineViewController.show(from: nav, user: Account.shared.user.value)
                 }else {
                     `self`.showLoginView()
                 }
             case 1:
-                guard let nav = self.drawerViewController?.centerViewController as? UINavigationController else {
-                    return
-                }
                 self.drawerViewController?.isOpenDrawer = false
                 nav.performSegue(withIdentifier: MessageViewController.segueId, sender: nil)
+            case 2:
+                self.drawerViewController?.isOpenDrawer = false
+                nav.performSegue(withIdentifier: FavoriteViewController.segueId, sender: nil)
+            case 3:
+                self.drawerViewController?.isOpenDrawer = false
+                nav.performSegue(withIdentifier: SettingViewController.segueId, sender: nil)
             default: break
             }
             
@@ -71,16 +77,6 @@ class ProfileViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 }
 
 

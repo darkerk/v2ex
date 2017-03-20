@@ -18,6 +18,9 @@ enum API {
     case profileTopics(href: String, page: Int)
     case profileReplies(href: String, page: Int)
     case notifications(page: Int)
+    case favoriteNodes(page: Int)
+    case favoriteTopics(page: Int)
+    case favoriteFollowings(page: Int)
 }
 
 extension API: TargetType {
@@ -46,6 +49,12 @@ extension API: TargetType {
             return href
         case .notifications(_):
             return "/notifications"
+        case .favoriteNodes(_):
+            return "/my/nodes"
+        case .favoriteTopics(_):
+            return "/my/topics"
+        case .favoriteFollowings(_):
+            return "/my/following"
         default:
             return ""
         }
@@ -77,6 +86,8 @@ extension API: TargetType {
         case let .topicDetails(_, page), let .profileTopics(_, page), let .profileReplies(_, page):
             return page == 0 ? nil : ["p": page]
         case let .notifications(page):
+            return page == 0 ? nil : ["p": page]
+        case let .favoriteNodes(page), let .favoriteTopics(page), let .favoriteFollowings(page):
             return page == 0 ? nil : ["p": page]
         default:
             return nil

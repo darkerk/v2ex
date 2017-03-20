@@ -27,7 +27,7 @@ class TopicViewCell: UITableViewCell {
                 nodeLabel.text = " " + (model.node?.name ?? "") + " "
                 ownerNameLabel.text = model.owner?.name
                 timeLabel.text = model.lastReplyTime
-                countLabel.text = model.replyCount
+                countLabel.text = "  \(model.replyCount)  "
                 titleLabel.text = model.title
                 countLabel.isHidden = model.replyCount == "0"
             }
