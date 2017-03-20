@@ -20,7 +20,7 @@ class TimelineViewController: UITableViewController {
     fileprivate let disposeBag = DisposeBag()
     
     class func show(from navigationController: UINavigationController, user: User?) {
-        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: TimelineViewController.segueId) as! TimelineViewController
+        let controller = UIStoryboard(name: "Timeline", bundle: nil).instantiateViewController(withIdentifier: TimelineViewController.segueId) as! TimelineViewController
         controller.user = user
         navigationController.pushViewController(controller, animated: true)
     }
