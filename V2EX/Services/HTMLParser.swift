@@ -344,7 +344,7 @@ struct HTMLParser {
         let pageTotal = pagePath.first?.content ?? "1/1"
         let currentPage = pageTotal.components(separatedBy: "/").first ?? "1"
         let totalPage = pageTotal.components(separatedBy: "/").last ?? "1"
-
+        
         return (items, Int(currentPage)!, Int(totalPage)!)
     }
     
@@ -369,7 +369,7 @@ struct HTMLParser {
                 
                 var lastReplyTime = e.xpath("./table/tr/td[3]/span[@class='small fade']").first?.content ?? ""
                 lastReplyTime = lastReplyTime.components(separatedBy: "•  \(username)  •  ").last ?? ""
- 
+                
                 var lastReplyerUser: User?
                 if let lastReplyerHref = e.xpath("./table/tr/td[3]/span[@class='small fade']/strong[last()]/a").first?["href"],
                     let lastReplyerName = e.xpath("./table/tr/td[3]/span[@class='small fade']/strong[last()]/a").first?.content {
@@ -424,7 +424,7 @@ struct HTMLParser {
                 let username = e.xpath("./table/tr/td[3]/span[@class='small fade']/strong").first?.content,
                 let topicHref = e.xpath("./table/tr/td[3]/span[@class='item_title']/a").first?["href"],
                 let topicTitle = e.xpath("./table/tr/td[3]/span[@class='item_title']/a").first?.content {
-
+                
                 let owner = User(name: username, href: userHref, src: userSrc)
                 let replyCount = e.xpath("./table/tr/td[4]/a[@class='count_livid']").first?.content ?? "0"
                 let topic = Topic(title: topicTitle, href: topicHref, owner: owner, replyCount: replyCount)
@@ -439,5 +439,28 @@ struct HTMLParser {
         let totalPage = pageTotal.components(separatedBy: "/").last ?? "1"
         
         return (items, Int(currentPage)!, Int(totalPage)!)
+    }
+    
+    // MARK: - 上传头像once值
+    func uploadOnce(html data: Data) -> String? {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return nil
+        }
+        let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='inner']/form/table/tr[last()]//input[@name='once']")
+        return path.first?["value"]
+    }
+    
+    // MARK: - 上传头像成功后新头像
+    func uploadAvatar(html data: Data) -> String? {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return nil
+        }
+        let path1 = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='message']")
+        let success = path1.first?.content?.contains("成功") ?? false
+        if success {
+            let path2 = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='inner']/form/table/tr[1]/td[2]/img[1]")
+            return path2.first?["src"]
+        }
+        return nil
     }
 }

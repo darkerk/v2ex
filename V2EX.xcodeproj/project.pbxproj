@@ -47,6 +47,9 @@
 		CA55A3641E7F726A00A99D6C /* FavoriteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA55A3631E7F726A00A99D6C /* FavoriteItem.swift */; };
 		CA55A3661E7FA6B900A99D6C /* FavoriteNodeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA55A3651E7FA6B900A99D6C /* FavoriteNodeViewCell.swift */; };
 		CA55A36C1E7FB36500A99D6C /* Timeline.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA55A36B1E7FB36500A99D6C /* Timeline.storyboard */; };
+		CA58105B1E80F68C0003B7C2 /* AppSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA58105A1E80F68C0003B7C2 /* AppSetting.swift */; };
+		CA58105D1E80F78C0003B7C2 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA58105C1E80F78C0003B7C2 /* UIImage.swift */; };
+		CA58105F1E80FEC70003B7C2 /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA58105E1E80FEC70003B7C2 /* SettingViewModel.swift */; };
 		CA6605F41E764D6300BB19A7 /* mobile.css in Resources */ = {isa = PBXBuildFile; fileRef = CA6605F31E764D6300BB19A7 /* mobile.css */; };
 		CA6605F61E768C2D00BB19A7 /* LoadMoreCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6605F51E768C2D00BB19A7 /* LoadMoreCommentCell.swift */; };
 		CA864BB41E77864D00997D4E /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA864BB31E77864D00997D4E /* HUD.swift */; };
@@ -115,6 +118,9 @@
 		CA55A3631E7F726A00A99D6C /* FavoriteItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteItem.swift; sourceTree = "<group>"; };
 		CA55A3651E7FA6B900A99D6C /* FavoriteNodeViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteNodeViewCell.swift; sourceTree = "<group>"; };
 		CA55A36B1E7FB36500A99D6C /* Timeline.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Timeline.storyboard; sourceTree = "<group>"; };
+		CA58105A1E80F68C0003B7C2 /* AppSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSetting.swift; sourceTree = "<group>"; };
+		CA58105C1E80F78C0003B7C2 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		CA58105E1E80FEC70003B7C2 /* SettingViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
 		CA6605F31E764D6300BB19A7 /* mobile.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = mobile.css; sourceTree = "<group>"; };
 		CA6605F51E768C2D00BB19A7 /* LoadMoreCommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadMoreCommentCell.swift; sourceTree = "<group>"; };
 		CA864BB31E77864D00997D4E /* HUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
@@ -189,6 +195,7 @@
 				CA9DE8891E7B8B2C003BA25F /* MessageViewModel.swift */,
 				CA9DE8911E7BD51A003BA25F /* FavoriteViewModel.swift */,
 				CA0C0B1B1E7FC14000B68208 /* NodeTopicsViewModel.swift */,
+				CA58105E1E80FEC70003B7C2 /* SettingViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -198,6 +205,7 @@
 			children = (
 				CA477A771E6660DD000FC1F5 /* AppDelegate.swift */,
 				CA4BA8A31E712DDE00FEE50E /* AppStyle.swift */,
+				CA58105A1E80F68C0003B7C2 /* AppSetting.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -223,6 +231,7 @@
 			children = (
 				CA360AB51E67FFD400DED2FD /* ReusableView.swift */,
 				CA2EEC9C1E7942BE00F723E8 /* InfiniteScrollView.swift */,
+				CA58105C1E80F78C0003B7C2 /* UIImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -474,6 +483,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA9DE88E1E7BCEC8003BA25F /* FavoriteViewController.swift in Sources */,
+				CA58105D1E80F78C0003B7C2 /* UIImage.swift in Sources */,
 				CA353EA31E6963C20006D37B /* LoginViewController.swift in Sources */,
 				CA864BB91E77983F00997D4E /* LoginButton.swift in Sources */,
 				CA505DA31E6D4440004F738C /* Account.swift in Sources */,
@@ -505,6 +515,7 @@
 				CA353E9B1E69478F0006D37B /* TopicViewModel.swift in Sources */,
 				CA3FFAE31E6FA97300470DAD /* Comment.swift in Sources */,
 				CA360AB81E68004400DED2FD /* TopicViewCell.swift in Sources */,
+				CA58105B1E80F68C0003B7C2 /* AppSetting.swift in Sources */,
 				CA360AB61E67FFD400DED2FD /* ReusableView.swift in Sources */,
 				CA9DE8841E7B7F91003BA25F /* Message.swift in Sources */,
 				CA9DE8921E7BD51A003BA25F /* FavoriteViewModel.swift in Sources */,
@@ -514,6 +525,7 @@
 				CA9DE8861E7B8674003BA25F /* MessageViewController.swift in Sources */,
 				CA477A781E6660DD000FC1F5 /* AppDelegate.swift in Sources */,
 				CA90CD8D1E66717500CD0B98 /* HTMLParser.swift in Sources */,
+				CA58105F1E80FEC70003B7C2 /* SettingViewModel.swift in Sources */,
 				CA864BBF1E779F2A00997D4E /* ProfileHeaderView.swift in Sources */,
 				CA360AB01E67EF4400DED2FD /* User.swift in Sources */,
 				CA477A8F1E6661B2000FC1F5 /* API.swift in Sources */,

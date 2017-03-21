@@ -28,6 +28,10 @@ enum API {
     case favoriteTopics(page: Int)
     /// 关注人的话题
     case favoriteFollowings(page: Int)
+    /// 更换头像
+    case updateAvatar(imageData: Data, once: String)
+    /// 获取上传头像once凭证
+    case uploadOnce()
 }
 
 extension API: TargetType {
@@ -36,7 +40,13 @@ extension API: TargetType {
     }
     
     var task: Task {
-        return .request
+        switch self {
+        case let .updateAvatar(imageData, once):
+            return .upload(.multipart([MultipartFormData(provider: .data(imageData), name: "avatar", fileName: "avatar.jpeg", mimeType: "image/jpeg"),
+                                       MultipartFormData(provider: .data(once.data(using: .utf8)!), name: "once")]))
+        default:
+            return .request
+        }
     }
     
     var path: String {
@@ -60,6 +70,8 @@ extension API: TargetType {
             return "/my/topics"
         case .favoriteFollowings(_):
             return "/my/following"
+        case .updateAvatar(_), .uploadOnce():
+            return "/settings/avatar"
         default:
             return ""
         }
@@ -68,6 +80,8 @@ extension API: TargetType {
     var method: Moya.Method {
         switch self {
         case .login(_, _, _, _, _):
+            return .post
+        case .updateAvatar(_):
             return .post
         default:
             return .get
@@ -88,9 +102,7 @@ extension API: TargetType {
             }
             let node = nodeHref.replacingOccurrences(of: "/?tab=", with: "")
             return ["tab": node]
-        case let .pageList(_, page):
-            return page == 0 ? nil : ["p": page]
-        case let .notifications(page):
+        case let .pageList(_, page), let .notifications(page):
             return page == 0 ? nil : ["p": page]
         case let .favoriteNodes(page), let .favoriteTopics(page), let .favoriteFollowings(page):
             return page == 0 ? nil : ["p": page]

@@ -41,8 +41,8 @@ extension HUD {
         HUD.flash(.labeledSuccess(title: nil, subtitle: text), delay: 3)
     }
     
-    static func showText(_ text: String) {
-        HUD.flash(.label(text), delay: 2)
+    static func showText(_ text: String, delay: TimeInterval = 2) {
+        HUD.flash(.label(text), delay: delay)
     }
 }
 
