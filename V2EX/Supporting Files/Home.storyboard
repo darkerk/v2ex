@@ -149,7 +149,7 @@
         <!--话题详情-->
         <scene sceneID="zTm-zT-EIk">
             <objects>
-                <tableViewController id="5ba-n9-MuG" customClass="TopicDetailsViewController" customModule="V2EX" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="TopicDetailsViewController" id="5ba-n9-MuG" customClass="TopicDetailsViewController" customModule="V2EX" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="110" sectionHeaderHeight="28" sectionFooterHeight="28" id="Kv3-Ph-gby">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -410,4 +410,34 @@ struct HTMLParser {
         })
         return items
     }
+    
+    // MARK: - 节点的话题列表
+    func nodeTopics(html data: Data) -> (topics: [Topic], currentPage: Int, totalPage: Int)? {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return nil
+        }
+        
+        let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell']")
+        let items = path.flatMap({e -> Topic? in
+            if let userSrc = e.xpath("./table/tr/td[1]/a/img").first?["src"],
+                let userHref = e.xpath("./table/tr/td[1]/a").first?["href"],
+                let username = e.xpath("./table/tr/td[3]/span[@class='small fade']/strong").first?.content,
+                let topicHref = e.xpath("./table/tr/td[3]/span[@class='item_title']/a").first?["href"],
+                let topicTitle = e.xpath("./table/tr/td[3]/span[@class='item_title']/a").first?.content {
+
+                let owner = User(name: username, href: userHref, src: userSrc)
+                let replyCount = e.xpath("./table/tr/td[4]/a[@class='count_livid']").first?.content ?? "0"
+                let topic = Topic(title: topicTitle, href: topicHref, owner: owner, replyCount: replyCount)
+                return topic
+            }
+            return nil
+        })
+        
+        let pagePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='inner'][last()]/table/tr/td[2]")
+        let pageTotal = pagePath.first?.content ?? "1/1"
+        let currentPage = pageTotal.components(separatedBy: "/").first ?? "1"
+        let totalPage = pageTotal.components(separatedBy: "/").last ?? "1"
+        
+        return (items, Int(currentPage)!, Int(totalPage)!)
+    }
 }

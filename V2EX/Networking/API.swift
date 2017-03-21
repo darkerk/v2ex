@@ -10,16 +10,23 @@ import Foundation
 import Moya
 
 enum API {
+    /// once凭证
     case once()
+    /// 登录
     case login(usernameKey: String, passwordKey: String, username: String, password: String, once: String)
+    /// 首页话题（切换节点）
     case topics(nodeHref: String)
-    case topicDetails(href: String, page: Int)
+    /// 个人创建的话题和回复
     case timeline(userHref: String)
-    case profileTopics(href: String, page: Int)
-    case profileReplies(href: String, page: Int)
+    /// 分页列表数据：话题详情评论、个人全部话题、个人全部回复
+    case pageList(href: String, page: Int)
+    /// 消息提醒
     case notifications(page: Int)
+    /// 收藏的节点
     case favoriteNodes(page: Int)
+    /// 收藏的话题
     case favoriteTopics(page: Int)
+    /// 关注人的话题
     case favoriteFollowings(page: Int)
 }
 
@@ -38,14 +45,12 @@ extension API: TargetType {
             return "/signin"
         case .login(_, _, _, _, _):
             return "/signin"
-        case let .topicDetails(href, _):
+        case let .timeline(userHref):
+            return userHref
+        case let .pageList(href, _):
             if href.contains("#") {
                 return href.components(separatedBy: "#").first ?? ""
             }
-            return href
-        case let .timeline(userHref):
-            return userHref
-        case let .profileTopics(href, _), let .profileReplies(href, _):
             return href
         case .notifications(_):
             return "/notifications"
@@ -83,7 +88,7 @@ extension API: TargetType {
             }
             let node = nodeHref.replacingOccurrences(of: "/?tab=", with: "")
             return ["tab": node]
-        case let .topicDetails(_, page), let .profileTopics(_, page), let .profileReplies(_, page):
+        case let .pageList(_, page):
             return page == 0 ? nil : ["p": page]
         case let .notifications(page):
             return page == 0 ? nil : ["p": page]

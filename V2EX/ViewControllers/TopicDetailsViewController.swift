@@ -18,6 +18,13 @@ class TopicDetailsViewController: UITableViewController {
     fileprivate lazy var dataSource = RxTableViewSectionedAnimatedDataSource<TopicDetailsSection>()
     fileprivate let disposeBag = DisposeBag()
     
+    class func show(from navigationController: UINavigationController, topic: Topic) {
+        let controller = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: TopicDetailsViewController.segueId) as! TopicDetailsViewController
+
+        controller.viewModel = TopicDetailsViewModel(topic: topic)
+        navigationController.pushViewController(controller, animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

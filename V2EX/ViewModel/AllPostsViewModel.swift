@@ -32,7 +32,7 @@ class AllPostsViewModel {
     }
     
     func fetcData(page: Int = 1, completion: (() -> Void)? = nil) {
-        let api = type == .topic ? API.profileTopics(href: href, page: page) : API.profileReplies(href: href, page: page)
+        let api = API.pageList(href: href, page: page)
         API.provider.request(api).subscribe(onNext: { response in
             switch self.type {
             case .topic:

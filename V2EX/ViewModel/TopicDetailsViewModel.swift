@@ -29,7 +29,7 @@ class TopicDetailsViewModel {
     }
     
     func fetchDetails(href: String) {
-        API.provider.request(.topicDetails(href: href, page: 0)).subscribe(onNext: { response in
+        API.provider.request(.pageList(href: href, page: 0)).subscribe(onNext: { response in
             if let data = HTMLParser.shared.topicDetails(html: response.data) {
                 var updateTopicInfo = self.topic
                 updateTopicInfo.creatTime = data.creatTime
@@ -56,7 +56,7 @@ class TopicDetailsViewModel {
         }
         
         let page = currentPage - 1
-        API.provider.request(.topicDetails(href: topic.href, page: page))
+        API.provider.request(.pageList(href: topic.href, page: page))
             .observeOn(MainScheduler.instance)
             .trackActivity(loadMoreActivityIndicator)
             .subscribe(onNext: { response in

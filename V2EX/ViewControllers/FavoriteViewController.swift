@@ -25,14 +25,15 @@ class FavoriteViewController: UITableViewController {
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
         
-        viewModel.dataItems.asObservable().bindTo(tableView.rx.items) {[weak self]  (table, row, item) in
+        viewModel.dataItems.asObservable().bindTo(tableView.rx.items) {[weak navigationController]  (table, row, item) in
             switch item {
             case let .topicItem(topic), let .followingItem(topic):
                 let cell: TopicViewCell = table.dequeueReusableCell()
                 cell.topic = topic
-                guard let `self` = self else { return cell }
-                cell.avatarTap = {
-                    TimelineViewController.show(from: self.navigationController!, user: topic.owner)
+                if let nav = navigationController {
+                    cell.avatarTap = {
+                        TimelineViewController.show(from: nav, user: topic.owner)
+                    }
                 }
                 return cell
             case let .nodeItem(node):
@@ -42,9 +43,16 @@ class FavoriteViewController: UITableViewController {
             }
         }.addDisposableTo(disposeBag)
         
-        tableView.rx.itemSelected.subscribe(onNext: {[weak self] indexPath in
-            guard let strongSelf = self else { return }
-            strongSelf.tableView.deselectRow(at: indexPath, animated: true)
+        tableView.rx.modelSelected(FavoriteItem.self).subscribe(onNext: {[weak self] item in
+            switch item {
+            case let .topicItem(topic), let .followingItem(topic):
+                if let nav = self?.navigationController {
+                    TopicDetailsViewController.show(from: nav, topic: topic)
+                }
+            case let .nodeItem(node):
+                self?.performSegue(withIdentifier: NodeTopicsViewController.segueId, sender: node)
+                break
+            }
         }).addDisposableTo(disposeBag)
         
         tableView.addInfiniteScrolling {[weak tableView, weak viewModel] in
@@ -64,4 +72,19 @@ class FavoriteViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    // MARK: - Navigation
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let node = sender as? Node, segue.destination is NodeTopicsViewController {
+            let controller = segue.destination as! NodeTopicsViewController
+            controller.nodeHref = node.href
+            controller.title = node.name
+        }
+    }
+}
+
+extension FavoriteViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }
