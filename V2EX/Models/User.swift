@@ -12,6 +12,12 @@ struct User {
     var name: String = ""
     var href: String = ""
     var src: String = ""
+    
+    init(name: String, href: String, src: String) {
+        self.name = name
+        self.href = href
+        self.src = src
+    }
 }
 
 extension User {

@@ -10,8 +10,9 @@ import RxSwift
 import Moya
 
 class SettingViewModel {
+    var once: String = ""
     private let disposeBag = DisposeBag()
-    
+
     func uploadAvatar(imageData: Data, completion: ((_ newURLString: String?) -> Void)? = nil) {
         API.provider.request(.uploadOnce()).flatMap { response -> Observable<Response> in
             if let value = HTMLParser.shared.uploadOnce(html: response.data) {
@@ -30,4 +31,23 @@ class SettingViewModel {
             }).addDisposableTo(disposeBag)
     }
     
+    func fetchPrivacyStatus(completion: (() -> Void)? = nil) {
+        API.provider.request(API.privacyOnce()).subscribe(onNext: { response in
+            if let status = HTMLParser.shared.privacyStatus(html: response.data) {
+                self.once = status.once
+                Account.shared.privacy = Privacy(online: status.onlineValue, topic: status.topicValue, search: status.searchValue)
+            }
+            completion?()
+        }) { error in
+            completion?()
+        }.addDisposableTo(disposeBag)
+    }
+    
+    func setPrivacy(type: PrivacyType) {
+        API.provider.request(API.privacy(type: type, once: once)).subscribe(onNext: { response in
+
+        }, onError: {error in
+            print("error: ", error)
+        }).addDisposableTo(disposeBag)
+    }
 }

@@ -679,7 +679,7 @@
                             <tableViewSection headerTitle="隐私" id="3RK-Ve-CeB">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="UITableViewCell" textLabel="rqg-Ei-bmq" detailTextLabel="Ixq-Mk-Jkl" style="IBUITableViewCellStyleValue1" id="jwz-4T-hVF">
-                                        <rect key="frame" x="0.0" y="140" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="139" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jwz-4T-hVF" id="7vP-mQ-tRF">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -703,7 +703,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="UITableViewCell" textLabel="O8z-jL-Vlu" detailTextLabel="ufi-wU-yIK" style="IBUITableViewCellStyleValue1" id="PJZ-SV-yDd">
-                                        <rect key="frame" x="0.0" y="184" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="183" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PJZ-SV-yDd" id="2xd-sA-EWm">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -727,7 +727,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="UITableViewCell" textLabel="vWl-Hy-3xh" style="IBUITableViewCellStyleDefault" id="dGr-u9-WIW">
-                                        <rect key="frame" x="0.0" y="228" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="227" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dGr-u9-WIW" id="KI0-dW-ehT">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -748,7 +748,7 @@
                             <tableViewSection headerTitle="关于" id="s5e-lx-zTy">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="UITableViewCell" textLabel="5ti-tn-9PU" style="IBUITableViewCellStyleDefault" id="Mcn-rS-lDr">
-                                        <rect key="frame" x="0.0" y="312" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="310" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Mcn-rS-lDr" id="fUa-gD-gcn">
                                             <rect key="frame" x="0.0" y="0.0" width="342" height="43"/>
@@ -765,7 +765,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="UITableViewCell" textLabel="Gv1-W7-UD5" style="IBUITableViewCellStyleDefault" id="R5q-4m-5QL">
-                                        <rect key="frame" x="0.0" y="356" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="354" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="R5q-4m-5QL" id="L8v-qC-70J">
                                             <rect key="frame" x="0.0" y="0.0" width="342" height="43"/>
@@ -790,10 +790,31 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="设置" id="EoW-8M-fEL"/>
+                    <connections>
+                        <segue destination="T9J-xt-8Mi" kind="show" identifier="AboutLicensesViewController" id="nOt-pC-VU9"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cXh-Id-4xx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2" y="1325"/>
+        </scene>
+        <!--About Licenses View Controller-->
+        <scene sceneID="YcG-ik-5HE">
+            <objects>
+                <viewController id="T9J-xt-8Mi" customClass="AboutLicensesViewController" customModule="V2EX" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="DNb-Dq-wZl"/>
+                        <viewControllerLayoutGuide type="bottom" id="Q1j-yJ-TyJ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="rx4-Ro-cL6">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="V5P-v6-BxW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="857" y="1576"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="HXx-h1-bMd">

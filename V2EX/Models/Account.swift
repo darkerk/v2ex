@@ -15,6 +15,8 @@ struct Account {
     let user = Variable<User?>(nil)
     let isLoggedIn = Variable<Bool>(false)
     
+    var privacy: Privacy = Privacy()
+    
     static var shared = Account()
     private init() {
     }

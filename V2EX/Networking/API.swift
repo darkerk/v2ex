@@ -9,6 +9,12 @@
 import Foundation
 import Moya
 
+enum PrivacyType {
+    case online(value: Int)
+    case topic(value: Int)
+    case search(on: Bool)
+}
+
 enum API {
     /// once凭证
     case once()
@@ -32,6 +38,10 @@ enum API {
     case updateAvatar(imageData: Data, once: String)
     /// 获取上传头像once凭证
     case uploadOnce()
+    /// 隐私设置once凭证
+    case privacyOnce()
+    /// 隐私设置
+    case privacy(type: PrivacyType, once: String)
 }
 
 extension API: TargetType {
@@ -72,6 +82,8 @@ extension API: TargetType {
             return "/my/following"
         case .updateAvatar(_), .uploadOnce():
             return "/settings/avatar"
+        case .privacy(_, _), .privacyOnce():
+            return "/settings/privacy"
         default:
             return ""
         }
@@ -81,7 +93,7 @@ extension API: TargetType {
         switch self {
         case .login(_, _, _, _, _):
             return .post
-        case .updateAvatar(_):
+        case .updateAvatar(_), .privacy(_, _):
             return .post
         default:
             return .get
@@ -106,6 +118,15 @@ extension API: TargetType {
             return page == 0 ? nil : ["p": page]
         case let .favoriteNodes(page), let .favoriteTopics(page), let .favoriteFollowings(page):
             return page == 0 ? nil : ["p": page]
+        case let .privacy(type, once):
+            switch type {
+            case let .online(value):
+                return ["who_can_view_my_online_status": value, "once": once]
+            case let .topic(value):
+                return ["who_can_view_my_topics_list": value, "once": once]
+            case let .search(on):
+                return ["topics_indexable": on ? 1 : 0, "once": once]
+            }
         default:
             return nil
         }

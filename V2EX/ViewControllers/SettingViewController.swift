@@ -13,17 +13,90 @@ import Photos
 import PKHUD
 import RxSwift
 import RxCocoa
+import SafariServices
 
 class SettingViewController: UITableViewController {
-    
-    var avatarView: UIImageView?
+    fileprivate var avatarView: UIImageView?
+    let privacyOptions = ["所有人", "已登录用户", "只有我自己"]
     
     let viewModel = SettingViewModel()
     fileprivate let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        viewModel.fetchPrivacyStatus(completion: {[weak tableView] in
+            tableView?.reloadData()
+        })
+    }
+    
+    func privacyAction(type: PrivacyType) {
+        var alertTitle = ""
+        if case PrivacyType.online(_) = type {
+            alertTitle = "谁可以看到我的在线状态"
+        }else {
+            alertTitle = "谁可以查看我的主题列表"
+        }
 
+        let alert = UIAlertController(title: alertTitle, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "所有人", style: .default, handler: {_ in
+            switch type {
+            case let .online(value):
+                if value != 0 {
+                    Account.shared.privacy.online = 0
+                    self.tableView.reloadData()
+                    self.tableView.cellForRow(at: IndexPath(row: 0, section: 1))?.detailTextLabel?.text = self.privacyOptions[0]
+                    self.viewModel.setPrivacy(type: PrivacyType.online(value: 0))
+                }
+            case let .topic(value):
+                if value != 0 {
+                    Account.shared.privacy.topic = 0
+                    self.tableView.cellForRow(at: IndexPath(row: 1, section: 1))?.detailTextLabel?.text = self.privacyOptions[0]
+                    self.viewModel.setPrivacy(type: PrivacyType.topic(value: 0))
+                }
+            default:
+                break
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "已登录用户", style: .default, handler: {_ in
+            switch type {
+            case let .online(value):
+                if value != 1 {
+                    Account.shared.privacy.online = 1
+                    self.tableView.cellForRow(at: IndexPath(row: 0, section: 1))?.detailTextLabel?.text = self.privacyOptions[1]
+                    self.viewModel.setPrivacy(type: PrivacyType.online(value: 1))
+                }
+            case let .topic(value):
+                if value != 1 {
+                    Account.shared.privacy.topic = 1
+                    self.tableView.cellForRow(at: IndexPath(row: 1, section: 1))?.detailTextLabel?.text = self.privacyOptions[1]
+                    self.viewModel.setPrivacy(type: PrivacyType.topic(value: 1))
+                }
+            default:
+                break
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "只有我自己", style: .default, handler: {_ in
+            switch type {
+            case let .online(value):
+                if value != 2 {
+                    Account.shared.privacy.online = 2
+                    self.tableView.cellForRow(at: IndexPath(row: 0, section: 1))?.detailTextLabel?.text = self.privacyOptions[2]
+                    self.viewModel.setPrivacy(type: PrivacyType.online(value: 2))
+                }
+            case let .topic(value):
+                if value != 2 {
+                    Account.shared.privacy.topic = 2
+                    self.tableView.cellForRow(at: IndexPath(row: 1, section: 1))?.detailTextLabel?.text = self.privacyOptions[2]
+                    self.viewModel.setPrivacy(type: PrivacyType.topic(value: 2))
+                }
+            default:
+                break
+            }
+        }))
+        
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 
     func openImagePicker() {
@@ -64,9 +137,23 @@ class SettingViewController: UITableViewController {
         present(actionSheet, animated: true, completion: nil)
     }
     
+    func searchSwitch(_ sender: UISwitch) {
+        Account.shared.privacy.search = sender.isOn
+        viewModel.setPrivacy(type: PrivacyType.search(on: sender.isOn))
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    // MARK: - Navigation
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.destination is AboutLicensesViewController, let indexPath = sender as? IndexPath {
+            let controller = segue.destination as! AboutLicensesViewController
+            controller.viewType = indexPath.row == 0 ? .licenses : .about
+        }
     }
 }
 
@@ -127,9 +214,21 @@ extension SettingViewController {
             }
             cell.accessoryView = imageView
             avatarView = imageView
-        }else if indexPath.section == 1 && indexPath.row == 2 {
-            let switchy = UISwitch()
-            cell.accessoryView = switchy
+        }else if indexPath.section == 1 {
+            switch indexPath.row {
+            case 0:
+                cell.detailTextLabel?.text = privacyOptions[Account.shared.privacy.online]
+            case 1:
+                cell.detailTextLabel?.text = privacyOptions[Account.shared.privacy.topic]
+            case 2:
+                let switchy = UISwitch()
+                switchy.isOn = Account.shared.privacy.search
+                switchy.addTarget(self, action: #selector(searchSwitch(_:)), for: .valueChanged)
+                cell.accessoryView = switchy
+            
+            default:
+                break
+            }
         }
     }
     
@@ -137,6 +236,10 @@ extension SettingViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 && indexPath.row == 0 {
             openImagePicker()
+        }else if indexPath.section == 1 && indexPath.row < 2 {
+            privacyAction(type: indexPath.row == 0 ? .online(value: Account.shared.privacy.online) : .topic(value: Account.shared.privacy.topic))
+        }else if indexPath.section == 2 {
+            performSegue(withIdentifier: AboutLicensesViewController.segueId, sender: indexPath)
         }
     }
 }

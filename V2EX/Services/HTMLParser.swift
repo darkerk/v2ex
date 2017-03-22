@@ -463,4 +463,23 @@ struct HTMLParser {
         }
         return nil
     }
+    
+    // MARK: - 隐私状态once值
+    func privacyStatus(html data: Data) -> (once: String, onlineValue: Int, topicValue: Int, searchValue: Bool)? {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return nil
+        }
+        let oncePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='inner']/form/table/tr[last()]//input[@name='once']")
+        let once = oncePath.first?["value"] ?? ""
+        
+        let onlinePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='inner']/form/table//select[@name='who_can_view_my_online_status']/option")
+        let topicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='inner']/form/table//select[@name='who_can_view_my_topics_list']/option")
+        let searchPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='inner']/form/table//select[@name='topics_indexable']/option")
+     
+        let currentOnlineValue = onlinePath.filter({$0["selected"] == "selected"}).first?["value"] ?? "0"
+        let currentTopicValue = topicPath.filter({$0["selected"] == "selected"}).first?["value"] ?? "0"
+        let currentSearchValue = searchPath.filter({$0["selected"] == "selected"}).first?["value"] ?? "0"
+        
+        return (once, Int(currentOnlineValue)!, Int(currentTopicValue)!, currentSearchValue == "1")
+    }
 }

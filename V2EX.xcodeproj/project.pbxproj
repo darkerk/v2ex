@@ -39,6 +39,10 @@
 		CA477A7F1E6660ED000FC1F5 /* DrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA477A7A1E6660ED000FC1F5 /* DrawerViewController.swift */; };
 		CA477A8A1E6660F4000FC1F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA477A831E6660F4000FC1F5 /* Assets.xcassets */; };
 		CA477A8F1E6661B2000FC1F5 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA477A8E1E6661B2000FC1F5 /* API.swift */; };
+		CA47EB361E82495900737EA5 /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA47EB351E82495900737EA5 /* Privacy.swift */; };
+		CA47EB3E1E8270ED00737EA5 /* LICENSES.html in Resources */ = {isa = PBXBuildFile; fileRef = CA47EB3D1E8270ED00737EA5 /* LICENSES.html */; };
+		CA47EB401E82716A00737EA5 /* ABOUT.html in Resources */ = {isa = PBXBuildFile; fileRef = CA47EB3F1E82716A00737EA5 /* ABOUT.html */; };
+		CA47EB421E82763200737EA5 /* AboutLicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA47EB411E82763200737EA5 /* AboutLicensesViewController.swift */; };
 		CA4BA8A01E712BB300FEE50E /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = CA4BA89F1E712BB300FEE50E /* style.css */; };
 		CA4BA8A41E712DDE00FEE50E /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4BA8A31E712DDE00FEE50E /* AppStyle.swift */; };
 		CA4BA8C61E713D7300FEE50E /* TopicDetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4BA8C51E713D7300FEE50E /* TopicDetailsHeaderView.swift */; };
@@ -110,6 +114,10 @@
 		CA477A831E6660F4000FC1F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CA477A891E6660F4000FC1F5 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CA477A8E1E6661B2000FC1F5 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		CA47EB351E82495900737EA5 /* Privacy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
+		CA47EB3D1E8270ED00737EA5 /* LICENSES.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = LICENSES.html; sourceTree = "<group>"; };
+		CA47EB3F1E82716A00737EA5 /* ABOUT.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ABOUT.html; sourceTree = "<group>"; };
+		CA47EB411E82763200737EA5 /* AboutLicensesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutLicensesViewController.swift; sourceTree = "<group>"; };
 		CA4BA89F1E712BB300FEE50E /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		CA4BA8A31E712DDE00FEE50E /* AppStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
 		CA4BA8C51E713D7300FEE50E /* TopicDetailsHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicDetailsHeaderView.swift; sourceTree = "<group>"; };
@@ -250,6 +258,7 @@
 				CA864BC91E77E39F00997D4E /* TimelineSection.swift */,
 				CA2EEC981E79388600F723E8 /* AllPostsSection.swift */,
 				CA55A3631E7F726A00A99D6C /* FavoriteItem.swift */,
+				CA47EB351E82495900737EA5 /* Privacy.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -282,6 +291,8 @@
 				CA477A891E6660F4000FC1F5 /* Info.plist */,
 				CA6605F31E764D6300BB19A7 /* mobile.css */,
 				CA4BA89F1E712BB300FEE50E /* style.css */,
+				CA47EB3D1E8270ED00737EA5 /* LICENSES.html */,
+				CA47EB3F1E82716A00737EA5 /* ABOUT.html */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -301,6 +312,7 @@
 				CA9DE88D1E7BCEC8003BA25F /* FavoriteViewController.swift */,
 				CA9DE88F1E7BCED5003BA25F /* SettingViewController.swift */,
 				CA0C0B191E7FC11400B68208 /* NodeTopicsViewController.swift */,
+				CA47EB411E82763200737EA5 /* AboutLicensesViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -423,7 +435,9 @@
 				CA6605F41E764D6300BB19A7 /* mobile.css in Resources */,
 				CA477A8A1E6660F4000FC1F5 /* Assets.xcassets in Resources */,
 				CA360ABA1E68228900DED2FD /* LaunchScreen.storyboard in Resources */,
+				CA47EB3E1E8270ED00737EA5 /* LICENSES.html in Resources */,
 				CA0C0B181E7FB90700B68208 /* Home.storyboard in Resources */,
+				CA47EB401E82716A00737EA5 /* ABOUT.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,8 +502,10 @@
 				CA864BB91E77983F00997D4E /* LoginButton.swift in Sources */,
 				CA505DA31E6D4440004F738C /* Account.swift in Sources */,
 				CA4BA8C61E713D7300FEE50E /* TopicDetailsHeaderView.swift in Sources */,
+				CA47EB421E82763200737EA5 /* AboutLicensesViewController.swift in Sources */,
 				CA2EEC8D1E78D69000F723E8 /* TimelineHeaderView.swift in Sources */,
 				CA2EEC911E78DBEC00F723E8 /* TimelineReplyViewCell.swift in Sources */,
+				CA47EB361E82495900737EA5 /* Privacy.swift in Sources */,
 				CA2DB6E41E6E92AA00E585B8 /* TopicDetailsViewController.swift in Sources */,
 				CA2EEC991E79388600F723E8 /* AllPostsSection.swift in Sources */,
 				CA2EEC971E7910A000F723E8 /* AllPostsViewModel.swift in Sources */,
