@@ -3,7 +3,7 @@
 //  V2EX
 //
 //  Created by wgh on 2017/3/7.
-//  Copyright © 2017年 yitop. All rights reserved.
+//  Copyright © 2017年 wgh. All rights reserved.
 //
 
 import UIKit
@@ -29,7 +29,7 @@ class TopicDetailsViewController: UITableViewController {
         super.viewDidLoad()
         
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 44
+        tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
         
         guard let viewModel = viewModel else { return }

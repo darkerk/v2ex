@@ -3,7 +3,7 @@
 //  V2EX
 //
 //  Created by wgh on 2017/3/6.
-//  Copyright © 2017年 yitop. All rights reserved.
+//  Copyright © 2017年 wgh. All rights reserved.
 //
 
 import Foundation
