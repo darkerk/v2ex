@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D9CF13EB5095AD5DABE6E48 /* Pods_V2EX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B07A087CCC03573424A85B18 /* Pods_V2EX.framework */; };
 		C6109F9FE20B54D835601FDA /* Pods_V2EX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA409175EAE8EE4DA205925E /* Pods_V2EX.framework */; };
+		CA01C5721E83BF8100DA8728 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01C5711E83BF8100DA8728 /* String.swift */; };
 		CA0C0B181E7FB90700B68208 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA0C0B171E7FB90700B68208 /* Home.storyboard */; };
 		CA0C0B1A1E7FC11400B68208 /* NodeTopicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0C0B191E7FC11400B68208 /* NodeTopicsViewController.swift */; };
 		CA0C0B1C1E7FC14000B68208 /* NodeTopicsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0C0B1B1E7FC14000B68208 /* NodeTopicsViewModel.swift */; };
@@ -43,6 +45,7 @@
 		CA47EB3E1E8270ED00737EA5 /* LICENSES.html in Resources */ = {isa = PBXBuildFile; fileRef = CA47EB3D1E8270ED00737EA5 /* LICENSES.html */; };
 		CA47EB401E82716A00737EA5 /* ABOUT.html in Resources */ = {isa = PBXBuildFile; fileRef = CA47EB3F1E82716A00737EA5 /* ABOUT.html */; };
 		CA47EB421E82763200737EA5 /* AboutLicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA47EB411E82763200737EA5 /* AboutLicensesViewController.swift */; };
+		CA4A4F3A1E84C3A30035E0A7 /* CommentTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4A4F391E84C3A30035E0A7 /* CommentTextView.swift */; };
 		CA4BA8A01E712BB300FEE50E /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = CA4BA89F1E712BB300FEE50E /* style.css */; };
 		CA4BA8A41E712DDE00FEE50E /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4BA8A31E712DDE00FEE50E /* AppStyle.swift */; };
 		CA4BA8C61E713D7300FEE50E /* TopicDetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4BA8C51E713D7300FEE50E /* TopicDetailsHeaderView.swift */; };
@@ -82,6 +85,7 @@
 		8E90EF33CA89918117D41AC4 /* Pods-V2EX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-V2EX.debug.xcconfig"; path = "Pods/Target Support Files/Pods-V2EX/Pods-V2EX.debug.xcconfig"; sourceTree = "<group>"; };
 		AA409175EAE8EE4DA205925E /* Pods_V2EX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_V2EX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B07A087CCC03573424A85B18 /* Pods_V2EX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_V2EX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA01C5711E83BF8100DA8728 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		CA0C0B171E7FB90700B68208 /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		CA0C0B191E7FC11400B68208 /* NodeTopicsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeTopicsViewController.swift; sourceTree = "<group>"; };
 		CA0C0B1B1E7FC14000B68208 /* NodeTopicsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeTopicsViewModel.swift; sourceTree = "<group>"; };
@@ -118,6 +122,7 @@
 		CA47EB3D1E8270ED00737EA5 /* LICENSES.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = LICENSES.html; sourceTree = "<group>"; };
 		CA47EB3F1E82716A00737EA5 /* ABOUT.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ABOUT.html; sourceTree = "<group>"; };
 		CA47EB411E82763200737EA5 /* AboutLicensesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutLicensesViewController.swift; sourceTree = "<group>"; };
+		CA4A4F391E84C3A30035E0A7 /* CommentTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentTextView.swift; sourceTree = "<group>"; };
 		CA4BA89F1E712BB300FEE50E /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		CA4BA8A31E712DDE00FEE50E /* AppStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
 		CA4BA8C51E713D7300FEE50E /* TopicDetailsHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicDetailsHeaderView.swift; sourceTree = "<group>"; };
@@ -159,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C6109F9FE20B54D835601FDA /* Pods_V2EX.framework in Frameworks */,
+				6D9CF13EB5095AD5DABE6E48 /* Pods_V2EX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +246,7 @@
 				CA360AB51E67FFD400DED2FD /* ReusableView.swift */,
 				CA2EEC9C1E7942BE00F723E8 /* InfiniteScrollView.swift */,
 				CA58105C1E80F78C0003B7C2 /* UIImage.swift */,
+				CA01C5711E83BF8100DA8728 /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -325,6 +332,7 @@
 				CA864BBE1E779F2A00997D4E /* ProfileHeaderView.swift */,
 				CA4BA8C51E713D7300FEE50E /* TopicDetailsHeaderView.swift */,
 				CA2EEC8C1E78D69000F723E8 /* TimelineHeaderView.swift */,
+				CA4A4F391E84C3A30035E0A7 /* CommentTextView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -515,6 +523,7 @@
 				CA864BB41E77864D00997D4E /* HUD.swift in Sources */,
 				CA90CD911E66AD7400CD0B98 /* Topic.swift in Sources */,
 				CA2EEC9D1E7942BE00F723E8 /* InfiniteScrollView.swift in Sources */,
+				CA4A4F3A1E84C3A30035E0A7 /* CommentTextView.swift in Sources */,
 				CA2EEC951E790B6700F723E8 /* AllPostsViewController.swift in Sources */,
 				CA2EEC8F1E78DBD000F723E8 /* TimelineTopicViewCell.swift in Sources */,
 				CA0C0B1E1E7FC58800B68208 /* NodeTopicsViewCell.swift in Sources */,
@@ -540,6 +549,7 @@
 				CA864BC51E77DAA600997D4E /* Reply.swift in Sources */,
 				CA9DE8861E7B8674003BA25F /* MessageViewController.swift in Sources */,
 				CA477A781E6660DD000FC1F5 /* AppDelegate.swift in Sources */,
+				CA01C5721E83BF8100DA8728 /* String.swift in Sources */,
 				CA90CD8D1E66717500CD0B98 /* HTMLParser.swift in Sources */,
 				CA58105F1E80FEC70003B7C2 /* SettingViewModel.swift in Sources */,
 				CA864BBF1E779F2A00997D4E /* ProfileHeaderView.swift in Sources */,

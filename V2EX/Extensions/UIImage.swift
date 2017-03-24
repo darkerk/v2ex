@@ -26,4 +26,27 @@ extension UIImage {
         }
         return self
     }
+    
+    convenience init(color: UIColor, size: CGSize) {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        
+        color.setFill()
+        UIBezierPath(rect: CGRect(origin: CGPoint.zero, size: size)).fill()
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+ 
+        self.init(cgImage: image!.cgImage!)
+    }
+    
+    class func imageWithColor(_ color: UIColor, size: CGSize) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        
+        color.setFill()
+        UIBezierPath(rect: CGRect(origin: CGPoint.zero, size: size)).fill()
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
 }

@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import Photos
+import SafariServices
 
 struct AppSetting {
     static var isCameraEnabled: Bool {
@@ -19,5 +20,10 @@ struct AppSetting {
     static var isAlbumEnabled: Bool {
         let status = PHPhotoLibrary.authorizationStatus()
         return status != .restricted && status != .denied
+    }
+    
+    static func openBrowser(from viewController: UIViewController, URL: URL) {
+        let browser = SFSafariViewController(url: URL)
+        viewController.present(browser, animated: true, completion: nil)
     }
 }

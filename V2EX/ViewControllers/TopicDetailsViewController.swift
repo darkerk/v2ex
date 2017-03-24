@@ -13,20 +13,21 @@ import RxDataSources
 
 class TopicDetailsViewController: UITableViewController {
     @IBOutlet weak var headerView: TopicDetailsHeaderView!
-
+    
     var viewModel: TopicDetailsViewModel?
     fileprivate lazy var dataSource = RxTableViewSectionedAnimatedDataSource<TopicDetailsSection>()
     fileprivate let disposeBag = DisposeBag()
     
     class func show(from navigationController: UINavigationController, topic: Topic) {
         let controller = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: TopicDetailsViewController.segueId) as! TopicDetailsViewController
-
+        
         controller.viewModel = TopicDetailsViewModel(topic: topic)
         navigationController.pushViewController(controller, animated: true)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
@@ -36,7 +37,7 @@ class TopicDetailsViewController: UITableViewController {
         
         headerView.topic = viewModel.topic
         
-        dataSource.configureCell = {(ds, tv, indexPath, item) in
+        dataSource.configureCell = {[weak navigationController] (ds, tv, indexPath, item) in
             switch ds[indexPath.section].type {
             case .more:
                 let cell: LoadMoreCommentCell = tv.dequeueReusableCell()
@@ -44,6 +45,19 @@ class TopicDetailsViewController: UITableViewController {
             case .data:
                 let cell: TopicDetailsCommentCell = tv.dequeueReusableCell()
                 cell.comment = item
+                cell.linkTap = {(linkType) in
+                    guard let nav = navigationController else {
+                        return
+                    }
+                    switch linkType {
+                    case let .user(info):
+                        TimelineViewController.show(from: nav, user: info)
+                    case let .image(src):
+                        print(src)
+                    case let .web(url):
+                        AppSetting.openBrowser(from: nav, URL: url)
+                    }
+                }
                 return cell
             }
         }
@@ -54,7 +68,7 @@ class TopicDetailsViewController: UITableViewController {
             }
             return nil
         }
-      
+        
         viewModel.updateTopic.asObservable().bindTo(headerView.rx.topic).addDisposableTo(disposeBag)
         viewModel.content.asObservable().bindTo(headerView.rx.htmlString).addDisposableTo(disposeBag)
         viewModel.sections.asObservable().bindTo(tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
@@ -65,9 +79,9 @@ class TopicDetailsViewController: UITableViewController {
                 self.tableView.endUpdates()
             }
         }).addDisposableTo(disposeBag)
-
+        
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -75,9 +89,11 @@ class TopicDetailsViewController: UITableViewController {
 }
 
 extension TopicDetailsViewController {
+    
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return section == 0 ? 40 : 0
     }
+    
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if section == 0 && view is UITableViewHeaderFooterView {
             let header = view as! UITableViewHeaderFooterView
