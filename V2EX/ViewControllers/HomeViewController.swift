@@ -71,8 +71,11 @@ class HomeViewController: UITableViewController {
             controller.preferredContentSize = CGSize(width: 150, height: UIScreen.main.bounds.height * 0.65)
             controller.popoverPresentationController?.delegate = self
             controller.viewModel.nodeItems = viewModel.defaultNodes
-            controller.selectedItem.asObservable().subscribe(onNext: { node in
+            controller.selectedItem.asObservable().subscribe(onNext: {[weak self] node in
                 if let node = node {
+                    guard let `self` = self else {
+                        return
+                    }
                     if self.navigationItem.rightBarButtonItem?.title != node.name {
                         self.navigationItem.rightBarButtonItem?.title = node.name
                         let defaultNodes = self.viewModel.defaultNodes.value.map({item -> Node in

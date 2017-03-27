@@ -41,11 +41,11 @@ class LoginViewController: UIViewController {
         
         loginViewModel.isloading.bindTo(PKHUD.sharedHUD.rx.isAnimating).addDisposableTo(disposeBag)
         
-        loginViewModel.response.subscribe(onNext: {response in
+        loginViewModel.response.subscribe(onNext: {[weak self] response in
             if let info = HTMLParser.shared.userInfo(html: response.data) {
                 Account.shared.user.value = User(name: info.username, href: "/member/" + info.username, src: info.avatar)
                 Account.shared.isLoggedIn.value = true
-                self.dismiss(animated: true, completion: nil)
+                self?.dismiss(animated: true, completion: nil)
             }else {
                 HUD.showText("返回数据出错！")
             }

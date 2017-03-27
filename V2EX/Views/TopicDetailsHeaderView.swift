@@ -20,6 +20,8 @@ class TopicDetailsHeaderView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var contentView: UIView!
     
+    var linkTap: ((URL) -> Void)?
+    
     lazy var webView = WKWebView()
     
     var heightUpdate = Variable<Bool>(false)
@@ -62,6 +64,7 @@ class TopicDetailsHeaderView: UIView {
         
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.scrollView.isScrollEnabled = false
+        webView.navigationDelegate = self
         contentView.addSubview(webView)
         
         webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
@@ -104,6 +107,22 @@ class TopicDetailsHeaderView: UIView {
             }
         }
     }
+}
+
+extension TopicDetailsHeaderView: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if let url = navigationAction.request.url {
+            if url.absoluteString.hasPrefix("https://") || url.absoluteString.hasPrefix("http://") {
+                if navigationAction.navigationType == .linkActivated {
+                    linkTap?(url)
+                    decisionHandler(.cancel)
+                    return
+                }
+            }
+        }
+        decisionHandler(.allow)
+    }
+    
 }
 
 extension Reactive where Base: TopicDetailsHeaderView {

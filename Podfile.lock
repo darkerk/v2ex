@@ -16,6 +16,7 @@ PODS:
     - RxCocoa (~> 3.0)
     - RxSwift (~> 3.0)
   - RxSwift (3.3.0)
+  - SKPhotoBrowser (4.0.1)
 
 DEPENDENCIES:
   - Kanna (~> 2.1.1)
@@ -24,6 +25,7 @@ DEPENDENCIES:
   - PKHUD (~> 4.2.0)
   - RxCocoa (~> 3.2.0)
   - RxDataSources (~> 1.0.3)
+  - SKPhotoBrowser (~> 4.0.1)
 
 SPEC CHECKSUMS:
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
@@ -35,7 +37,8 @@ SPEC CHECKSUMS:
   RxCocoa: ccdf43101a70407097a29082f648ba1676075b30
   RxDataSources: a021a0e944ba5f7991259829d973afdbfa719c0b
   RxSwift: 7d42e8bc91faa4c218292400646c482f3402774a
+  SKPhotoBrowser: 3a7c6fc02aa1620ab17253a47a49fafda46536e8
 
-PODFILE CHECKSUM: 7df7228de053274cddd58de016d13e4f5103a54c
+PODFILE CHECKSUM: 702d936518404e50aec23f82747162838ceea5a3
 
 COCOAPODS: 1.2.0

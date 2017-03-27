@@ -10,6 +10,7 @@
 		6D9CF13EB5095AD5DABE6E48 /* Pods_V2EX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B07A087CCC03573424A85B18 /* Pods_V2EX.framework */; };
 		C6109F9FE20B54D835601FDA /* Pods_V2EX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA409175EAE8EE4DA205925E /* Pods_V2EX.framework */; };
 		CA01C5721E83BF8100DA8728 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01C5711E83BF8100DA8728 /* String.swift */; };
+		CA0A6B051E88AE7F00798F88 /* GrowingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0A6B041E88AE7F00798F88 /* GrowingTextView.swift */; };
 		CA0C0B181E7FB90700B68208 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA0C0B171E7FB90700B68208 /* Home.storyboard */; };
 		CA0C0B1A1E7FC11400B68208 /* NodeTopicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0C0B191E7FC11400B68208 /* NodeTopicsViewController.swift */; };
 		CA0C0B1C1E7FC14000B68208 /* NodeTopicsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0C0B1B1E7FC14000B68208 /* NodeTopicsViewModel.swift */; };
@@ -78,6 +79,7 @@
 		CA9DE88E1E7BCEC8003BA25F /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9DE88D1E7BCEC8003BA25F /* FavoriteViewController.swift */; };
 		CA9DE8901E7BCED5003BA25F /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9DE88F1E7BCED5003BA25F /* SettingViewController.swift */; };
 		CA9DE8921E7BD51A003BA25F /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9DE8911E7BD51A003BA25F /* FavoriteViewModel.swift */; };
+		CAFB87FA1E851EB2001885DA /* InputCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAFB87F91E851EB2001885DA /* InputCommentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,6 +88,7 @@
 		AA409175EAE8EE4DA205925E /* Pods_V2EX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_V2EX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B07A087CCC03573424A85B18 /* Pods_V2EX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_V2EX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA01C5711E83BF8100DA8728 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		CA0A6B041E88AE7F00798F88 /* GrowingTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GrowingTextView.swift; sourceTree = "<group>"; };
 		CA0C0B171E7FB90700B68208 /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		CA0C0B191E7FC11400B68208 /* NodeTopicsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeTopicsViewController.swift; sourceTree = "<group>"; };
 		CA0C0B1B1E7FC14000B68208 /* NodeTopicsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeTopicsViewModel.swift; sourceTree = "<group>"; };
@@ -156,6 +159,7 @@
 		CA9DE88D1E7BCEC8003BA25F /* FavoriteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
 		CA9DE88F1E7BCED5003BA25F /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		CA9DE8911E7BD51A003BA25F /* FavoriteViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
+		CAFB87F91E851EB2001885DA /* InputCommentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputCommentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -311,8 +315,8 @@
 				CA864BBA1E779DCD00997D4E /* ProfileViewController.swift */,
 				CA353EA21E6963C20006D37B /* LoginViewController.swift */,
 				CA360AB31E67FFA600DED2FD /* HomeViewController.swift */,
-				CA353E9E1E6953AF0006D37B /* NodesViewController.swift */,
 				CA2DB6E31E6E92AA00E585B8 /* TopicDetailsViewController.swift */,
+				CA353E9E1E6953AF0006D37B /* NodesViewController.swift */,
 				CA864BC61E77DCBE00997D4E /* TimelineViewController.swift */,
 				CA2EEC941E790B6700F723E8 /* AllPostsViewController.swift */,
 				CA9DE8851E7B8674003BA25F /* MessageViewController.swift */,
@@ -333,6 +337,8 @@
 				CA4BA8C51E713D7300FEE50E /* TopicDetailsHeaderView.swift */,
 				CA2EEC8C1E78D69000F723E8 /* TimelineHeaderView.swift */,
 				CA4A4F391E84C3A30035E0A7 /* CommentTextView.swift */,
+				CA0A6B041E88AE7F00798F88 /* GrowingTextView.swift */,
+				CAFB87F91E851EB2001885DA /* InputCommentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -359,12 +365,12 @@
 			isa = PBXGroup;
 			children = (
 				CA477A6D1E665F68000FC1F5 /* App */,
+				CA477A761E665F68000FC1F5 /* Views */,
+				CA477A6E1E665F68000FC1F5 /* Cells */,
+				CA477A701E665F68000FC1F5 /* Models */,
+				CA353E991E6947550006D37B /* ViewModel */,
 				CA477A721E665F68000FC1F5 /* Services */,
 				CA477A711E665F68000FC1F5 /* Networking */,
-				CA477A701E665F68000FC1F5 /* Models */,
-				CA477A6E1E665F68000FC1F5 /* Cells */,
-				CA477A761E665F68000FC1F5 /* Views */,
-				CA353E991E6947550006D37B /* ViewModel */,
 				CA477A6F1E665F68000FC1F5 /* Extensions */,
 				CA477A751E665F68000FC1F5 /* ViewControllers */,
 				CA477A731E665F68000FC1F5 /* Supporting Files */,
@@ -549,6 +555,7 @@
 				CA864BC51E77DAA600997D4E /* Reply.swift in Sources */,
 				CA9DE8861E7B8674003BA25F /* MessageViewController.swift in Sources */,
 				CA477A781E6660DD000FC1F5 /* AppDelegate.swift in Sources */,
+				CAFB87FA1E851EB2001885DA /* InputCommentView.swift in Sources */,
 				CA01C5721E83BF8100DA8728 /* String.swift in Sources */,
 				CA90CD8D1E66717500CD0B98 /* HTMLParser.swift in Sources */,
 				CA58105F1E80FEC70003B7C2 /* SettingViewModel.swift in Sources */,
@@ -560,6 +567,7 @@
 				CA360AB41E67FFA600DED2FD /* HomeViewController.swift in Sources */,
 				CA353E9F1E6953AF0006D37B /* NodesViewController.swift in Sources */,
 				CA505D9F1E6D2C17004F738C /* ActivityIndicator.swift in Sources */,
+				CA0A6B051E88AE7F00798F88 /* GrowingTextView.swift in Sources */,
 				CA4BA8A41E712DDE00FEE50E /* AppStyle.swift in Sources */,
 				CA353EA51E696D9F0006D37B /* LoginViewModel.swift in Sources */,
 				CA2DB6E61E6E95D200E585B8 /* TopicDetailsSection.swift in Sources */,

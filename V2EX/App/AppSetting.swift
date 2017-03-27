@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import Photos
 import SafariServices
+import SKPhotoBrowser
 
 struct AppSetting {
     static var isCameraEnabled: Bool {
@@ -22,8 +23,17 @@ struct AppSetting {
         return status != .restricted && status != .denied
     }
     
-    static func openBrowser(from viewController: UIViewController, URL: URL) {
+    static func openWebBrowser(from viewController: UIViewController, URL: URL) {
         let browser = SFSafariViewController(url: URL)
+        viewController.present(browser, animated: true, completion: nil)
+    }
+    
+    static func openPhotoBrowser(from viewController: UIViewController, src: String) {
+        let photo = SKPhoto.photoWithImageURL(src)
+        photo.shouldCachePhotoURLImage = true
+        
+        let browser = SKPhotoBrowser(photos: [photo])
+        browser.initializePageIndex(0)
         viewController.present(browser, animated: true, completion: nil)
     }
 }

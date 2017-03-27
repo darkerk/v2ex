@@ -73,7 +73,10 @@ class DrawerViewController: UIViewController {
         
         // Do any additional setup after loading the view.
         view.addGestureRecognizer(panGesture)
-        panGesture.rx.event.subscribe(onNext: {sender in
+        panGesture.rx.event.subscribe(onNext: {[weak self ]sender in
+            guard let `self` = self else {
+                return
+            }
             guard let leftViewController = self.leftViewController, let centerViewController = self.centerViewController else {
                 return
             }
