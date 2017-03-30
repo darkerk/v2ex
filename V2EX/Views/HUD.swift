@@ -34,7 +34,7 @@ extension HUD {
     static func show() {
         HUD.dimsBackground = true
         PKHUD.sharedHUD.contentView = HUDLoadingView(image: UIImage(named: "hud_progress"))
-        PKHUD.sharedHUD.show()
+        PKHUD.sharedHUD.show(onView: UIApplication.shared.windows.last)
     }
     
     static func showSuccess(_ text: String? = nil) {

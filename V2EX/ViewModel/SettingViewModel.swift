@@ -14,11 +14,11 @@ class SettingViewModel {
     private let disposeBag = DisposeBag()
 
     func uploadAvatar(imageData: Data, completion: ((_ newURLString: String?) -> Void)? = nil) {
-        API.provider.request(.uploadOnce()).flatMap { response -> Observable<Response> in
-            if let value = HTMLParser.shared.uploadOnce(html: response.data) {
-                return API.provider.request(API.updateAvatar(imageData: imageData, once: value))
+        API.provider.request(.once()).flatMap { response -> Observable<Response> in
+            if let once = HTMLParser.shared.once(html: response.data) {
+                return API.provider.request(API.updateAvatar(imageData: imageData, once: once))
             }else {
-                return Observable.just(response)
+                return Observable.error(NetError.message(text: "获取once失败"))
             }
             }.subscribe(onNext: { response in
                 if let newURLString = HTMLParser.shared.uploadAvatar(html: response.data) {

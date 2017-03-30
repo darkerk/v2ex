@@ -16,10 +16,10 @@ struct Topic {
     var lastReplyTime: String = ""
     var lastReplyUser: User?
     var replyCount: String = "0"
-    
     var creatTime: String = ""
-
-    init(title: String = "", href: String = "", owner: User? = nil, node: Node? = nil, lastReplyTime: String = "", lastReplyUser: User? = nil, replyCount: String = "0", creatTime: String = "") {
+    var token: String = ""
+    
+    init(title: String = "", href: String = "", owner: User? = nil, node: Node? = nil, lastReplyTime: String = "", lastReplyUser: User? = nil, replyCount: String = "0", creatTime: String = "", token: String = "") {
         self.title = title
         self.href = href
         self.owner = owner
@@ -28,5 +28,15 @@ struct Topic {
         self.lastReplyUser = lastReplyUser
         self.replyCount = replyCount
         self.creatTime = creatTime
+        self.token = token
+    }
+}
+
+extension Topic {
+    var id: String {
+        if href.contains("#") {
+            return href.components(separatedBy: "#").first?.replacingOccurrences(of: "/t/", with: "") ?? ""
+        }
+        return href.replacingOccurrences(of: "/t/", with: "")
     }
 }

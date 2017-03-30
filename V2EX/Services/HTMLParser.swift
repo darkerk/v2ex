@@ -51,6 +51,19 @@ struct HTMLParser {
         return nodes
     }
     
+    // MARK: - 获取once
+    func once(html data: Data) -> String? {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return nil
+        }
+        if let onceElement = html.css("input").first(where: {$0["name"] == "once"}) {
+            if let value = onceElement["value"] {
+                return value
+            }
+        }
+        return nil
+    }
+    
     // MARK: - 登录的用户名key，密码key，once值
     func keyAndOnce(html data: Data) -> (usernameKey: String, passwordKey: String, once: String)? {
         guard let html = HTML(html: data, encoding: .utf8) else {
@@ -137,10 +150,13 @@ struct HTMLParser {
     }
     
     // MARK: - 话题详情
-    func topicDetails(html data: Data) -> (creatTime: String, currentPage: Int, content: String, countTime: String, comments: [Comment])? {
+    func topicDetails(html data: Data) -> (token: String, creatTime: String, currentPage: Int, content: String, countTime: String, comments: [Comment])? {
         guard let html = HTML(html: data, encoding: .utf8) else {
             return nil
         }
+        
+        let tokenPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='inner']/div[@class='fr']/a[@class='op'][1]")
+        let token = tokenPath.first?["href"]?.components(separatedBy: "?t=").last ?? ""
         
         let creatTimePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='header']/small[@class='gray']")
         let creatTimeString = creatTimePath.first?.content ?? ""
@@ -171,11 +187,13 @@ struct HTMLParser {
                 let number = e.xpath("./table/tr/td[3]/div[@class='fr']/span[@class='no']").first?.content ?? "0"
                 let user = User(name: userName, href: userHref, src: src)
                 
-                return Comment(content: text, time: time, thanks: thanks, number: number, user: user)
+                let replyId = e["id"]?.replacingOccurrences(of: "r_", with: "") ?? ""
+
+                return Comment(id: replyId, content: text, time: time, thanks: thanks, number: number, user: user)
             }
             return nil
         })
-        return (creatTime, currentPage, content, countTime, comments)
+        return (token, creatTime, currentPage, content, countTime, comments)
     }
     
     // MARK: - 个人的主题和回复
@@ -475,7 +493,7 @@ struct HTMLParser {
         let onlinePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='inner']/form/table//select[@name='who_can_view_my_online_status']/option")
         let topicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='inner']/form/table//select[@name='who_can_view_my_topics_list']/option")
         let searchPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='inner']/form/table//select[@name='topics_indexable']/option")
-     
+        
         let currentOnlineValue = onlinePath.filter({$0["selected"] == "selected"}).first?["value"] ?? "0"
         let currentTopicValue = topicPath.filter({$0["selected"] == "selected"}).first?["value"] ?? "0"
         let currentSearchValue = searchPath.filter({$0["selected"] == "selected"}).first?["value"] ?? "0"

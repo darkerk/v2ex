@@ -10,14 +10,26 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import SKPhotoBrowser
+import PKHUD
+
+protocol TopicDetailsViewControllerDelegate: class {
+    func topicDetailsViewController(viewcontroller: TopicDetailsViewController, ignoreTopic topicId: String?)
+}
 
 class TopicDetailsViewController: UITableViewController {
     @IBOutlet weak var headerView: TopicDetailsHeaderView!
     
     var viewModel: TopicDetailsViewModel?
+    weak var delegate: TopicDetailsViewControllerDelegate?
+    
     fileprivate lazy var dataSource = RxTableViewSectionedAnimatedDataSource<TopicDetailsSection>()
     fileprivate let disposeBag = DisposeBag()
     
+    fileprivate lazy var inputbar: InputCommentBar = InputCommentBar()
+    fileprivate var lastSelectIndexPath: IndexPath?
+    fileprivate var canCancelFirstResponder = true
+
     class func show(from navigationController: UINavigationController, topic: Topic) {
         let controller = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: TopicDetailsViewController.segueId) as! TopicDetailsViewController
         
@@ -28,14 +40,29 @@ class TopicDetailsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(moreAction(_:)))
         
+        tableView.keyboardDismissMode = .onDrag
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
         
+        inputbar.sizeToFit()
+        
         guard let viewModel = viewModel else { return }
         
         headerView.topic = viewModel.topic
+        headerView.linkTap = {[weak navigationController] url in
+            guard let nav = navigationController else { return }
+            AppSetting.openWebBrowser(from: nav, URL: url)
+        }
+        
+        headerView.heightUpdate.asObservable().subscribe(onNext: {[weak self] isUpdate in
+            if let `self` = self, isUpdate {
+                self.tableView.beginUpdates()
+                self.tableView.endUpdates()
+            }
+        }).addDisposableTo(disposeBag)
         
         dataSource.configureCell = {[weak navigationController] (ds, tv, indexPath, item) in
             switch ds[indexPath.section].type {
@@ -45,7 +72,7 @@ class TopicDetailsViewController: UITableViewController {
             case .data:
                 let cell: TopicDetailsCommentCell = tv.dequeueReusableCell()
                 cell.comment = item
-                cell.linkTap = {(linkType) in
+                cell.linkTap = {linkType in
                     guard let nav = navigationController else {
                         return
                     }
@@ -53,33 +80,128 @@ class TopicDetailsViewController: UITableViewController {
                     case let .user(info):
                         TimelineViewController.show(from: nav, user: info)
                     case let .image(src):
-                        print(src)
+                        AppSetting.openPhotoBrowser(from: nav, src: src)
                     case let .web(url):
-                        AppSetting.openBrowser(from: nav, URL: url)
+                        AppSetting.openWebBrowser(from: nav, URL: url)
                     }
                 }
                 return cell
             }
         }
         
-        dataSource.titleForHeaderInSection = {[weak viewModel] (ds, sectionIndex) in
-            if sectionIndex == 0, let viewModel = viewModel {
-                return ds[sectionIndex].comments.isEmpty ? "目前尚无回复" : viewModel.countTime.value
+        dataSource.titleForHeaderInSection = {[weak viewModel] (ds, section) in
+            if section == 0, let viewModel = viewModel {
+                return ds[section].comments.isEmpty ? "目前尚无回复" : viewModel.countTime.value
             }
             return nil
+        }
+        
+        dataSource.canEditRowAtIndexPath = {_ in
+            return true
         }
         
         viewModel.updateTopic.asObservable().bindTo(headerView.rx.topic).addDisposableTo(disposeBag)
         viewModel.content.asObservable().bindTo(headerView.rx.htmlString).addDisposableTo(disposeBag)
         viewModel.sections.asObservable().bindTo(tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
         
-        headerView.heightUpdate.asObservable().subscribe(onNext: {[weak self] isUpdate in
-            if let `self` = self, isUpdate {
-                self.tableView.beginUpdates()
-                self.tableView.endUpdates()
-            }
+        inputbar.rx.sendEvent.subscribe(onNext: {[weak viewModel, weak inputbar, weak self] (text, atName) in
+            HUD.show()
+            viewModel?.sendComment(content: text, atName: atName, completion: {error in
+                if let error = error {
+                    HUD.showText(error.message)
+                }else {
+                    HUD.hide()
+                    self?.lastSelectIndexPath = nil
+                    inputbar?.endEditing(isClear: true)
+                }
+            })
         }).addDisposableTo(disposeBag)
         
+        /// 处理当键盘
+        inputbar.shouldBeginEditing = {[weak self] isEditing in
+            self?.headerView.webView.isUserInteractionEnabled = !isEditing
+            self?.canCancelFirstResponder = true
+        }
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(headerTap(_:)))
+        tap.delegate = self
+        headerView.addGestureRecognizer(tap)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        canCancelFirstResponder = true
+        inputbar.endEditing()
+    }
+    
+    func headerTap(_ sender: Any) {
+        if inputbar.isFirstResponder {
+            canCancelFirstResponder = true
+            inputbar.endEditing()
+        }else {
+            canCancelFirstResponder = false
+            becomeFirstResponder()
+        }
+    }
+    
+    func moreAction(_ sender: Any) {
+        inputbar.endEditing()
+        
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "收藏", style: .default, handler: {_ in
+            
+        }))
+        alert.addAction(UIAlertAction(title: "感谢", style: .default, handler: {_ in
+            self.sendThank(type: .topic(id: self.viewModel?.topic.id ?? ""))
+        }))
+        alert.addAction(UIAlertAction(title: "忽略主题", style: .default, handler: {_ in
+            self.sendIgnore()
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func sendThank(type: ThankType, username: String? = nil) {
+        var tips = "确定要发送感谢？"
+        switch type {
+        case .topic(_):
+            tips = "确定要向本主题创建者发送感谢？"
+        case .reply(_):
+            if let username = username {
+                tips = "确定要向 \(username) 发送感谢？"
+            }
+        }
+        let alert = UIAlertController(title: tips, message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "好", style: .default, handler: {_ in
+            self.viewModel?.sendThank(type: type)
+            HUD.showText("感谢已发送！")
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func sendIgnore() {
+        let alert = UIAlertController(title: "确定不想再看到这个主题？", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "好", style: .default, handler: {_ in
+            self.viewModel?.sendIgnore()
+            _ = self.navigationController?.popViewController(animated: true)
+            self.delegate?.topicDetailsViewController(viewcontroller: self, ignoreTopic: self.viewModel?.topic.id)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    override var inputAccessoryView: UIView? {
+        return inputbar
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    override var canResignFirstResponder: Bool {
+        return canCancelFirstResponder
     }
     
     override func didReceiveMemoryWarning() {
@@ -88,18 +210,33 @@ class TopicDetailsViewController: UITableViewController {
     }
 }
 
+extension TopicDetailsViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+}
+
 extension TopicDetailsViewController {
-    
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return section == 0 ? 40 : 0
     }
-    
+
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if section == 0 && view is UITableViewHeaderFooterView {
             let header = view as! UITableViewHeaderFooterView
             header.textLabel?.font = UIFont.systemFont(ofSize: 13)
             header.textLabel?.textColor = #colorLiteral(red: 0.2509803922, green: 0.2509803922, blue: 0.2509803922, alpha: 1)
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let thankAction = UITableViewRowAction(style: .default, title: "感谢") { (action, index) in
+            tableView.setEditing(false, animated: true)
+            let item = self.dataSource[index.section].comments[index.row]
+            self.sendThank(type: .reply(id: item.id), username: item.user?.name)
+        }
+        thankAction.backgroundColor = #colorLiteral(red: 0.7401831746, green: 0.09487184137, blue: 0.09507951885, alpha: 1)
+        return [thankAction]
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -111,7 +248,16 @@ extension TopicDetailsViewController {
             }
             viewModel?.fetchMoreComments()
         case .data:
-            print("点击评论....")
+            if lastSelectIndexPath != indexPath {
+                inputbar.clear()
+            }
+            lastSelectIndexPath = indexPath
+            let item = dataSource[indexPath.section].comments[indexPath.row]
+            inputbar.atName = item.user?.name
+            
+            canCancelFirstResponder = true
+            becomeFirstResponder()
+            inputbar.startEditing()
         }
     }
 }

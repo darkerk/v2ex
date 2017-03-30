@@ -72,7 +72,6 @@ class DrawerViewController: UIViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        view.addGestureRecognizer(panGesture)
         panGesture.rx.event.subscribe(onNext: {[weak self ]sender in
             guard let `self` = self else {
                 return
@@ -178,7 +177,15 @@ class DrawerViewController: UIViewController {
 
 extension DrawerViewController: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        panGesture.isEnabled = navigationController.viewControllers.count == 1
+        if navigationController.viewControllers.count == 1 {
+            if view.gestureRecognizers?.contains(panGesture) != true {
+                view.addGestureRecognizer(panGesture)
+            }
+        }else {
+            if view.gestureRecognizers?.contains(panGesture) == true {
+                view.removeGestureRecognizer(panGesture)
+            }
+        }
     }
 }
 

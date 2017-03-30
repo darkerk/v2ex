@@ -9,9 +9,22 @@
 import UIKit
 import Kingfisher
 import Kanna
+import SKPhotoBrowser
 
 class ImageAttachment: NSTextAttachment {
     var src: String?
+    var imageSize = CGSize(width: 100, height: 100)
+    let maxHeight: CGFloat = 100.0
+    
+    override func attachmentBounds(for textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
+        
+        if imageSize.height > maxHeight {
+            let factor = maxHeight / imageSize.height
+            return CGRect(origin: CGPoint.zero, size:CGSize(width: imageSize.width * factor, height: maxHeight))
+        }else {
+            return CGRect(origin: CGPoint.zero, size:imageSize)
+        }
+    }
 }
 
 class TopicDetailsCommentCell: UITableViewCell {
@@ -20,7 +33,7 @@ class TopicDetailsCommentCell: UITableViewCell {
     @IBOutlet weak var textView: CommentTextView!
     @IBOutlet weak var floorLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
-
+    
     enum LinkType {
         case user(info: User)
         case image(src: String)
@@ -103,19 +116,21 @@ class TopicDetailsCommentCell: UITableViewCell {
                     self.attributedText = attributedString
                     self.isInitialized = true
                     imgsrcs.forEach({ item in
+                        
                         let url = URL(string: item.src)!
-                        let imgSize = CGSize(width: 100, height: 100)
+                        var imgSize = CGSize(width: 100, height: 100)
                         var image: UIImage?
                         var isImageCached = false
                         if let cacheImage = ImageCache.default.retrieveImageInDiskCache(forKey: item.id) {
                             isImageCached = true
                             image = cacheImage
+                            imgSize = cacheImage.size
                         }else {
                             image = UIImage(color: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1), size: imgSize)
                         }
                         
                         let attachment = ImageAttachment()
-                        attachment.bounds = CGRect(x: 0, y: 0, width: imgSize.width, height: imgSize.height)
+                        attachment.imageSize = imgSize
                         attachment.image = image
                         attachment.src = item.src
                         
@@ -128,16 +143,17 @@ class TopicDetailsCommentCell: UITableViewCell {
                                 ImageDownloader.default.downloadImage(with: url, completionHandler: { (newImage, _, _, _) in
                                     if let newImage = newImage {
                                         let smallImage = newImage.thumbnailForMaxPixelSize(200)
+                                        attachment.imageSize = smallImage.size
                                         attachment.image = smallImage
-                                        self.textView.textContainer.layoutManager?.invalidateDisplay(forCharacterRange: nsRange)
+                                        self.textView.textContainer.layoutManager?.invalidateLayout(forCharacterRange: nsRange, actualCharacterRange: nil)
                                         ImageCache.default.store(smallImage, forKey: item.id)
+                                        SKCache.sharedCache.setImage(newImage, forKey: item.src)
                                     }
                                 })
                             }
                         }
                     })
                     textView.attributedText = attributedString
-                    layoutIfNeeded()
                 } catch {
                     textView.text = model.content
                 }
@@ -184,8 +200,11 @@ extension TopicDetailsCommentCell: UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-        if let src = (textAttachment as? ImageAttachment)?.src {
-            linkTap?(LinkType.image(src: src))
+        if textAttachment is ImageAttachment {
+            let attachment = textAttachment as! ImageAttachment
+            if let src = attachment.src, attachment.imageSize.width > 50 {
+                linkTap?(LinkType.image(src: src))
+            }
             return false
         }
         return true

@@ -19,11 +19,9 @@ class TopicDetailsHeaderView: UIView {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var contentView: UIView!
+    lazy var webView: WKWebView = WKWebView()
     
     var linkTap: ((URL) -> Void)?
-    
-    lazy var webView = WKWebView()
-    
     var heightUpdate = Variable<Bool>(false)
     
     var topic: Topic? {
@@ -39,15 +37,18 @@ class TopicDetailsHeaderView: UIView {
     
     var htmlString: String? {
         willSet {
-            if let html = newValue {
-                if html.isEmpty {
+            if let content = newValue {
+                if content.isEmpty {
                     let headHeight = titleView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
                     var rect = self.frame
                     rect.size.height = headHeight
                     self.frame = rect
                     self.heightUpdate.value = true
                 }else {
-                    loadHTMLString(content: html)
+                    let head = "<head><meta name=\"viewport\" content=\"width=device-width, user-scalable=no\"><style>\(AppStyle.shared.css)</style></head>"
+                    let body = "<body><div id=\"Wrapper\">\(content)</div></body>"
+                    let html = "<html>\(head)\(body)</html>"
+                    webView.loadHTMLString(html, baseURL: URL(string: "https://www.v2ex.com"))
                 }
             }
         }
@@ -61,12 +62,12 @@ class TopicDetailsHeaderView: UIView {
         super.awakeFromNib()
         avatarView.clipsToBounds = true
         avatarView.layer.cornerRadius = 4.0
-        
+        webView.scrollView.delaysContentTouches = false
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.scrollView.isScrollEnabled = false
         webView.navigationDelegate = self
         contentView.addSubview(webView)
-        
+
         webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
         
         webView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
@@ -83,12 +84,6 @@ class TopicDetailsHeaderView: UIView {
         lineView.trailingAnchor.constraint(equalTo: titleView.trailingAnchor).isActive = true
         lineView.bottomAnchor.constraint(equalTo: titleView.bottomAnchor).isActive = true
         lineView.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
-    }
-    
-    func loadHTMLString(head: String = "<head><meta name=\"viewport\" content=\"width=device-width, user-scalable=no\"><style>\(AppStyle.shared.css)</style></head>", content: String) {
-        let body = "<body><div id=\"Wrapper\">\(content)</div></body>"
-        let html = "<html>\(head)\(body)</html>"
-        webView.loadHTMLString(html, baseURL: URL(string: "https://www.v2ex.com"))
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {

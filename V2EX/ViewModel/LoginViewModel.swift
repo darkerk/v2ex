@@ -26,7 +26,7 @@ class LoginViewModel {
                     let api = API.login(usernameKey: value.usernameKey, passwordKey: value.passwordKey, username: username, password: password, once: value.once)
                     return API.provider.request(api)
                 }else {
-                    return Observable.just(response)
+                    return Observable.error(NetError.message(text: "获取once失败"))
                 }
             }.observeOn(MainScheduler.instance).trackActivity(activityIndicator)
         }

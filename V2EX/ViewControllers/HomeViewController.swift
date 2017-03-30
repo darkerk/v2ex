@@ -10,10 +10,12 @@ import UIKit
 import Kanna
 import RxSwift
 import RxCocoa
+import RxDataSources
 
 class HomeViewController: UITableViewController {
     
-    private lazy var viewModel = TopicViewModel()
+    fileprivate lazy var viewModel = HomeViewModel()
+    fileprivate let dataSource = RxTableViewSectionedAnimatedDataSource<TopicListSection>()
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
@@ -25,6 +27,18 @@ class HomeViewController: UITableViewController {
         tableView.delegate = nil
         tableView.dataSource = nil
         
+        dataSource.configureCell = {[weak self] (ds, table, indexPath, _) in
+            let cell: TopicViewCell = table.dequeueReusableCell()
+            let item = ds[indexPath]
+            cell.topic = item
+            guard let `self` = self else { return cell }
+            cell.avatarTap = {
+                TimelineViewController.show(from: self.navigationController!, user: item.owner)
+            }
+            return cell
+        }
+        
+        viewModel.sections.asObservable().bindTo(tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
         viewModel.defaultNodes.asObservable().subscribe(onNext: {[weak self] nodes in
             guard let `self` = self else { return }
             if let currentNode = nodes.filter({$0.isCurrent}).first {
@@ -34,16 +48,6 @@ class HomeViewController: UITableViewController {
             }
         }).addDisposableTo(disposeBag)
 
-        viewModel.topicItems.asObservable().bindTo(tableView.rx.items) {[weak self] (tableView, row, item) in
-            let cell: TopicViewCell = tableView.dequeueReusableCell()
-            cell.topic = item
-            guard let `self` = self else { return cell }
-            cell.avatarTap = {
-                TimelineViewController.show(from: self.navigationController!, user: item.owner)
-            }
-            return cell
-        }.addDisposableTo(disposeBag)
-        
         tableView.rx.itemSelected.subscribe(onNext: {[weak self] indexPath in
             guard let strongSelf = self else { return }
             strongSelf.tableView.deselectRow(at: indexPath, animated: true)
@@ -59,7 +63,6 @@ class HomeViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
     
     // MARK: - Navigation
     
@@ -92,12 +95,20 @@ class HomeViewController: UITableViewController {
             guard let cell = sender as? TopicViewCell, let indexPath = tableView.indexPath(for: cell) else {
                 return
             }
-            let topic = viewModel.topicItems.value[indexPath.row]
+            let topic = dataSource[indexPath]
             let controller = segue.destination as! TopicDetailsViewController
+            controller.delegate = self
             controller.viewModel = TopicDetailsViewModel(topic: topic)
-            
         default:
             break
+        }
+    }
+}
+
+extension HomeViewController: TopicDetailsViewControllerDelegate {
+    func topicDetailsViewController(viewcontroller: TopicDetailsViewController, ignoreTopic topicId: String?) {
+        if let topicId = topicId {
+            viewModel.removeTopic(for: topicId)
         }
     }
 }

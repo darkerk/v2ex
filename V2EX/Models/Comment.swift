@@ -9,6 +9,7 @@
 import Foundation
 
 struct Comment {
+    var id: String = ""
     var content: String = ""
     var time: String = ""
     var thanks: String = "0"

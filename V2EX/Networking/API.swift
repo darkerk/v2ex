@@ -15,6 +15,11 @@ enum PrivacyType {
     case search(on: Bool)
 }
 
+enum ThankType {
+    case topic(id: String)
+    case reply(id: String)
+}
+
 enum API {
     /// once凭证
     case once()
@@ -36,12 +41,16 @@ enum API {
     case favoriteFollowings(page: Int)
     /// 更换头像
     case updateAvatar(imageData: Data, once: String)
-    /// 获取上传头像once凭证
-    case uploadOnce()
     /// 隐私设置once凭证
     case privacyOnce()
     /// 隐私设置
     case privacy(type: PrivacyType, once: String)
+    /// 评论回复
+    case comment(topicHref: String, content: String, once: String)
+    /// 感谢话题或回复
+    case thank(type: ThankType, token: String)
+    /// 忽略主题
+    case ignoreTopic(id: String, once: String)
 }
 
 extension API: TargetType {
@@ -67,7 +76,7 @@ extension API: TargetType {
             return "/signin"
         case let .timeline(userHref):
             return userHref
-        case let .pageList(href, _):
+        case let .pageList(href, _), let .comment(href, _, _):
             if href.contains("#") {
                 return href.components(separatedBy: "#").first ?? ""
             }
@@ -80,10 +89,19 @@ extension API: TargetType {
             return "/my/topics"
         case .favoriteFollowings(_):
             return "/my/following"
-        case .updateAvatar(_), .uploadOnce():
+        case .updateAvatar(_):
             return "/settings/avatar"
         case .privacy(_, _), .privacyOnce():
             return "/settings/privacy"
+        case let .thank(type, _):
+            switch type {
+            case let .topic(id):
+                return "/thank/topic/\(id)"
+            case let .reply(id):
+                return "/thank/reply/\(id)"
+            }
+        case let .ignoreTopic(id, _):
+            return "/ignore/topic/\(id)"
         default:
             return ""
         }
@@ -93,7 +111,7 @@ extension API: TargetType {
         switch self {
         case .login(_, _, _, _, _):
             return .post
-        case .updateAvatar(_), .privacy(_, _):
+        case .updateAvatar(_), .privacy(_, _), .comment(_, _, _), .thank(_, _):
             return .post
         default:
             return .get
@@ -127,6 +145,12 @@ extension API: TargetType {
             case let .search(on):
                 return ["topics_indexable": on ? 1 : 0, "once": once]
             }
+        case let .comment(_ , content, once):
+            return ["content": content, "once": once]
+        case let .thank(_, token):
+            return ["t": token]
+        case let .ignoreTopic(_, once):
+            return ["once": once]
         default:
             return nil
         }
