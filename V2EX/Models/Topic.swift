@@ -18,8 +18,10 @@ struct Topic {
     var replyCount: String = "0"
     var creatTime: String = ""
     var token: String = ""
+    var isFavorite: Bool = false
+    var isThank: Bool = false
     
-    init(title: String = "", href: String = "", owner: User? = nil, node: Node? = nil, lastReplyTime: String = "", lastReplyUser: User? = nil, replyCount: String = "0", creatTime: String = "", token: String = "") {
+    init(title: String = "", href: String = "", owner: User? = nil, node: Node? = nil, lastReplyTime: String = "", lastReplyUser: User? = nil, replyCount: String = "0", creatTime: String = "", token: String = "", isFavorite: Bool = false, isThank: Bool = false) {
         self.title = title
         self.href = href
         self.owner = owner
@@ -29,6 +31,8 @@ struct Topic {
         self.replyCount = replyCount
         self.creatTime = creatTime
         self.token = token
+        self.isFavorite = isFavorite
+        self.isThank = isThank
     }
 }
 

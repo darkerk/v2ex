@@ -38,11 +38,11 @@ extension HUD {
     }
     
     static func showSuccess(_ text: String? = nil) {
-        HUD.flash(.labeledSuccess(title: nil, subtitle: text), delay: 3)
+        HUD.flash(.labeledSuccess(title: nil, subtitle: text), onView: UIApplication.shared.windows.last, delay: 3)
     }
     
     static func showText(_ text: String, delay: TimeInterval = 2) {
-        HUD.flash(.label(text), delay: delay)
+        HUD.flash(.label(text), onView: UIApplication.shared.windows.last, delay: delay)
     }
 }
 

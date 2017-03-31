@@ -50,12 +50,15 @@ class TopicDetailsViewModel {
     func fetchDetails(href: String) {
         API.provider.request(.pageList(href: href, page: 0)).subscribe(onNext: { response in
             if let data = HTMLParser.shared.topicDetails(html: response.data) {
-                self.topic.token = data.token
+                self.topic.token = data.topic.token
+                self.topic.isThank = data.topic.isThank
+                self.topic.isFavorite = data.topic.isFavorite
+                
                 var updateTopicInfo = self.topic
-                updateTopicInfo.creatTime = data.creatTime
+                updateTopicInfo.creatTime = data.topic.creatTime
                 self.updateTopic.value = updateTopicInfo
                 
-                self.content.value = data.content
+                self.content.value = data.topic.title
                 self.countTime.value = data.countTime
                 self.currentPage = data.currentPage
                 if data.currentPage > 1 {
@@ -109,15 +112,17 @@ class TopicDetailsViewModel {
             }).addDisposableTo(disposeBag)
     }
     
-    func sendThank(type: ThankType) {
+    func sendThank(type: ThankType, completion: ((Bool) -> Void)? = nil) {
+        topic.isThank = true
         API.provider.request(.thank(type: type, token: topic.token)).subscribe(onNext: {response in
-
+            self.topic.isThank = true
+            completion?(true)
         }, onError: {error in
-            print(error)
+            completion?(false)
         }).addDisposableTo(disposeBag)
     }
     
-    func sendIgnore() {
+    func sendIgnore(completion: ((Bool) -> Void)? = nil) {
         API.provider.request(.once()).flatMap { response -> Observable<Response> in
             if let once = HTMLParser.shared.once(html: response.data) {
                 return API.provider.request(API.ignoreTopic(id: self.topic.id, once: once))
@@ -125,9 +130,19 @@ class TopicDetailsViewModel {
                 return Observable.error(NetError.message(text: "获取once失败"))
             }
             }.shareReplay(1).subscribe(onNext: { response in
-                
+                completion?(true)
             }, onError: {error in
-                print(error)
+                completion?(false)
             }).addDisposableTo(disposeBag)
+    }
+    
+    func sendFavorite(completion: ((Bool) -> Void)? = nil) {
+        let isFavorite = !topic.isFavorite
+        API.provider.request(.favorite(id: topic.id, token: topic.token, isCancel: isFavorite)).subscribe(onNext: {response in
+            self.topic.isFavorite = isFavorite
+            completion?(true)
+        }, onError: {error in
+            completion?(false)
+        }).addDisposableTo(disposeBag)
     }
 }

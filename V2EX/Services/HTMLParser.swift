@@ -150,13 +150,17 @@ struct HTMLParser {
     }
     
     // MARK: - 话题详情
-    func topicDetails(html data: Data) -> (token: String, creatTime: String, currentPage: Int, content: String, countTime: String, comments: [Comment])? {
+    func topicDetails(html data: Data) -> (topic: Topic, currentPage: Int, countTime: String, comments: [Comment])? {
         guard let html = HTML(html: data, encoding: .utf8) else {
             return nil
         }
         
         let tokenPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='inner']/div[@class='fr']/a[@class='op'][1]")
         let token = tokenPath.first?["href"]?.components(separatedBy: "?t=").last ?? ""
+        let isFavorite = tokenPath.first?["href"]?.contains("unfavorite") ?? false
+        
+        let thankPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='inner']/div[@class='fr']/div[@id='topic_thank']")
+        let isThank = thankPath.first?.content?.contains("感谢已发送") ?? false
         
         let creatTimePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='header']/small[@class='gray']")
         let creatTimeString = creatTimePath.first?.content ?? ""
@@ -193,7 +197,8 @@ struct HTMLParser {
             }
             return nil
         })
-        return (token, creatTime, currentPage, content, countTime, comments)
+        let topic = Topic(title: content, creatTime: creatTime, token: token, isFavorite: isFavorite, isThank: isThank)
+        return (topic, currentPage, countTime, comments)
     }
     
     // MARK: - 个人的主题和回复

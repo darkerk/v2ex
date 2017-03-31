@@ -146,7 +146,7 @@
             </objects>
             <point key="canvasLocation" x="856.79999999999995" y="-561.76911544227892"/>
         </scene>
-        <!--话题详情-->
+        <!--主题详情-->
         <scene sceneID="zTm-zT-EIk">
             <objects>
                 <tableViewController storyboardIdentifier="TopicDetailsViewController" id="5ba-n9-MuG" customClass="TopicDetailsViewController" customModule="V2EX" customModuleProvider="target" sceneMemberID="viewController">
@@ -245,7 +245,7 @@
                                 <rect key="frame" x="0.0" y="148" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lbs-Oi-a31" id="KEf-Vb-KGE">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="加载更多回复" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JJY-iQ-OOg">
@@ -273,7 +273,7 @@
                                 <rect key="frame" x="0.0" y="192" width="375" height="110"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mVR-u2-Iw4" id="9Cz-ZI-tMg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="109.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="110"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="O8h-fI-r2K">
@@ -338,7 +338,7 @@
                             <outlet property="delegate" destination="5ba-n9-MuG" id="qnJ-af-FSO"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="话题详情" id="5G7-hE-N0C"/>
+                    <navigationItem key="navigationItem" title="主题详情" id="5G7-hE-N0C"/>
                     <connections>
                         <outlet property="headerView" destination="0Re-bS-t58" id="gD1-a1-HXh"/>
                     </connections>

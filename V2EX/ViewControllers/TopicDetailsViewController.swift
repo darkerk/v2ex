@@ -13,8 +13,8 @@ import RxDataSources
 import SKPhotoBrowser
 import PKHUD
 
-protocol TopicDetailsViewControllerDelegate: class {
-    func topicDetailsViewController(viewcontroller: TopicDetailsViewController, ignoreTopic topicId: String?)
+@objc protocol TopicDetailsViewControllerDelegate: class {
+    @objc optional func topicDetailsViewController(viewcontroller: TopicDetailsViewController, ignoreTopic topicId: String?)
 }
 
 class TopicDetailsViewController: UITableViewController {
@@ -29,7 +29,7 @@ class TopicDetailsViewController: UITableViewController {
     fileprivate lazy var inputbar: InputCommentBar = InputCommentBar()
     fileprivate var lastSelectIndexPath: IndexPath?
     fileprivate var canCancelFirstResponder = true
-
+    
     class func show(from navigationController: UINavigationController, topic: Topic) {
         let controller = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: TopicDetailsViewController.segueId) as! TopicDetailsViewController
         
@@ -127,7 +127,7 @@ class TopicDetailsViewController: UITableViewController {
         tap.delegate = self
         headerView.addGestureRecognizer(tap)
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -147,15 +147,29 @@ class TopicDetailsViewController: UITableViewController {
     
     func moreAction(_ sender: Any) {
         inputbar.endEditing()
-        
+        guard let viewModel = viewModel else {
+            return
+        }
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "收藏", style: .default, handler: {_ in
-            
-        }))
-        alert.addAction(UIAlertAction(title: "感谢", style: .default, handler: {_ in
+        let isFavorite = viewModel.topic.isFavorite
+        let favoriteAction = UIAlertAction(title: isFavorite ? "取消收藏" : "收藏", style: .default, handler: {action in
+            viewModel.sendFavorite(completion: {isSuccess in
+                if isSuccess {
+                    HUD.showText(isFavorite ? "取消收藏成功！" : "收藏成功！")
+                }else {
+                    HUD.showText(isFavorite ? "取消收藏失败！" : "收藏失败！")
+                }
+            })
+        })
+        
+        let thankAction = UIAlertAction(title: viewModel.topic.isThank ? "已感谢" : "感谢", style: .default, handler: {_ in
             self.sendThank(type: .topic(id: self.viewModel?.topic.id ?? ""))
-        }))
+        })
+        thankAction.isEnabled = !viewModel.topic.isThank
+        
+        alert.addAction(thankAction)
+        alert.addAction(favoriteAction)
         alert.addAction(UIAlertAction(title: "忽略主题", style: .default, handler: {_ in
             self.sendIgnore()
         }))
@@ -174,9 +188,10 @@ class TopicDetailsViewController: UITableViewController {
         }
         let alert = UIAlertController(title: tips, message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "好", style: .default, handler: {_ in
-            self.viewModel?.sendThank(type: type)
-            HUD.showText("感谢已发送！")
+        alert.addAction(UIAlertAction(title: "好", style: .default, handler: {action in
+            self.viewModel?.sendThank(type: type, completion: { isSuccess in
+                HUD.showText(isSuccess ? "感谢已发送！" : "感谢发送失败！")
+            })
         }))
         present(alert, animated: true, completion: nil)
     }
@@ -184,10 +199,17 @@ class TopicDetailsViewController: UITableViewController {
     func sendIgnore() {
         let alert = UIAlertController(title: "确定不想再看到这个主题？", message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "好", style: .default, handler: {_ in
-            self.viewModel?.sendIgnore()
-            _ = self.navigationController?.popViewController(animated: true)
-            self.delegate?.topicDetailsViewController(viewcontroller: self, ignoreTopic: self.viewModel?.topic.id)
+        alert.addAction(UIAlertAction(title: "好", style: .default, handler: {action in
+            action.isEnabled = false
+            self.viewModel?.sendIgnore(completion: {isSuccess in
+                action.isEnabled = true
+                if isSuccess {
+                    _ = self.navigationController?.popViewController(animated: true)
+                    self.delegate?.topicDetailsViewController?(viewcontroller: self, ignoreTopic: self.viewModel?.topic.id)
+                }else {
+                    HUD.showText("忽略主题失败！")
+                }
+            })
         }))
         present(alert, animated: true, completion: nil)
     }
@@ -220,7 +242,7 @@ extension TopicDetailsViewController {
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return section == 0 ? 40 : 0
     }
-
+    
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if section == 0 && view is UITableViewHeaderFooterView {
             let header = view as! UITableViewHeaderFooterView

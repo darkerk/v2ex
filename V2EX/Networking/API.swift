@@ -51,6 +51,8 @@ enum API {
     case thank(type: ThankType, token: String)
     /// 忽略主题
     case ignoreTopic(id: String, once: String)
+    /// 收藏话题
+    case favorite(id: String, token: String, isCancel: Bool)
 }
 
 extension API: TargetType {
@@ -102,6 +104,8 @@ extension API: TargetType {
             }
         case let .ignoreTopic(id, _):
             return "/ignore/topic/\(id)"
+        case let .favorite(id, _, isCancel):
+            return (isCancel ? "/unfavorite" :  "/favorite") + "/topic/\(id)"
         default:
             return ""
         }
@@ -147,7 +151,7 @@ extension API: TargetType {
             }
         case let .comment(_ , content, once):
             return ["content": content, "once": once]
-        case let .thank(_, token):
+        case let .thank(_, token), let .favorite(_, token, _):
             return ["t": token]
         case let .ignoreTopic(_, once):
             return ["once": once]
@@ -162,7 +166,7 @@ extension API: TargetType {
 }
 
 extension API {
-    static let provider = RxMoyaProvider(endpointClosure: endpointClosure)
+    static let provider = RxMoyaProvider(endpointClosure: endpointClosure, plugins: [networkActivityPlugin])
     static func endpointClosure(_ target: API) -> Endpoint<API> {
         let defaultEndpoint = MoyaProvider<API>.defaultEndpointMapping(for: target)
         switch target{
@@ -179,4 +183,13 @@ extension API {
             return defaultEndpoint.adding(newHTTPHeaderFields: headers)
         }
     }
+    
+   static let networkActivityPlugin = NetworkActivityPlugin(networkActivityClosure: {(change: NetworkActivityChangeType) in
+        switch change {
+        case .began:
+            UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        case .ended:
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+        }
+    })
 }
