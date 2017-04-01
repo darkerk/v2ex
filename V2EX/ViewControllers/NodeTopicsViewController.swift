@@ -16,6 +16,14 @@ class NodeTopicsViewController: UITableViewController {
     
     fileprivate let disposeBag = DisposeBag()
     
+    class func show(from navigationController: UINavigationController, node: Node) {
+        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: NodeTopicsViewController.segueId) as! NodeTopicsViewController
+        
+        controller.nodeHref = node.href
+        controller.title = node.name
+        navigationController.pushViewController(controller, animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)

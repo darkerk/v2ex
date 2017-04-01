@@ -180,6 +180,22 @@ struct HTMLParser {
             currentPage = Int(page) ?? 1
         }
         
+        var owner: User?
+        let headerPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='header']")
+        if let ownerHref = headerPath.first?.xpath("./div[@class='fr']/a").first?["href"],
+            let ownerSrc = headerPath.first?.xpath("./div[@class='fr']/a/img").first?["src"],
+            let ownerName = headerPath.first?.xpath("./small[@class='gray']/a").first?.content {
+            owner = User(name: ownerName, href: ownerHref, src: ownerSrc)
+        }
+        
+        var node: Node?
+        if let nodeName = headerPath.first?.xpath("./a[2]").first?.content,
+            let nodeHref = headerPath.first?.xpath("./a[2]").first?["href"] {
+            node = Node(name: nodeName, href: nodeHref)
+        }
+        
+        let title = headerPath.first?.xpath("./h1").first?.content ?? ""
+        
         let replyContentPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][2]/div[contains(@id,'r_')]")
         let comments = replyContentPath.flatMap({e -> Comment? in
             if let src = e.xpath("./table/tr/td[1]/img").first?["src"],
@@ -197,7 +213,8 @@ struct HTMLParser {
             }
             return nil
         })
-        let topic = Topic(title: content, creatTime: creatTime, token: token, isFavorite: isFavorite, isThank: isThank)
+
+        let topic = Topic(title: title, content: content, owner: owner, node: node, creatTime: creatTime, token: token, isFavorite: isFavorite, isThank: isThank)
         return (topic, currentPage, countTime, comments)
     }
     
@@ -244,7 +261,8 @@ struct HTMLParser {
                 let topicTitle = e.xpath("./table/tr[1]/td/span[@class='gray']").first?.content,
                 let topicHref = e.xpath("./table/tr[1]/td/span[@class='gray']/a").first?["href"] {
                 
-                let topic = Topic(title: topicTitle, href: topicHref, lastReplyTime: time)
+                let titleText = topicTitle.components(separatedBy: "›").last?.trimmingCharacters(in: .whitespacesAndNewlines) ?? topicTitle
+                let topic = Topic(title: titleText, href: topicHref, lastReplyTime: time)
                 var replyContent = ""
                 if i < replyContentPath.count {
                     replyContent = replyContentPath[i].content ?? ""

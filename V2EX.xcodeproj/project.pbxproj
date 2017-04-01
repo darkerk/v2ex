@@ -59,6 +59,7 @@
 		CA58105F1E80FEC70003B7C2 /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA58105E1E80FEC70003B7C2 /* SettingViewModel.swift */; };
 		CA6605F41E764D6300BB19A7 /* mobile.css in Resources */ = {isa = PBXBuildFile; fileRef = CA6605F31E764D6300BB19A7 /* mobile.css */; };
 		CA6605F61E768C2D00BB19A7 /* LoadMoreCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6605F51E768C2D00BB19A7 /* LoadMoreCommentCell.swift */; };
+		CA670E6D1E8E37850091FBC8 /* TapLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA670E6C1E8E37850091FBC8 /* TapLink.swift */; };
 		CA864BB41E77864D00997D4E /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA864BB31E77864D00997D4E /* HUD.swift */; };
 		CA864BB91E77983F00997D4E /* LoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA864BB81E77983F00997D4E /* LoginButton.swift */; };
 		CA864BBB1E779DCD00997D4E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA864BBA1E779DCD00997D4E /* ProfileViewController.swift */; };
@@ -81,6 +82,7 @@
 		CAF418F61E8B509F005F26AF /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF418F51E8B509F005F26AF /* Error.swift */; };
 		CAF418FA1E8BADAE005F26AF /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF418F91E8BADAE005F26AF /* HomeViewModel.swift */; };
 		CAF418FD1E8BB063005F26AF /* TopicListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF418FC1E8BB063005F26AF /* TopicListSection.swift */; };
+		E2CEBD49B71C68B4AA52C753 /* Pods_V2EX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B07A087CCC03573424A85B18 /* Pods_V2EX.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -140,6 +142,7 @@
 		CA58105E1E80FEC70003B7C2 /* SettingViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
 		CA6605F31E764D6300BB19A7 /* mobile.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = mobile.css; sourceTree = "<group>"; };
 		CA6605F51E768C2D00BB19A7 /* LoadMoreCommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadMoreCommentCell.swift; sourceTree = "<group>"; };
+		CA670E6C1E8E37850091FBC8 /* TapLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapLink.swift; sourceTree = "<group>"; };
 		CA864BB31E77864D00997D4E /* HUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
 		CA864BB81E77983F00997D4E /* LoginButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginButton.swift; sourceTree = "<group>"; };
 		CA864BBA1E779DCD00997D4E /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -171,6 +174,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C6109F9FE20B54D835601FDA /* Pods_V2EX.framework in Frameworks */,
+				E2CEBD49B71C68B4AA52C753 /* Pods_V2EX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,6 +278,7 @@
 				CA2DB6E51E6E95D200E585B8 /* TopicDetailsSection.swift */,
 				CA864BC91E77E39F00997D4E /* TimelineSection.swift */,
 				CA2EEC981E79388600F723E8 /* AllPostsSection.swift */,
+				CA670E6C1E8E37850091FBC8 /* TapLink.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -573,6 +578,7 @@
 				CA353E9F1E6953AF0006D37B /* NodesViewController.swift in Sources */,
 				CA505D9F1E6D2C17004F738C /* ActivityIndicator.swift in Sources */,
 				CA0A6B051E88AE7F00798F88 /* GrowingTextView.swift in Sources */,
+				CA670E6D1E8E37850091FBC8 /* TapLink.swift in Sources */,
 				CA4BA8A41E712DDE00FEE50E /* AppStyle.swift in Sources */,
 				CA353EA51E696D9F0006D37B /* LoginViewModel.swift in Sources */,
 				CA2DB6E61E6E95D200E585B8 /* TopicDetailsSection.swift in Sources */,
@@ -685,6 +691,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = VE7H86BMP3;
 				INFOPLIST_FILE = "$(SRCROOT)/V2EX/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.wgh.V2EX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -701,6 +708,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = VE7H86BMP3;
 				INFOPLIST_FILE = "$(SRCROOT)/V2EX/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.wgh.V2EX;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -31,9 +31,8 @@ class HomeViewController: UITableViewController {
             let cell: TopicViewCell = table.dequeueReusableCell()
             let item = ds[indexPath]
             cell.topic = item
-            guard let `self` = self else { return cell }
-            cell.avatarTap = {
-                TimelineViewController.show(from: self.navigationController!, user: item.owner)
+            cell.linkTap = {type in
+                self?.linkTapAction(type: type)
             }
             return cell
         }
@@ -57,6 +56,17 @@ class HomeViewController: UITableViewController {
     @IBAction func leftBarItemAction(_ sender: Any) {
         guard let drawerViewController = drawerViewController else { return }
         drawerViewController.isOpenDrawer = !drawerViewController.isOpenDrawer
+    }
+    
+    func linkTapAction(type: TapLink) {
+        guard let nav = navigationController else { return }
+        switch type {
+        case let .user(info):
+            TimelineViewController.show(from: nav, user: info)
+        case let .node(info):
+            NodeTopicsViewController.show(from: nav, node: info)
+        default: break
+        }
     }
     
     override func didReceiveMemoryWarning() {

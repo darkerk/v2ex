@@ -18,19 +18,28 @@ class TopicDetailsHeaderView: UIView {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var nodeLabel: UILabel!
     @IBOutlet weak var contentView: UIView!
     lazy var webView: WKWebView = WKWebView()
     
-    var linkTap: ((URL) -> Void)?
+    var linkTap: ((TapLink) -> Void)?
     var heightUpdate = Variable<Bool>(false)
     
     var topic: Topic? {
         willSet {
             if let model = newValue {
+                avatarView.isUserInteractionEnabled = true
                 avatarView.kf.setImage(with: URL(string: model.owner?.avatar(.large) ?? ""))
                 nameLabel.text = model.owner?.name
                 timeLabel.text = model.creatTime.components(separatedBy: ",").first
                 titleLabel.text = model.title
+                
+                if let node = model.node {
+                    nodeLabel.text = " " + node.name + " "
+                    nodeLabel.isHidden = false
+                }else {
+                    nodeLabel.isHidden = true
+                }
             }
         }
     }
@@ -54,21 +63,19 @@ class TopicDetailsHeaderView: UIView {
         }
     }
     
-    deinit {
-        webView.removeObserver(self, forKeyPath: "estimatedProgress")
-    }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         avatarView.clipsToBounds = true
         avatarView.layer.cornerRadius = 4.0
+        
+        nodeLabel.clipsToBounds = true
+        nodeLabel.layer.cornerRadius = 4.0
+        
         webView.scrollView.delaysContentTouches = false
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.scrollView.isScrollEnabled = false
         webView.navigationDelegate = self
         contentView.addSubview(webView)
-
-        webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
         
         webView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         webView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
@@ -84,32 +91,74 @@ class TopicDetailsHeaderView: UIView {
         lineView.trailingAnchor.constraint(equalTo: titleView.trailingAnchor).isActive = true
         lineView.bottomAnchor.constraint(equalTo: titleView.bottomAnchor).isActive = true
         lineView.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        
+        avatarView.isUserInteractionEnabled = true
+        let avatarTap = UITapGestureRecognizer(target: self, action: #selector(userTapAction(_:)))
+        avatarView.addGestureRecognizer(avatarTap)
+        
+        nameLabel.isUserInteractionEnabled = true
+        let nameTap = UITapGestureRecognizer(target: self, action: #selector(userTapAction(_:)))
+        nameLabel.addGestureRecognizer(nameTap)
+        
+        nodeLabel.isUserInteractionEnabled = true
+        let nodeTap = UITapGestureRecognizer(target: self, action: #selector(nodeTapAction(_:)))
+        nodeLabel.addGestureRecognizer(nodeTap)
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if let object = object as? WKWebView, keyPath == "estimatedProgress" {
-            if let newValue = change?[.newKey] as? Double, newValue == 1.0 {
-                object.evaluateJavaScript("document.body.scrollHeight", completionHandler: {(result, _) in
-                    if let height = result as? CGFloat {
-                        
-                        let headHeight = self.titleView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
-                        var rect = self.frame
-                        rect.size.height = headHeight + height
-                        self.frame = rect
-                        self.heightUpdate.value = true
-                    }
-                })
-            }
+    func userTapAction(_ sender: Any) {
+        if let user = topic?.owner {
+            linkTap?(TapLink.user(info: user))
+        }
+    }
+    
+    func nodeTapAction(_ sender: Any) {
+        if let node = topic?.node {
+            linkTap?(TapLink.node(info: node))
         }
     }
 }
 
 extension TopicDetailsHeaderView: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: {(result, _) in
+            if let height = result as? CGFloat {
+                let headHeight = self.titleView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+                var rect = self.frame
+                rect.size.height = headHeight + height
+                self.frame = rect
+                self.heightUpdate.value = true
+            }
+        })
+        
+        let script = "var imgs = document.getElementsByTagName('img');" +
+            "for (var i = 0; i < imgs.length; ++i) {" +
+            "var img = imgs[i];" +
+            "img.onclick = function () {" +
+            "window.location.href = 'v2ex-image:' + this.src;" +
+            "}" +
+        "}"
+        webView.evaluateJavaScript(script, completionHandler: nil)
+    }
+    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url {
-            if url.absoluteString.hasPrefix("https://") || url.absoluteString.hasPrefix("http://") {
+            let urlString = url.absoluteString
+            if url.scheme == "v2ex-image" {
+                let src = urlString.replacingOccurrences(of: "v2ex-image:", with: "")
+                linkTap?(TapLink.image(src: src))
+                decisionHandler(.cancel)
+                return
+            }else if urlString.hasPrefix("https://") || urlString.hasPrefix("http://") {
                 if navigationAction.navigationType == .linkActivated {
-                    linkTap?(url)
+                    if url.path.hasPrefix("/member/") {
+                        let href = url.path
+                        let name = href.replacingOccurrences(of: "/member/", with: "")
+                        let user = User(name: name, href: href, src: "")
+                        linkTap?(TapLink.user(info: user))
+                    }else {
+                        linkTap?(TapLink.web(url: url))
+                    }
                     decisionHandler(.cancel)
                     return
                 }

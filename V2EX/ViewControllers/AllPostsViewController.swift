@@ -19,7 +19,7 @@ class AllPostsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         let titleText = type == .topic ? "全部主题" : "全部回复"
         navigationItem.title = titleText
         
@@ -42,6 +42,22 @@ class AllPostsViewController: UITableViewController {
                 return cell
             }
         }.addDisposableTo(disposeBag)
+        
+        tableView.rx.modelSelected(SectionTimelineItem.self).subscribe(onNext: {[weak navigationController] item in
+            guard let nav = navigationController else { return }
+            switch item {
+            case let .topicItem(topic):
+                TopicDetailsViewController.show(from: nav, topic: topic)
+            case let .replyItem(reply):
+                if let topic = reply.topic {
+                    TopicDetailsViewController.show(from: nav, topic: topic)
+                }
+            }
+        }).addDisposableTo(disposeBag)
+        
+        tableView.rx.itemSelected.subscribe(onNext: {[weak tableView] indexPath in
+            tableView?.deselectRow(at: indexPath, animated: true)
+        }).addDisposableTo(disposeBag)
 
         tableView.addInfiniteScrolling {[weak tableView] in
            viewModel.fetchMoreData(completion: {
@@ -66,4 +82,3 @@ class AllPostsViewController: UITableViewController {
     }
     */
 }
-

@@ -96,7 +96,16 @@ extension TimelineViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+        switch dataSource[indexPath] {
+        case let .topicItem(topic):
+            if let nav = navigationController {
+                TopicDetailsViewController.show(from: nav, topic: topic)
+            }
+        case let .replyItem(reply):
+            if let nav = navigationController, let topic = reply.topic {
+                TopicDetailsViewController.show(from: nav, topic: topic)
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

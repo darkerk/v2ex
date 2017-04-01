@@ -34,12 +34,7 @@ class TopicDetailsCommentCell: UITableViewCell {
     @IBOutlet weak var floorLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     
-    enum LinkType {
-        case user(info: User)
-        case image(src: String)
-        case web(url: URL)
-    }
-    var linkTap: ((LinkType) -> Void)?
+    var linkTap: ((TapLink) -> Void)?
     
     private var isInitialized = false
     private var attributedText: NSAttributedString?
@@ -77,7 +72,7 @@ class TopicDetailsCommentCell: UITableViewCell {
     
     func userTapAction(_ sender: Any) {
         if let user = comment?.user {
-            linkTap?(LinkType.user(info: user))
+            linkTap?(TapLink.user(info: user))
         }
     }
     
@@ -189,12 +184,12 @@ extension TopicDetailsCommentCell: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         let link = URL.absoluteString
         if link.hasPrefix("https://") || link.hasPrefix("http://"){
-            linkTap?(LinkType.web(url: URL))
+            linkTap?(TapLink.web(url: URL))
         }else if link.hasPrefix("applewebdata://") && link.contains("/member/") {
             let href = URL.path
             let name = href.replacingOccurrences(of: "/member/", with: "")
             let user = User(name: name, href: href, src: "")
-            linkTap?(LinkType.user(info: user))
+            linkTap?(TapLink.user(info: user))
         }
         return false
     }
@@ -203,7 +198,7 @@ extension TopicDetailsCommentCell: UITextViewDelegate {
         if textAttachment is ImageAttachment {
             let attachment = textAttachment as! ImageAttachment
             if let src = attachment.src, attachment.imageSize.width > 50 {
-                linkTap?(LinkType.image(src: src))
+                linkTap?(TapLink.image(src: src))
             }
             return false
         }

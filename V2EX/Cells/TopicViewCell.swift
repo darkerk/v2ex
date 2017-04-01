@@ -18,7 +18,7 @@ class TopicViewCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var countLabel: UILabel!
     
-    var avatarTap: (() -> Void)?
+    var linkTap: ((TapLink) -> Void)?
     
     var topic: Topic? {
         willSet {
@@ -46,12 +46,28 @@ class TopicViewCell: UITableViewCell {
         countLabel.layer.cornerRadius = 9
         
         avatarView.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(avatarTapAction(_:)))
-        avatarView.addGestureRecognizer(tap)
+        let avatarTap = UITapGestureRecognizer(target: self, action: #selector(userTapAction(_:)))
+        avatarView.addGestureRecognizer(avatarTap)
+        
+        ownerNameLabel.isUserInteractionEnabled = true
+        let nameTap = UITapGestureRecognizer(target: self, action: #selector(userTapAction(_:)))
+        ownerNameLabel.addGestureRecognizer(nameTap)
+        
+        nodeLabel.isUserInteractionEnabled = true
+        let nodeTap = UITapGestureRecognizer(target: self, action: #selector(nodeTapAction(_:)))
+        nodeLabel.addGestureRecognizer(nodeTap)
     }
     
-    func avatarTapAction(_ sender: Any) {
-        avatarTap?()
+    func userTapAction(_ sender: Any) {
+        if let user = topic?.owner {
+            linkTap?(TapLink.user(info: user))
+        }
+    }
+    
+    func nodeTapAction(_ sender: Any) {
+        if let node = topic?.node {
+            linkTap?(TapLink.node(info: node))
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

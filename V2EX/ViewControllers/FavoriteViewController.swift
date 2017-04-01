@@ -25,15 +25,13 @@ class FavoriteViewController: UITableViewController {
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
         
-        viewModel.dataItems.asObservable().bindTo(tableView.rx.items) {[weak navigationController]  (table, row, item) in
+        viewModel.dataItems.asObservable().bindTo(tableView.rx.items) {[weak self]  (table, row, item) in
             switch item {
             case let .topicItem(topic), let .followingItem(topic):
                 let cell: TopicViewCell = table.dequeueReusableCell()
                 cell.topic = topic
-                if let nav = navigationController {
-                    cell.avatarTap = {
-                        TimelineViewController.show(from: nav, user: topic.owner)
-                    }
+                cell.linkTap = {type in
+                    self?.linkTapAction(type: type)
                 }
                 return cell
             case let .nodeItem(node):
@@ -65,6 +63,17 @@ class FavoriteViewController: UITableViewController {
     
     @IBAction func segmentedChange(_ sender: UISegmentedControl) {
         viewModel.type = FavoriteType(rawValue: sender.selectedSegmentIndex)!
+    }
+    
+    func linkTapAction(type: TapLink) {
+        guard let nav = navigationController else { return }
+        switch type {
+        case let .user(info):
+            TimelineViewController.show(from: nav, user: info)
+        case let .node(info):
+            NodeTopicsViewController.show(from: nav, node: info)
+        default: break
+        }
     }
     
     override func didReceiveMemoryWarning() {

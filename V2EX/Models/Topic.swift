@@ -10,6 +10,7 @@ import Foundation
 
 struct Topic {
     var title: String = ""
+    var content: String = ""
     var href: String = ""
     var owner: User?
     var node: Node?
@@ -21,8 +22,9 @@ struct Topic {
     var isFavorite: Bool = false
     var isThank: Bool = false
     
-    init(title: String = "", href: String = "", owner: User? = nil, node: Node? = nil, lastReplyTime: String = "", lastReplyUser: User? = nil, replyCount: String = "0", creatTime: String = "", token: String = "", isFavorite: Bool = false, isThank: Bool = false) {
+    init(title: String = "", content: String = "", href: String = "", owner: User? = nil, node: Node? = nil, lastReplyTime: String = "", lastReplyUser: User? = nil, replyCount: String = "0", creatTime: String = "", token: String = "", isFavorite: Bool = false, isThank: Bool = false) {
         self.title = title
+        self.content = content
         self.href = href
         self.owner = owner
         self.node = node

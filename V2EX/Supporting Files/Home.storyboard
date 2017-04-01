@@ -33,7 +33,6 @@
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="W2f-Ud-fAi">
                                             <rect key="frame" x="10" y="10" width="40" height="40"/>
-                                            <color key="backgroundColor" red="0.94117647059999998" green="0.94117647059999998" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="40" id="2JN-e9-nm8"/>
                                                 <constraint firstAttribute="width" constant="40" id="Rap-Oo-TYP"/>
@@ -164,7 +163,6 @@
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wvA-Qx-aI4">
                                             <rect key="frame" x="10" y="10" width="40" height="40"/>
-                                            <color key="backgroundColor" red="0.94117647059999998" green="0.94117647059999998" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="40" id="UK2-b3-jQb"/>
                                                 <constraint firstAttribute="height" constant="40" id="XRO-cv-0n9"/>
@@ -195,6 +193,16 @@
                                             </attributedString>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" 程序员 " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bdk-mt-nmf">
+                                            <rect key="frame" x="318" y="9" width="47" height="20"/>
+                                            <color key="backgroundColor" red="0.96068006750000001" green="0.96084433790000001" blue="0.96066969629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="hfV-vu-nP2"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                            <color key="textColor" red="0.59993284940000002" green="0.60003870729999997" blue="0.59992617370000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
@@ -202,9 +210,11 @@
                                         <constraint firstItem="TpI-Nq-lhM" firstAttribute="leading" secondItem="wvA-Qx-aI4" secondAttribute="trailing" constant="10" id="3Xi-oF-Lgi"/>
                                         <constraint firstAttribute="bottom" secondItem="2h3-JK-gFW" secondAttribute="bottom" constant="10" id="9AF-09-Yat"/>
                                         <constraint firstItem="ZiM-CX-SEn" firstAttribute="top" secondItem="TpI-Nq-lhM" secondAttribute="bottom" constant="2" id="AUS-Ci-iuU"/>
+                                        <constraint firstItem="Bdk-mt-nmf" firstAttribute="centerY" secondItem="TpI-Nq-lhM" secondAttribute="centerY" id="E3S-Jw-wIn"/>
                                         <constraint firstAttribute="trailing" secondItem="2h3-JK-gFW" secondAttribute="trailing" constant="10" id="G1j-ZY-b01"/>
                                         <constraint firstItem="wvA-Qx-aI4" firstAttribute="top" secondItem="21W-xY-540" secondAttribute="top" constant="10" id="KEU-cs-Map"/>
                                         <constraint firstItem="2h3-JK-gFW" firstAttribute="leading" secondItem="21W-xY-540" secondAttribute="leading" constant="10" id="LNC-sD-SqJ"/>
+                                        <constraint firstAttribute="trailing" secondItem="Bdk-mt-nmf" secondAttribute="trailing" constant="10" id="Mn3-XP-tjl"/>
                                         <constraint firstItem="TpI-Nq-lhM" firstAttribute="top" secondItem="21W-xY-540" secondAttribute="top" constant="10" id="RwI-Ki-YOh"/>
                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="90" id="TAR-t5-h9W"/>
                                         <constraint firstItem="wvA-Qx-aI4" firstAttribute="leading" secondItem="21W-xY-540" secondAttribute="leading" constant="10" id="b9o-ED-t0H"/>
@@ -230,6 +240,7 @@
                                 <outlet property="avatarView" destination="wvA-Qx-aI4" id="Ler-b7-Jwl"/>
                                 <outlet property="contentView" destination="LI3-dq-8qr" id="Ins-yj-sMV"/>
                                 <outlet property="nameLabel" destination="TpI-Nq-lhM" id="xoG-Gd-hFj"/>
+                                <outlet property="nodeLabel" destination="Bdk-mt-nmf" id="9mQ-Ho-GQB"/>
                                 <outlet property="timeLabel" destination="ZiM-CX-SEn" id="9mg-wO-5zF"/>
                                 <outlet property="titleLabel" destination="2h3-JK-gFW" id="bny-Xq-cml"/>
                                 <outlet property="titleView" destination="21W-xY-540" id="J8S-bT-RED"/>

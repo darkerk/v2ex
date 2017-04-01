@@ -52,9 +52,8 @@ class TopicDetailsViewController: UITableViewController {
         guard let viewModel = viewModel else { return }
         
         headerView.topic = viewModel.topic
-        headerView.linkTap = {[weak navigationController] url in
-            guard let nav = navigationController else { return }
-            AppSetting.openWebBrowser(from: nav, URL: url)
+        headerView.linkTap = {[weak self] type in
+            self?.linkTapAction(type: type)
         }
         
         headerView.heightUpdate.asObservable().subscribe(onNext: {[weak self] isUpdate in
@@ -64,7 +63,7 @@ class TopicDetailsViewController: UITableViewController {
             }
         }).addDisposableTo(disposeBag)
         
-        dataSource.configureCell = {[weak navigationController] (ds, tv, indexPath, item) in
+        dataSource.configureCell = {[weak self] (ds, tv, indexPath, item) in
             switch ds[indexPath.section].type {
             case .more:
                 let cell: LoadMoreCommentCell = tv.dequeueReusableCell()
@@ -72,18 +71,8 @@ class TopicDetailsViewController: UITableViewController {
             case .data:
                 let cell: TopicDetailsCommentCell = tv.dequeueReusableCell()
                 cell.comment = item
-                cell.linkTap = {linkType in
-                    guard let nav = navigationController else {
-                        return
-                    }
-                    switch linkType {
-                    case let .user(info):
-                        TimelineViewController.show(from: nav, user: info)
-                    case let .image(src):
-                        AppSetting.openPhotoBrowser(from: nav, src: src)
-                    case let .web(url):
-                        AppSetting.openWebBrowser(from: nav, URL: url)
-                    }
+                cell.linkTap = {type in
+                    self?.linkTapAction(type: type)
                 }
                 return cell
             }
@@ -133,6 +122,20 @@ class TopicDetailsViewController: UITableViewController {
         
         canCancelFirstResponder = true
         inputbar.endEditing()
+    }
+    
+    func linkTapAction(type: TapLink) {
+        guard let nav = navigationController else { return }
+        switch type {
+        case let .user(info):
+            TimelineViewController.show(from: nav, user: info)
+        case let .image(src):
+            AppSetting.openPhotoBrowser(from: nav, src: src)
+        case let .web(url):
+            AppSetting.openWebBrowser(from: nav, URL: url)
+        case let .node(info):
+            NodeTopicsViewController.show(from: nav, node: info)
+        }
     }
     
     func headerTap(_ sender: Any) {

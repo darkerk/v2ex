@@ -53,12 +53,21 @@ class TopicDetailsViewModel {
                 self.topic.token = data.topic.token
                 self.topic.isThank = data.topic.isThank
                 self.topic.isFavorite = data.topic.isFavorite
+                if let owner = data.topic.owner {
+                    self.topic.owner = owner
+                }
+                if let node = data.topic.node {
+                    self.topic.node = node
+                }
+                if !data.topic.title.isEmpty {
+                    self.topic.title = data.topic.title
+                }
                 
                 var updateTopicInfo = self.topic
                 updateTopicInfo.creatTime = data.topic.creatTime
                 self.updateTopic.value = updateTopicInfo
                 
-                self.content.value = data.topic.title
+                self.content.value = data.topic.content
                 self.countTime.value = data.countTime
                 self.currentPage = data.currentPage
                 if data.currentPage > 1 {
