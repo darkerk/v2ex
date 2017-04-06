@@ -42,15 +42,19 @@ class LoginViewController: UIViewController {
         loginViewModel.isloading.bindTo(PKHUD.sharedHUD.rx.isAnimating).addDisposableTo(disposeBag)
         
         loginViewModel.response.subscribe(onNext: {[weak self] response in
-            if let info = HTMLParser.shared.userInfo(html: response.data) {
-                Account.shared.user.value = User(name: info.username, href: "/member/" + info.username, src: info.avatar)
+            let result = HTMLParser.shared.loginResult(html: response.data)
+            if let user = result.user {
+                Account.shared.user.value = user
                 Account.shared.isLoggedIn.value = true
                 self?.dismiss(animated: true, completion: nil)
             }else {
-                HUD.showText("返回数据出错！")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                    let errorMsg = result.problem ?? "登录失败，请稍后再试"
+                    HUD.showText(errorMsg)
+                })
             }
         }, onError: {error in
-            HUD.showText(error.localizedDescription)
+            HUD.showText(error.message)
         }).addDisposableTo(disposeBag)
         
     }
@@ -58,6 +62,11 @@ class LoginViewController: UIViewController {
     @IBAction func cancelButtonAction(_ sender: Any) {
         view.endEditing(true)
         dismiss(animated: true, completion: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        view.endEditing(true)
     }
     
     override func didReceiveMemoryWarning() {

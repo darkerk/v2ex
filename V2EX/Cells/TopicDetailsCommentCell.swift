@@ -68,6 +68,15 @@ class TopicDetailsCommentCell: UITableViewCell {
         nameLabel.isUserInteractionEnabled = true
         let nameTap = UITapGestureRecognizer(target: self, action: #selector(userTapAction(_:)))
         nameLabel.addGestureRecognizer(nameTap)
+        
+        let cellTap = UITapGestureRecognizer(target: self, action: #selector(cellTapAction(_:)))
+        addGestureRecognizer(cellTap)
+    }
+    
+    func cellTapAction(_ sender: Any) {
+        if let tableView = superview?.superview as? UITableView, let indexPath = tableView.indexPath(for: self) {
+            tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+        }
     }
     
     func userTapAction(_ sender: Any) {

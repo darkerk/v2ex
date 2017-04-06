@@ -96,7 +96,7 @@ class InputCommentBar: UIToolbar {
             textView.resignFirstResponder()
         }
         if isClear {
-            textView.text = ""
+            clear()
         }
     }
     
@@ -112,6 +112,9 @@ extension InputCommentBar: GrowingTextViewDelegate {
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        if !textView.text.isEmpty && !sendButton.isEnabled {
+            clear()
+        }
         shouldBeginEditing?(false)
         return true
     }

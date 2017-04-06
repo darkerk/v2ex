@@ -187,16 +187,16 @@ extension SettingViewController: UIImagePickerControllerDelegate, UINavigationCo
 
 extension SettingViewController {
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        if section == 2 {
-            let verson = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+        if section == 3 {
+            let version = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
             let build = Bundle.main.infoDictionary!["CFBundleVersion"] as! String
-            return "Version" + verson + "（build \(build)）"
+            return "Version" + version + "（build \(build)）"
         }
         return nil
     }
     
     override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-        if section == 2 && view is UITableViewHeaderFooterView {
+        if section == 3 && view is UITableViewHeaderFooterView {
             let header = view as! UITableViewHeaderFooterView
             header.textLabel?.font = UIFont.systemFont(ofSize: 13)
             header.textLabel?.textAlignment = .center
@@ -240,6 +240,14 @@ extension SettingViewController {
             privacyAction(type: indexPath.row == 0 ? .online(value: Account.shared.privacy.online) : .topic(value: Account.shared.privacy.topic))
         }else if indexPath.section == 2 {
             performSegue(withIdentifier: AboutLicensesViewController.segueId, sender: indexPath)
+        }else if indexPath.section == 3 {
+            let alert = UIAlertController(title: "退出 V2EX?", message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "退出", style: .default, handler: {_ in
+                Account.shared.logout()
+                self.navigationController?.popViewController(animated: true)
+            }))
+            present(alert, animated: true, completion: nil)
         }
     }
 }

@@ -21,4 +21,13 @@ struct Account {
     private init() {
     }
     
+    mutating func logout() {
+        isLoggedIn.value = false
+        user.value = nil
+        isDailyRewards = false
+        HTTPCookieStorage.shared.cookies?.forEach({ cookie in
+            HTTPCookieStorage.shared.deleteCookie(cookie)
+        })
+    }
+    
 }

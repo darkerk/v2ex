@@ -32,6 +32,12 @@ class ProfileHeaderView: UIView {
         avatarButton.layer.cornerRadius = 40
         nameLabel.isHidden = true
     }
+    
+    func logout() {
+        avatarButton.setTitle("登录", for: .normal)
+        avatarButton.setBackgroundImage(nil, for: .normal)
+        nameLabel.isHidden = true
+    }
 }
 
 extension Reactive where Base: ProfileHeaderView {

@@ -25,9 +25,14 @@ class ProfileViewController: UITableViewController {
         
         tableView.delegate = nil
         tableView.dataSource = nil
-        
-        Account.shared.isLoggedIn.asObservable().map({!$0}).bindTo(headerView.rx.isLoginEnabled).addDisposableTo(disposeBag)
+
         Account.shared.user.asObservable().bindTo(headerView.rx.user).addDisposableTo(disposeBag)
+        Account.shared.isLoggedIn.asObservable().subscribe(onNext: {isLoggedIn in
+            self.headerView.avatarButton.isUserInteractionEnabled = !isLoggedIn
+            if !isLoggedIn {
+                self.headerView.logout()
+            }
+        }).addDisposableTo(disposeBag)
         
         let menuItems = [(#imageLiteral(resourceName: "slide_menu_topic"), "个人"), (#imageLiteral(resourceName: "slide_menu_message"), "消息"), (#imageLiteral(resourceName: "slide_menu_favorite"), "收藏"), (#imageLiteral(resourceName: "slide_menu_setting"), "设置")]
         Observable.just(menuItems).bindTo(tableView.rx.items) { (tableView, row, item) in
@@ -38,18 +43,18 @@ class ProfileViewController: UITableViewController {
         
         tableView.rx.itemSelected.subscribe(onNext: {[weak self] indexPath in
             guard let `self` = self else { return }
-            `self`.tableView.deselectRow(at: indexPath, animated: true)
+            self.tableView.deselectRow(at: indexPath, animated: true)
             guard let nav = self.navController else {
+                return
+            }
+            guard Account.shared.isLoggedIn.value else {
+                self.showLoginView()
                 return
             }
             switch indexPath.row {
             case 0:
-                if Account.shared.isLoggedIn.value {
-                    self.drawerViewController?.isOpenDrawer = false
-                    TimelineViewController.show(from: nav, user: Account.shared.user.value)
-                }else {
-                    `self`.showLoginView()
-                }
+                self.drawerViewController?.isOpenDrawer = false
+                TimelineViewController.show(from: nav, user: Account.shared.user.value)
             case 1:
                 self.drawerViewController?.isOpenDrawer = false
                 nav.performSegue(withIdentifier: MessageViewController.segueId, sender: nil)

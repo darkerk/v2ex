@@ -93,18 +93,26 @@ struct HTMLParser {
         return nil
     }
     
-    // MARK: - 登录用户的头像
-    func userInfo(html data: Data) -> (username: String, avatar: String)? {
+    // MARK: - 登录结果
+    func loginResult(html data: Data) -> (user: User?, problem: String?) {
         guard let html = HTML(html: data, encoding: .utf8) else {
-            return nil
+            return (nil, "登录失败，请稍后再试")
         }
-        if let element = html.css(".top").first(where: {$0["href"]?.hasPrefix("/member") == true}) {
-            if let href = element["href"], let src = element.css("img").first?["src"] {
-                let name = href.replacingOccurrences(of: "/member/", with: "")
-                return (name, src)
-            }
+        let path = html.xpath("//body/div[@id='Top']/div[@class='content']/div/table/tr/td[3]/a[1]")
+        if let href = path.first?["href"] {
+            let name = href.replacingOccurrences(of: "/member/", with: "")
+            let src = path.first?.xpath("./img").first?["src"] ?? ""
+            let user = User(name: name, href: href, src: src)
+            return (user, nil)
         }
-        return nil
+        
+        var problem = "登录失败，请稍后再试"
+        
+        let problemPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='problem']/ul")
+        if let content = problemPath.first?.content {
+            problem = content
+        }
+        return (nil, problem)
     }
     
     // MARK: - 首页话题列表

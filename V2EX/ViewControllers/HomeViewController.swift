@@ -27,6 +27,19 @@ class HomeViewController: UITableViewController {
         tableView.delegate = nil
         tableView.dataSource = nil
         
+        refreshControl = UIRefreshControl()
+        refreshControl?.rx.controlEvent(.valueChanged)
+            .flatMapLatest({[unowned viewModel]_ in
+                viewModel.fetchTopics()})
+            .shareReplay(1)
+            .subscribe(onNext: {isEmpty in
+                
+        }, onError: {error in
+            print("error: ", error)
+        }).addDisposableTo(disposeBag)
+
+        viewModel.loadingActivityIndicator.asObservable().bindTo(refreshControl!.rx.isRefreshing).addDisposableTo(disposeBag)
+        
         dataSource.configureCell = {[weak self] (ds, table, indexPath, _) in
             let cell: TopicViewCell = table.dequeueReusableCell()
             let item = ds[indexPath]
@@ -51,6 +64,9 @@ class HomeViewController: UITableViewController {
             guard let strongSelf = self else { return }
             strongSelf.tableView.deselectRow(at: indexPath, animated: true)
         }).addDisposableTo(disposeBag)
+
+        refreshControl?.sendActions(for: .valueChanged)
+        tableView.setContentOffset(CGPoint(x: 0, y: -60), animated: true)
     }
     
     @IBAction func leftBarItemAction(_ sender: Any) {
@@ -81,7 +97,9 @@ class HomeViewController: UITableViewController {
         switch segue.destination {
         case is NodesViewController:
             let controller = segue.destination as! NodesViewController
-            controller.preferredContentSize = CGSize(width: 150, height: UIScreen.main.bounds.height * 0.65)
+            if UIScreen.main.traitCollection.userInterfaceIdiom == .phone {
+                controller.preferredContentSize = CGSize(width: 150, height: UIScreen.main.bounds.height * 0.65)
+            }
             controller.popoverPresentationController?.delegate = self
             controller.viewModel.nodeItems = viewModel.defaultNodes
             controller.selectedItem.asObservable().subscribe(onNext: {[weak self] node in
@@ -97,7 +115,9 @@ class HomeViewController: UITableViewController {
                             return newNode
                         })
                         self.viewModel.defaultNodes.value = defaultNodes
-                        self.viewModel.fetchTopics(nodeHref: node.href)
+                        self.viewModel.nodeHref = node.href
+                        self.viewModel.sections.value.removeAll()
+                        self.refreshControl?.sendActions(for: .valueChanged)
                     }
                 }
             }).addDisposableTo(disposeBag)

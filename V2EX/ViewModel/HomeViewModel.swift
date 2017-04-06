@@ -7,30 +7,26 @@
 //
 
 import RxSwift
+import Moya
 
 class HomeViewModel {
     let sections = Variable<[TopicListSection]>([])
     let defaultNodes = Variable<[Node]>([])
+    let loadingActivityIndicator = ActivityIndicator()
     
+    var nodeHref: String = ""
     private let disposeBag = DisposeBag()
     
-    init() {
-        fetchTopics()
-    }
-    
-    func fetchTopics(nodeHref: String = "") {
-        API.provider.request(API.topics(nodeHref: nodeHref)).subscribe(onNext: { response in
-            
-            let nodes = HTMLParser.shared.homeNodes(html: response.data)
-            if !nodes.isEmpty && self.defaultNodes.value.isEmpty {
+    func fetchTopics() -> Observable<Bool> {
+        return API.provider.request(API.topics(nodeHref: nodeHref)).flatMapLatest({response -> Observable<Bool> in
+            if self.defaultNodes.value.isEmpty {
+                let nodes = HTMLParser.shared.homeNodes(html: response.data)
                 self.defaultNodes.value = nodes
             }
             let topics = HTMLParser.shared.homeTopics(html: response.data)
             self.sections.value = [TopicListSection(header: "home", topics: topics)]
-            
-        }, onError: {error in
-            print(error)
-        }).addDisposableTo(disposeBag)
+            return Observable.just(topics.isEmpty)
+        }).shareReplay(1).observeOn(MainScheduler.instance).trackActivity(loadingActivityIndicator)
     }
     
     func removeTopic(for id: String) {

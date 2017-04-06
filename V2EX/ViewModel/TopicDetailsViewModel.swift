@@ -15,6 +15,7 @@ class TopicDetailsViewModel {
     let countTime = Variable<String>("")
     let sections = Variable<[TopicDetailsSection]>([])
     let updateTopic = Variable<Topic?>(nil)
+    let loadingActivityIndicator = ActivityIndicator()
     let loadMoreActivityIndicator = ActivityIndicator()
     
     var currentPage = 1
@@ -48,7 +49,10 @@ class TopicDetailsViewModel {
     }
     
     func fetchDetails(href: String) {
-        API.provider.request(.pageList(href: href, page: 0)).subscribe(onNext: { response in
+        API.provider.request(.pageList(href: href, page: 0))
+            .observeOn(MainScheduler.instance)
+            .trackActivity(loadingActivityIndicator)
+            .subscribe(onNext: { response in
             if let data = HTMLParser.shared.topicDetails(html: response.data) {
                 self.topic.token = data.topic.token
                 self.topic.isThank = data.topic.isThank

@@ -28,7 +28,7 @@ class LoginViewModel {
                 }else {
                     return Observable.error(NetError.message(text: "获取once失败"))
                 }
-            }.observeOn(MainScheduler.instance).trackActivity(activityIndicator)
+            }.shareReplay(1).observeOn(MainScheduler.instance).trackActivity(activityIndicator)
         }
     }
 }

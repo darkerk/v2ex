@@ -40,8 +40,7 @@ class TopicDetailsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(moreAction(_:)))
-        
+
         tableView.keyboardDismissMode = .onDrag
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
@@ -86,12 +85,26 @@ class TopicDetailsViewController: UITableViewController {
         }
         
         dataSource.canEditRowAtIndexPath = {_ in
-            return true
+            return Account.shared.isLoggedIn.value
         }
         
         viewModel.updateTopic.asObservable().bindTo(headerView.rx.topic).addDisposableTo(disposeBag)
         viewModel.content.asObservable().bindTo(headerView.rx.htmlString).addDisposableTo(disposeBag)
         viewModel.sections.asObservable().bindTo(tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
+        viewModel.loadingActivityIndicator.asObservable().subscribe(onNext: {[weak self] isLoading in
+            guard let `self` = self else { return }
+            if isLoading {
+                let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+                activityIndicator.startAnimating()
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
+            }else {
+                if Account.shared.isLoggedIn.value {
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
+                }else {
+                    self.navigationItem.rightBarButtonItem = nil
+                }
+            }
+        }).addDisposableTo(disposeBag)
         
         inputbar.rx.sendEvent.subscribe(onNext: {[weak viewModel, weak inputbar, weak self] (text, atName) in
             HUD.show()
@@ -106,7 +119,7 @@ class TopicDetailsViewController: UITableViewController {
             })
         }).addDisposableTo(disposeBag)
         
-        /// 处理当键盘
+        /// 处理当键盘弹出时，点击web会造成inputbar取消第一响应
         inputbar.shouldBeginEditing = {[weak self] isEditing in
             self?.headerView.webView.isUserInteractionEnabled = !isEditing
             self?.canCancelFirstResponder = true
@@ -218,7 +231,10 @@ class TopicDetailsViewController: UITableViewController {
     }
     
     override var inputAccessoryView: UIView? {
-        return inputbar
+        if Account.shared.isLoggedIn.value {
+            return inputbar
+        }
+        return nil
     }
     
     override var canBecomeFirstResponder: Bool {
@@ -265,24 +281,25 @@ extension TopicDetailsViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
         switch dataSource[indexPath.section].type {
         case .more:
+            tableView.deselectRow(at: indexPath, animated: true)
             if let cell = tableView.cellForRow(at: indexPath) as? LoadMoreCommentCell {
                 viewModel?.loadMoreActivityIndicator.asObservable().bindTo(cell.activityIndicatorView.rx.isAnimating).addDisposableTo(disposeBag)
             }
             viewModel?.fetchMoreComments()
         case .data:
-            if lastSelectIndexPath != indexPath {
-                inputbar.clear()
-            }
-            lastSelectIndexPath = indexPath
-            let item = dataSource[indexPath.section].comments[indexPath.row]
-            inputbar.atName = item.user?.name
-            
             canCancelFirstResponder = true
             becomeFirstResponder()
             inputbar.startEditing()
+            
+            if lastSelectIndexPath != indexPath {
+                inputbar.clear()
+            }
+            
+            lastSelectIndexPath = indexPath
+            let item = dataSource[indexPath.section].comments[indexPath.row]
+            inputbar.atName = item.user?.name
         }
     }
 }
