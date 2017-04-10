@@ -243,7 +243,7 @@ struct HTMLParser {
     }
     
     // MARK: - 个人的主题和回复
-    func timeline(html data: Data) -> (joinTime: String, topicPrivacy: String, topics: [Topic], replys: [Reply], moreTopicHref: String, moreRepliesHref: String)? {
+    func timeline(html data: Data) -> (joinTime: String, topicPrivacy: String, topics: [Topic], replys: [Reply], moreTopicHref: String, moreRepliesHref: String, isFollowed: Bool, isBlockd: Bool, tValue: String, idValue: String)? {
         guard let html = HTML(html: data, encoding: .utf8) else {
             return nil
         }
@@ -303,7 +303,15 @@ struct HTMLParser {
         let moreRepliesPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][last()]/div[@class='inner'][last()]/a")
         let moreRepliesHref = moreRepliesPath.first?["href"] ?? ""
         
-        return (joinTime, topicPrivacy, topicItems, replyItems, moreTopicHref, moreRepliesHref)
+        let followPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[1]/table/tr/td[3]/div[@class='fr']/input[1]")
+        let blockPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[1]/table/tr/td[3]/div[@class='fr']/input[2]")
+        let followHref = followPath.first?["onclick"]?.components(separatedBy: "location.href = '").last?.components(separatedBy: "'").first ?? ""
+        let blockHref = blockPath.first?["onclick"]?.components(separatedBy: "location.href = '").last?.components(separatedBy: "'").first ?? ""
+        let isFollowed = followHref.contains("unfollow")
+        let tValue = blockHref.components(separatedBy: "?t=").last ?? ""
+        let isBlockd = blockHref.contains("unblock")
+        let idValue = followHref.components(separatedBy: "?t=").first?.components(separatedBy: "/").last ?? ""
+        return (joinTime, topicPrivacy, topicItems, replyItems, moreTopicHref, moreRepliesHref, isFollowed, isBlockd, tValue, idValue)
     }
     
     // MARK: - 个人的全部主题

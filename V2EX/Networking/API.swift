@@ -58,6 +58,10 @@ enum API {
     case ignoreTopic(id: String, once: String)
     /// 收藏/取消收藏 话题或节点
     case favorite(type: FavoriteType, isCancel: Bool)
+    /// 关注用户／取消关注
+    case follow(id: String, once: String, isCancel: Bool)
+    /// 屏蔽用户／取消屏蔽
+    case block(id: String, token: String, isCancel: Bool)
 }
 
 extension API: TargetType {
@@ -116,6 +120,10 @@ extension API: TargetType {
             case let .node(id, _):
                 return (isCancel ? "/unfavorite" :  "/favorite") + "/node/\(id)"
             }
+        case let .follow(id, _, isCancel):
+            return (isCancel ? "/unfollow" :  "/follow") + "/\(id)"
+        case let .block(id, _, isCancel):
+            return (isCancel ? "/unblock" :  "/block") + "/\(id)"
         default:
             return ""
         }
@@ -172,6 +180,10 @@ extension API: TargetType {
             case let .node(_, once):
                 return ["once": once]
             }
+        case let .follow(_, once, _):
+            return ["once": once]
+        case let .block(_, token, _):
+            return ["t": token]
         default:
             return nil
         }

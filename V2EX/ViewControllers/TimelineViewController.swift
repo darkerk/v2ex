@@ -10,12 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import PKHUD
 
 class TimelineViewController: UITableViewController {
     @IBOutlet weak var headerView: TimelineHeaderView!
     
     var user: User?
-    
+    let viewModel = TimelineViewModel()
     let dataSource = RxTableViewSectionedReloadDataSource<TimelineSection>()
     fileprivate let disposeBag = DisposeBag()
     
@@ -33,6 +34,7 @@ class TimelineViewController: UITableViewController {
             return
         }
         navigationItem.title = user.name
+        viewModel.fetcTimeline(href: user.href)
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
@@ -63,7 +65,6 @@ class TimelineViewController: UITableViewController {
             return ds[section].title
         }
         
-        let viewModel = TimelineViewModel(href: user.href)
         viewModel.joinTime.asObservable().bindTo(headerView.rx.text).addDisposableTo(disposeBag)
         viewModel.sections.asObservable().bindTo(tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
         
@@ -73,6 +74,51 @@ class TimelineViewController: UITableViewController {
                 self.tableView.endUpdates()
             }
         }).addDisposableTo(disposeBag)
+        
+        viewModel.loadingActivityIndicator.asObservable().subscribe(onNext: {[weak self] isLoading in
+            guard let `self` = self else { return }
+            if isLoading {
+                let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+                activityIndicator.startAnimating()
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
+            }else {
+                if Account.shared.isLoggedIn.value {
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
+                }else {
+                    self.navigationItem.rightBarButtonItem = nil
+                }
+            }
+        }).addDisposableTo(disposeBag)
+    }
+    
+    func moreAction(_ sender: Any) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        let isFollowed = viewModel.isFollowed
+        let followAction = UIAlertAction(title: isFollowed ? "取消关注" : "关注", style: .default, handler: {action in
+            self.viewModel.sendFollow(completion: {isSuccess in
+                if isSuccess {
+                    HUD.showText(isFollowed ? "取消关注成功！" : "关注成功！")
+                }else {
+                    HUD.showText(isFollowed ? "取消关注失败！" : "关注失败！")
+                }
+            })
+        })
+        
+        let isBlockd = viewModel.isBlockd
+        let blockAction = UIAlertAction(title: isBlockd ? "取消屏蔽" : "屏蔽", style: .default, handler: {action in
+            self.viewModel.sendBlock(completion: {isSuccess in
+                if isSuccess {
+                    HUD.showText(isBlockd ? "取消屏蔽成功！" : "屏蔽成功！")
+                }else {
+                    HUD.showText(isBlockd ? "取消屏蔽失败！" : "屏蔽失败！")
+                }
+            })
+        })
+        
+        alert.addAction(followAction)
+        alert.addAction(blockAction)
+        present(alert, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
