@@ -9,7 +9,7 @@
 import RxSwift
 import Moya
 
-enum FavoriteType: Int {
+enum FavoriteDataType: Int {
     case topic = 0, following = 1, node = 2
 }
 
@@ -30,7 +30,7 @@ class FavoriteViewModel {
     private var nodeCurrentPage = 1
     private var nodeTotalPage = 1
     
-    var type: FavoriteType = .topic {
+    var type: FavoriteDataType = .topic {
         didSet {
             if type != oldValue {
                 dataItems.value.removeAll()
@@ -136,6 +136,38 @@ class FavoriteViewModel {
             }
             nodeCurrentPage += 1
             fetcData(page: nodeCurrentPage, completion: completion)
+        }
+    }
+    
+    func removeItem(id: String) {
+        switch type {
+        case .topic:
+            if let index = topics.index(where: {data -> Bool in
+                switch data {
+                case let .topicItem(item):
+                    return item.id == id
+                default:
+                    return false
+                }
+            }) {
+                topics.remove(at: index)
+            }
+            
+            if let index = dataItems.value.index(where: {data -> Bool in
+                switch data {
+                case let .topicItem(item):
+                    return item.id == id
+                default:
+                    return false
+                }
+            }) {
+                dataItems.value.remove(at: index)
+            }
+            
+        case .following:
+            break
+        case .node:
+            break
         }
     }
 }

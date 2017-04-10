@@ -15,7 +15,7 @@ struct Node {
     
     var icon: String = ""
     var comments: Int = 0
-    
+
     init(name: String, href: String, isCurrent: Bool = false, icon: String = "", comments: Int = 0) {
         self.name = name
         self.href = href

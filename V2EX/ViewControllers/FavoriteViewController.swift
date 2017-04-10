@@ -62,7 +62,7 @@ class FavoriteViewController: UITableViewController {
     }
     
     @IBAction func segmentedChange(_ sender: UISegmentedControl) {
-        viewModel.type = FavoriteType(rawValue: sender.selectedSegmentIndex)!
+        viewModel.type = FavoriteDataType(rawValue: sender.selectedSegmentIndex)!
     }
     
     func linkTapAction(type: TapLink) {

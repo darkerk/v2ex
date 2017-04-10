@@ -8,7 +8,7 @@ PODS:
   - Moya/RxSwift (8.0.3):
     - Moya/Core
     - RxSwift (~> 3.0)
-  - PKHUD (4.2.0)
+  - PKHUD (4.2.1)
   - Result (3.2.1)
   - RxCocoa (3.2.0):
     - RxSwift (~> 3.1)
@@ -22,7 +22,7 @@ DEPENDENCIES:
   - Kanna (~> 2.1.1)
   - Kingfisher (~> 3.5.1)
   - Moya/RxSwift (~> 8.0.2)
-  - PKHUD (~> 4.2.0)
+  - PKHUD (~> 4.2.1)
   - RxCocoa (~> 3.2.0)
   - RxDataSources (~> 1.0.3)
   - SKPhotoBrowser (~> 4.0.1)
@@ -32,13 +32,13 @@ SPEC CHECKSUMS:
   Kanna: 9b4b086c218703f2b94f5b21a466217dd2f9332e
   Kingfisher: 9950e382c500b6834ce004c7c4131c444e90c3a1
   Moya: d3721622e3cc0cc2f038d69a258686f0b66e7252
-  PKHUD: 48af884cf00c2213b0313b739d914e6cab1c0f5e
+  PKHUD: 957ce2a68b3c97a51839b30216120c1dbc0c3a78
   Result: 2453a22e5c5b11c0c3a478736e82cd02f763b781
   RxCocoa: ccdf43101a70407097a29082f648ba1676075b30
   RxDataSources: a021a0e944ba5f7991259829d973afdbfa719c0b
   RxSwift: 8fc9f2de6275a9101d518444e00bf32f1a42caac
   SKPhotoBrowser: 3a7c6fc02aa1620ab17253a47a49fafda46536e8
 
-PODFILE CHECKSUM: 702d936518404e50aec23f82747162838ceea5a3
+PODFILE CHECKSUM: 905ce263b27bfd8b6f717a5fa9640af45bd06019
 
 COCOAPODS: 1.2.0

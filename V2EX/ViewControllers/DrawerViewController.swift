@@ -37,6 +37,7 @@ class DrawerViewController: UIViewController {
             var leftRect = leftViewController.view.frame
             var centerRect = centerViewController.view.frame
             
+            leftRect.size.height = centerRect.size.height
             leftRect.origin.x = newValue ? 0.0 : -leftDrawerWidth
             centerRect.origin.x += newValue ? leftDrawerWidth : -leftDrawerWidth
             
@@ -94,6 +95,7 @@ class DrawerViewController: UIViewController {
                 var centerFrame = centerViewController.view.frame
                 centerFrame.origin.x = min(self.leftDrawerWidth, max(self.startingPanX + point.x, 0.0))
                 leftFrame.origin.x = centerFrame.origin.x - leftFrame.width
+                leftFrame.size.height = centerFrame.size.height
                 
                 leftViewController.view.frame = leftFrame
                 centerViewController.view.frame = centerFrame
@@ -115,6 +117,7 @@ class DrawerViewController: UIViewController {
                 
                 var leftFrame = leftViewController.view.frame
                 leftFrame.origin.x = newFrame.origin.x - leftFrame.width
+                leftFrame.size.height = oldFrame.size.height
                 
                 let distance = abs(oldFrame.minX - newFrame.origin.x)
                 let minimumAnimationDuration: CGFloat = 0.15
@@ -160,10 +163,16 @@ class DrawerViewController: UIViewController {
                 centerViewController = segue.destination
                 (centerViewController as! UINavigationController).delegate = self
 
-                centerOverlayView = UIView(frame: centerViewController!.view.bounds)
+                centerOverlayView = UIView()
+                centerOverlayView?.translatesAutoresizingMaskIntoConstraints = false
                 centerOverlayView?.backgroundColor = UIColor.black
                 centerOverlayView?.alpha = 0.0
                 centerViewController!.view.addSubview(centerOverlayView!)
+                
+                centerOverlayView?.leadingAnchor.constraint(equalTo: centerViewController!.view.leadingAnchor).isActive = true
+                centerOverlayView?.trailingAnchor.constraint(equalTo: centerViewController!.view.trailingAnchor).isActive = true
+                centerOverlayView?.topAnchor.constraint(equalTo: centerViewController!.view.topAnchor).isActive = true
+                centerOverlayView?.bottomAnchor.constraint(equalTo: centerViewController!.view.bottomAnchor).isActive = true
                 
                 let tap = UITapGestureRecognizer()
                 tap.rx.event.subscribe(onNext: {_ in
@@ -197,6 +206,12 @@ extension UIViewController {
                 return drawer
             }
             drawer = parent?.parent
+        }
+        if let controller = drawer as? DrawerViewController {
+            return controller
+        }
+        if let controller = presentingViewController as? DrawerViewController {
+            return controller
         }
         return drawer as? DrawerViewController
     }

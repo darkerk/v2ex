@@ -12,6 +12,7 @@ import Moya
 class HomeViewModel {
     let sections = Variable<[TopicListSection]>([])
     let defaultNodes = Variable<[Node]>([])
+    var nodesNavigation: [(name: String, content: String)] = []
     let loadingActivityIndicator = ActivityIndicator()
     
     var nodeHref: String = ""
@@ -22,6 +23,10 @@ class HomeViewModel {
             if self.defaultNodes.value.isEmpty {
                 let nodes = HTMLParser.shared.homeNodes(html: response.data)
                 self.defaultNodes.value = nodes
+            }
+            if self.nodesNavigation.isEmpty {
+                let navigation = HTMLParser.shared.nodesNavigation(html: response.data)
+                self.nodesNavigation = navigation
             }
             let topics = HTMLParser.shared.homeTopics(html: response.data)
             self.sections.value = [TopicListSection(header: "home", topics: topics)]

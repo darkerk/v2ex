@@ -20,6 +20,11 @@ enum ThankType {
     case reply(id: String)
 }
 
+enum FavoriteType {
+    case topic(id: String, token: String)
+    case node(id: String, once: String)
+}
+
 enum API {
     /// once凭证
     case once()
@@ -51,8 +56,8 @@ enum API {
     case thank(type: ThankType, token: String)
     /// 忽略主题
     case ignoreTopic(id: String, once: String)
-    /// 收藏话题
-    case favorite(id: String, token: String, isCancel: Bool)
+    /// 收藏/取消收藏 话题或节点
+    case favorite(type: FavoriteType, isCancel: Bool)
 }
 
 extension API: TargetType {
@@ -104,8 +109,13 @@ extension API: TargetType {
             }
         case let .ignoreTopic(id, _):
             return "/ignore/topic/\(id)"
-        case let .favorite(id, _, isCancel):
-            return (isCancel ? "/unfavorite" :  "/favorite") + "/topic/\(id)"
+        case let .favorite(type, isCancel):
+            switch type {
+            case let .topic(id, _):
+                return (isCancel ? "/unfavorite" :  "/favorite") + "/topic/\(id)"
+            case let .node(id, _):
+                return (isCancel ? "/unfavorite" :  "/favorite") + "/node/\(id)"
+            }
         default:
             return ""
         }
@@ -151,10 +161,17 @@ extension API: TargetType {
             }
         case let .comment(_ , content, once):
             return ["content": content, "once": once]
-        case let .thank(_, token), let .favorite(_, token, _):
+        case let .thank(_, token):
             return ["t": token]
         case let .ignoreTopic(_, once):
             return ["once": once]
+        case let .favorite(type, _):
+            switch type {
+            case let .topic(_, token):
+                return ["t": token]
+            case let .node(_, once):
+                return ["once": once]
+            }
         default:
             return nil
         }

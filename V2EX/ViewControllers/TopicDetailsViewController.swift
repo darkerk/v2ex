@@ -15,6 +15,7 @@ import PKHUD
 
 @objc protocol TopicDetailsViewControllerDelegate: class {
     @objc optional func topicDetailsViewController(viewcontroller: TopicDetailsViewController, ignoreTopic topicId: String?)
+    @objc optional func topicDetailsViewController(viewcontroller: TopicDetailsViewController, unfavorite topicId: String?)
 }
 
 class TopicDetailsViewController: UITableViewController {
@@ -30,9 +31,9 @@ class TopicDetailsViewController: UITableViewController {
     fileprivate var lastSelectIndexPath: IndexPath?
     fileprivate var canCancelFirstResponder = true
     
-    class func show(from navigationController: UINavigationController, topic: Topic) {
+    class func show(from navigationController: UINavigationController, topic: Topic, delegate: TopicDetailsViewControllerDelegate? = nil) {
         let controller = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: TopicDetailsViewController.segueId) as! TopicDetailsViewController
-        
+        controller.delegate = delegate
         controller.viewModel = TopicDetailsViewModel(topic: topic)
         navigationController.pushViewController(controller, animated: true)
     }
@@ -173,6 +174,9 @@ class TopicDetailsViewController: UITableViewController {
             viewModel.sendFavorite(completion: {isSuccess in
                 if isSuccess {
                     HUD.showText(isFavorite ? "取消收藏成功！" : "收藏成功！")
+                    if isFavorite {
+                        self.delegate?.topicDetailsViewController?(viewcontroller: self, unfavorite: viewModel.topic.id)
+                    }
                 }else {
                     HUD.showText(isFavorite ? "取消收藏失败！" : "收藏失败！")
                 }

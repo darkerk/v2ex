@@ -9,9 +9,11 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import PKHUD
 
 class NodeTopicsViewController: UITableViewController {
 
+    let viewModel = NodeTopicsViewModel()
     var nodeHref: String = ""
     
     fileprivate let disposeBag = DisposeBag()
@@ -31,7 +33,8 @@ class NodeTopicsViewController: UITableViewController {
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
         
-        let viewModel = NodeTopicsViewModel(href: nodeHref)
+        viewModel.nodeHref = nodeHref
+        viewModel.fetcData()
 
         viewModel.items.asObservable().bindTo(tableView.rx.items) {[weak navigationController] (table, row, item) in
             let cell: NodeTopicsViewCell = table.dequeueReusableCell()
@@ -50,29 +53,58 @@ class NodeTopicsViewController: UITableViewController {
             }
         }).addDisposableTo(disposeBag)
         
-        tableView.addInfiniteScrolling {[weak tableView] in
-            viewModel.fetchMoreData(completion: {
-                tableView?.infiniteScrollingView?.stopAnimating()
-            })
+        tableView.addInfiniteScrolling {[weak viewModel] in
+            viewModel?.fetchMoreData()
         }
+        
         viewModel.loadMoreEnabled.asObservable().bindTo(tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
+        viewModel.loadMoreCompleted.asObservable().subscribe(onNext: {[weak tableView] isFinished in
+            if isFinished {
+                tableView?.infiniteScrollingView?.stopAnimating()
+            }
+        }).addDisposableTo(disposeBag)
+        
+        viewModel.loadingActivityIndicator.asObservable().subscribe(onNext: {[weak self] isLoading in
+            guard let `self` = self else { return }
+            if isLoading {
+                let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+                activityIndicator.startAnimating()
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
+            }else {
+                if Account.shared.isLoggedIn.value {
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
+                }else {
+                    self.navigationItem.rightBarButtonItem = nil
+                }
+            }
+        }).addDisposableTo(disposeBag)
     }
 
+    func moreAction(_ sender: Any) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        let isFavorite = viewModel.isFavorited
+        let favoriteAction = UIAlertAction(title: isFavorite ? "取消收藏" : "收藏", style: .default, handler: {action in
+            self.viewModel.sendFavorite(completion: {isSuccess in
+                if isSuccess {
+                    HUD.showText(isFavorite ? "取消收藏成功！" : "收藏成功！")
+                }else {
+                    HUD.showText(isFavorite ? "取消收藏失败！" : "收藏失败！")
+                }
+            })
+        })
+        
+        alert.addAction(favoriteAction)
+        alert.addAction(UIAlertAction(title: "创建新主题", style: .default, handler: {_ in
+
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 extension NodeTopicsViewController {

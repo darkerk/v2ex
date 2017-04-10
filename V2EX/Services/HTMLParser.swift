@@ -120,7 +120,7 @@ struct HTMLParser {
         guard let html = HTML(html: data, encoding: .utf8) else {
             return []
         }
-        
+
         var path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell item']")
         if Account.shared.isLoggedIn.value {
             if Account.shared.isDailyRewards {
@@ -154,6 +154,22 @@ struct HTMLParser {
             }
             return nil
         })
+        return items
+    }
+    
+    // MARK: - 节点导航
+    func nodesNavigation(html data: Data) -> [(name: String, content: String)] {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return []
+        }
+        let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][last()]/div[position()>1]")
+        let items = path.flatMap { e -> (name: String, content: String)? in
+            if let name = e.xpath("./table/tr/td[1]/span").first?.content,
+                let content = e.xpath("./table/tr/td[2]").first?.innerHTML {
+                return (name, content)
+            }
+            return nil
+        }
         return items
     }
     
@@ -461,11 +477,10 @@ struct HTMLParser {
     }
     
     // MARK: - 节点的话题列表
-    func nodeTopics(html data: Data) -> (topics: [Topic], currentPage: Int, totalPage: Int)? {
+    func nodeTopics(html data: Data) -> (topics: [Topic], currentPage: Int, totalPage: Int, favoriteHref: String)? {
         guard let html = HTML(html: data, encoding: .utf8) else {
             return nil
         }
-        
         let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell']")
         let items = path.flatMap({e -> Topic? in
             if let userSrc = e.xpath("./table/tr/td[1]/a/img").first?["src"],
@@ -487,16 +502,10 @@ struct HTMLParser {
         let currentPage = pageTotal.components(separatedBy: "/").first ?? "1"
         let totalPage = pageTotal.components(separatedBy: "/").last ?? "1"
         
-        return (items, Int(currentPage)!, Int(totalPage)!)
-    }
-    
-    // MARK: - 上传头像once值
-    func uploadOnce(html data: Data) -> String? {
-        guard let html = HTML(html: data, encoding: .utf8) else {
-            return nil
-        }
-        let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='inner']/form/table/tr[last()]//input[@name='once']")
-        return path.first?["value"]
+        let favoritePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='header']/div[@class='fr f12']/a")
+        let favoriteHref = favoritePath.first?["href"] ?? ""
+        
+        return (items, Int(currentPage)!, Int(totalPage)!, favoriteHref)
     }
     
     // MARK: - 上传头像成功后新头像

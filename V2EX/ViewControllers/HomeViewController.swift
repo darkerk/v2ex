@@ -96,12 +96,11 @@ class HomeViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.destination {
         case is NodesViewController:
+
             let controller = segue.destination as! NodesViewController
-            if UIScreen.main.traitCollection.userInterfaceIdiom == .phone {
-                controller.preferredContentSize = CGSize(width: 150, height: UIScreen.main.bounds.height * 0.65)
-            }
             controller.popoverPresentationController?.delegate = self
-            controller.viewModel.nodeItems = viewModel.defaultNodes
+            controller.nodeItems = viewModel.defaultNodes
+            controller.nodesNavigation = viewModel.nodesNavigation
             controller.selectedItem.asObservable().subscribe(onNext: {[weak self] node in
                 if let node = node {
                     guard let `self` = self else {

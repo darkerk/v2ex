@@ -12,21 +12,21 @@ import RxCocoa
 
 class NodesViewController: UITableViewController {
 
-    lazy var viewModel = NodeViewModel()
-    private let disposeBag = DisposeBag()
-    
-    var currentNode: Node?
+    var nodeItems: Variable<[Node]>?
+    var nodesNavigation: [(name: String, content: String)] = []
     let selectedItem = Variable<Node?>(nil)
+
+    private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.delegate = nil
         tableView.dataSource = nil
-        viewModel.nodeItems?.asObservable().bindTo(tableView.rx.items) { (tableView, row, item) in
+        nodeItems?.asObservable().bindTo(tableView.rx.items) { (tableView, row, item) in
             let cell: UITableViewCell = tableView.dequeueReusableCell()
             cell.textLabel?.text = item.name
-            cell.textLabel?.textColor = item.isCurrent ? #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) : #colorLiteral(red: 0.2509803922, green: 0.2509803922, blue: 0.2509803922, alpha: 1)
+            cell.textLabel?.textColor = item.isCurrent ? #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) : #colorLiteral(red: 0.3137254902, green: 0.3137254902, blue: 0.3137254902, alpha: 1)
             return cell
             
             }.addDisposableTo(disposeBag)
@@ -41,7 +41,13 @@ class NodesViewController: UITableViewController {
             guard let strongSelf = self else { return }
             strongSelf.tableView.deselectRow(at: indexPath, animated: true)
         }).addDisposableTo(disposeBag)
-        
+    }
+    
+    @IBAction func navigationAction(_ sender: Any) {
+        if let navigationController = drawerViewController?.centerViewController as? UINavigationController {
+            dismiss(animated: true, completion: nil)
+            NodeNavigationViewController.show(from: navigationController, items: nodesNavigation)
+        }
     }
 
     override func didReceiveMemoryWarning() {

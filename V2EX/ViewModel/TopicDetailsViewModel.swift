@@ -150,9 +150,9 @@ class TopicDetailsViewModel {
     }
     
     func sendFavorite(completion: ((Bool) -> Void)? = nil) {
-        let isFavorite = !topic.isFavorite
-        API.provider.request(.favorite(id: topic.id, token: topic.token, isCancel: isFavorite)).subscribe(onNext: {response in
-            self.topic.isFavorite = isFavorite
+        let isCancel = topic.isFavorite
+        API.provider.request(.favorite(type: .topic(id: topic.id, token: topic.token), isCancel: isCancel)).subscribe(onNext: {response in
+            self.topic.isFavorite = !isCancel
             completion?(true)
         }, onError: {error in
             completion?(false)
