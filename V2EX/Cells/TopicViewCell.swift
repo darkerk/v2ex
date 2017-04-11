@@ -23,7 +23,7 @@ class TopicViewCell: UITableViewCell {
     var topic: Topic? {
         willSet {
             if let model = newValue {
-                avatarView.kf.setImage(with: URL(string: model.owner?.avatar(.large) ?? ""))
+                avatarView.kf.setImage(with: URL(string: model.owner?.avatar(.large) ?? ""), placeholder: #imageLiteral(resourceName: "avatar_default"))
                 nodeLabel.text = " " + (model.node?.name ?? "") + " "
                 ownerNameLabel.text = model.owner?.name
                 timeLabel.text = model.lastReplyTime

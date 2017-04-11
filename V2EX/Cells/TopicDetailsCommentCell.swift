@@ -81,7 +81,7 @@ class TopicDetailsCommentCell: UITableViewCell {
         guard let model = comment else {
             return
         }
-        avatarView.kf.setImage(with: URL(string: model.user?.avatar(.large) ?? ""))
+        avatarView.kf.setImage(with: URL(string: model.user?.avatar(.large) ?? ""), placeholder: #imageLiteral(resourceName: "avatar_default"))
         nameLabel.text = model.user?.name
         floorLabel.text = "#" + model.number
         timeLabel.text = model.time

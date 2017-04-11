@@ -20,7 +20,7 @@ class MessageViewCell: UITableViewCell {
     var message: Message? {
         willSet {
             if let model = newValue {
-                avatarView.kf.setImage(with: URL(string: model.sender?.avatar(.large) ?? ""))
+                avatarView.kf.setImage(with: URL(string: model.sender?.avatar(.large) ?? ""), placeholder: #imageLiteral(resourceName: "avatar_default"))
                 nameLabel.text = model.sender?.name
                 timeLabel.text = model.time
                 topicLabel.text = model.topic?.title

@@ -82,7 +82,7 @@ class TimelineViewController: UITableViewController {
                 activityIndicator.startAnimating()
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
             }else {
-                if Account.shared.isLoggedIn.value {
+                if Account.shared.isLoggedIn.value && user.href != Account.shared.user.value?.href {
                     self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
                 }else {
                     self.navigationItem.rightBarButtonItem = nil

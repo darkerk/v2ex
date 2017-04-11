@@ -21,7 +21,7 @@ class NodeTopicsViewCell: UITableViewCell {
     var topic: Topic? {
         willSet {
             if let model = newValue {
-                avatarView.kf.setImage(with: URL(string: model.owner?.avatar(.large) ?? ""))
+                avatarView.kf.setImage(with: URL(string: model.owner?.avatar(.large) ?? ""), placeholder: #imageLiteral(resourceName: "avatar_default"))
                 ownerNameLabel.text = model.owner?.name
                 countLabel.text = "  \(model.replyCount)  "
                 titleLabel.text = model.title

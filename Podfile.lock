@@ -15,7 +15,7 @@ PODS:
   - RxDataSources (1.0.3):
     - RxCocoa (~> 3.0)
     - RxSwift (~> 3.0)
-  - RxSwift (3.3.1)
+  - RxSwift (3.4.0)
   - SKPhotoBrowser (4.0.1)
 
 DEPENDENCIES:
@@ -36,7 +36,7 @@ SPEC CHECKSUMS:
   Result: 2453a22e5c5b11c0c3a478736e82cd02f763b781
   RxCocoa: ccdf43101a70407097a29082f648ba1676075b30
   RxDataSources: a021a0e944ba5f7991259829d973afdbfa719c0b
-  RxSwift: 8fc9f2de6275a9101d518444e00bf32f1a42caac
+  RxSwift: 3789a1af753002a14edecdb698a2424624296a9c
   SKPhotoBrowser: 3a7c6fc02aa1620ab17253a47a49fafda46536e8
 
 PODFILE CHECKSUM: 905ce263b27bfd8b6f717a5fa9640af45bd06019
