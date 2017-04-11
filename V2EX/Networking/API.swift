@@ -32,6 +32,8 @@ enum API {
     case login(usernameKey: String, passwordKey: String, username: String, password: String, once: String)
     /// 首页话题（切换节点）
     case topics(nodeHref: String)
+    /// 领取每日奖励
+    case dailyRewards(once: String)
     /// 个人创建的话题和回复
     case timeline(userHref: String)
     /// 分页列表数据：话题详情评论、个人全部话题、个人全部回复
@@ -62,6 +64,8 @@ enum API {
     case follow(id: String, once: String, isCancel: Bool)
     /// 屏蔽用户／取消屏蔽
     case block(id: String, token: String, isCancel: Bool)
+    /// 发布新话题
+    case createTopic(nodeHref: String, title: String, content: String, once: String)
 }
 
 extension API: TargetType {
@@ -85,6 +89,8 @@ extension API: TargetType {
             return "/signin"
         case .login(_, _, _, _, _):
             return "/signin"
+        case .dailyRewards(_):
+            return "/mission/daily/redeem"
         case let .timeline(userHref):
             return userHref
         case let .pageList(href, _), let .comment(href, _, _):
@@ -124,6 +130,8 @@ extension API: TargetType {
             return (isCancel ? "/unfollow" :  "/follow") + "/\(id)"
         case let .block(id, _, isCancel):
             return (isCancel ? "/unblock" :  "/block") + "/\(id)"
+        case let .createTopic(nodeHref, _, _, _):
+            return nodeHref.replacingOccurrences(of: "go", with: "new")
         default:
             return ""
         }
@@ -133,7 +141,7 @@ extension API: TargetType {
         switch self {
         case .login(_, _, _, _, _):
             return .post
-        case .updateAvatar(_), .privacy(_, _), .comment(_, _, _), .thank(_, _):
+        case .updateAvatar(_), .privacy(_, _), .comment(_, _, _), .thank(_, _), .createTopic(_, _, _, _):
             return .post
         default:
             return .get
@@ -148,6 +156,8 @@ extension API: TargetType {
         switch self {
         case let .login(userNameKey, passwordKey, userName, password, once):
             return [userNameKey: userName, passwordKey: password, "once": once, "next": "/"]
+        case let .dailyRewards(once):
+            return ["once": once]
         case let .topics(nodeHref):
             if nodeHref.isEmpty {
                 return nil
@@ -184,6 +194,8 @@ extension API: TargetType {
             return ["once": once]
         case let .block(_, token, _):
             return ["t": token]
+        case let .createTopic(_, title, content, once):
+            return ["title": title, "content": content, "once": once]
         default:
             return nil
         }
@@ -213,7 +225,7 @@ extension API {
         }
     }
     
-   static let networkActivityPlugin = NetworkActivityPlugin(networkActivityClosure: {(change: NetworkActivityChangeType) in
+    static let networkActivityPlugin = NetworkActivityPlugin(networkActivityClosure: {(change: NetworkActivityChangeType) in
         switch change {
         case .began:
             UIApplication.shared.isNetworkActivityIndicatorVisible = true

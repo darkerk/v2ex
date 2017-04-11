@@ -35,9 +35,12 @@ class NodeTopicsViewModel {
                 self.favoriteHref = data.favoriteHref
                 self.isFavorited = data.favoriteHref.contains("/unfavorite/")
                 
-                self.items.value.append(contentsOf: data.topics)
+                if page == 1 {
+                    self.items.value = data.topics
+                }else {
+                    self.items.value.append(contentsOf: data.topics)
+                }
                 self.loadMoreEnabled.value = data.totalPage > data.currentPage
-                
                 if page > 1 {
                     self.loadMoreCompleted.value = true
                 }

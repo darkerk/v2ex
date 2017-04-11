@@ -44,6 +44,8 @@
 		CA47EB3E1E8270ED00737EA5 /* LICENSES.html in Resources */ = {isa = PBXBuildFile; fileRef = CA47EB3D1E8270ED00737EA5 /* LICENSES.html */; };
 		CA47EB401E82716A00737EA5 /* ABOUT.html in Resources */ = {isa = PBXBuildFile; fileRef = CA47EB3F1E82716A00737EA5 /* ABOUT.html */; };
 		CA47EB421E82763200737EA5 /* AboutLicensesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA47EB411E82763200737EA5 /* AboutLicensesViewController.swift */; };
+		CA4AB5E71E9C7DD500EC3D2F /* CreateTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4AB5E61E9C7DD500EC3D2F /* CreateTopicViewController.swift */; };
+		CA4AB5EB1E9C891400EC3D2F /* PlaceHolderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4AB5EA1E9C891400EC3D2F /* PlaceHolderTextView.swift */; };
 		CA4BA8A01E712BB300FEE50E /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = CA4BA89F1E712BB300FEE50E /* style.css */; };
 		CA4BA8A41E712DDE00FEE50E /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4BA8A31E712DDE00FEE50E /* AppStyle.swift */; };
 		CA4BA8C61E713D7300FEE50E /* TopicDetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4BA8C51E713D7300FEE50E /* TopicDetailsHeaderView.swift */; };
@@ -127,6 +129,8 @@
 		CA47EB3D1E8270ED00737EA5 /* LICENSES.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = LICENSES.html; sourceTree = "<group>"; };
 		CA47EB3F1E82716A00737EA5 /* ABOUT.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ABOUT.html; sourceTree = "<group>"; };
 		CA47EB411E82763200737EA5 /* AboutLicensesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutLicensesViewController.swift; sourceTree = "<group>"; };
+		CA4AB5E61E9C7DD500EC3D2F /* CreateTopicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTopicViewController.swift; sourceTree = "<group>"; };
+		CA4AB5EA1E9C891400EC3D2F /* PlaceHolderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceHolderTextView.swift; sourceTree = "<group>"; };
 		CA4BA89F1E712BB300FEE50E /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		CA4BA8A31E712DDE00FEE50E /* AppStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
 		CA4BA8C51E713D7300FEE50E /* TopicDetailsHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicDetailsHeaderView.swift; sourceTree = "<group>"; };
@@ -334,6 +338,7 @@
 				CA9DE88D1E7BCEC8003BA25F /* FavoriteViewController.swift */,
 				CA9DE88F1E7BCED5003BA25F /* SettingViewController.swift */,
 				CA47EB411E82763200737EA5 /* AboutLicensesViewController.swift */,
+				CA4AB5E61E9C7DD500EC3D2F /* CreateTopicViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -348,6 +353,7 @@
 				CA2EEC8C1E78D69000F723E8 /* TimelineHeaderView.swift */,
 				CA0A6B041E88AE7F00798F88 /* GrowingTextView.swift */,
 				CA0A6B061E890DF900798F88 /* InputCommentBar.swift */,
+				CA4AB5EA1E9C891400EC3D2F /* PlaceHolderTextView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -555,6 +561,7 @@
 				CA2EEC9D1E7942BE00F723E8 /* InfiniteScrollView.swift in Sources */,
 				CA2EEC951E790B6700F723E8 /* AllPostsViewController.swift in Sources */,
 				CA2EEC8F1E78DBD000F723E8 /* TimelineTopicViewCell.swift in Sources */,
+				CA4AB5E71E9C7DD500EC3D2F /* CreateTopicViewController.swift in Sources */,
 				CA0C0B1E1E7FC58800B68208 /* NodeTopicsViewCell.swift in Sources */,
 				CA3FFAE51E6FDBD300470DAD /* TopicDetailsViewModel.swift in Sources */,
 				CA90CD951E66ADEC00CD0B98 /* Node.swift in Sources */,
@@ -594,6 +601,7 @@
 				CA0A6B051E88AE7F00798F88 /* GrowingTextView.swift in Sources */,
 				CA670E6D1E8E37850091FBC8 /* TapLink.swift in Sources */,
 				CA4BA8A41E712DDE00FEE50E /* AppStyle.swift in Sources */,
+				CA4AB5EB1E9C891400EC3D2F /* PlaceHolderTextView.swift in Sources */,
 				CA353EA51E696D9F0006D37B /* LoginViewModel.swift in Sources */,
 				CA2DB6E61E6E95D200E585B8 /* TopicDetailsSection.swift in Sources */,
 				CAF418F61E8B509F005F26AF /* Error.swift in Sources */,

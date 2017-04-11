@@ -33,11 +33,10 @@ struct HTMLParser {
             let dailyPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='inner']/a")
             if let href = dailyPath.first?["href"], href == "/mission/daily" {
                 //领取今日的登录奖励
-                //print(href)
-                Account.shared.isDailyRewards = true
+                Account.shared.isDailyRewards.value = true
                 nodePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][2]/div[@class='cell'][2]/a")
             }else {
-                Account.shared.isDailyRewards = false
+                Account.shared.isDailyRewards.value = false
                 nodePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell'][2]/a")
             }
         }
@@ -98,21 +97,20 @@ struct HTMLParser {
         guard let html = HTML(html: data, encoding: .utf8) else {
             return (nil, "登录失败，请稍后再试")
         }
+
+        let problemPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='problem']/ul")
+        if let problem = problemPath.first?.content {
+            return (nil, problem)
+        }
+        
         let path = html.xpath("//body/div[@id='Top']/div[@class='content']/div/table/tr/td[3]/a[1]")
-        if let href = path.first?["href"] {
+        if let href = path.first?["href"], href.contains("/member/")  {
             let name = href.replacingOccurrences(of: "/member/", with: "")
             let src = path.first?.xpath("./img").first?["src"] ?? ""
             let user = User(name: name, href: href, src: src)
             return (user, nil)
         }
-        
-        var problem = "登录失败，请稍后再试"
-        
-        let problemPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='problem']/ul")
-        if let content = problemPath.first?.content {
-            problem = content
-        }
-        return (nil, problem)
+        return (nil, "登录失败，请稍后再试")
     }
     
     // MARK: - 首页话题列表
@@ -120,16 +118,23 @@ struct HTMLParser {
         guard let html = HTML(html: data, encoding: .utf8) else {
             return []
         }
-
-        var path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell item']")
-        if Account.shared.isLoggedIn.value {
-            if Account.shared.isDailyRewards {
-                path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][2]/div[@class='cell item']")
-            }else {
-                path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell item']")
-            }
+        
+        var path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]")
+        if Account.shared.isLoggedIn.value && Account.shared.isDailyRewards.value {
+            path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][2]")
         }
-        let items = path.flatMap({e -> Topic? in
+        
+        let unreadPath = path.first?.xpath("./div[@class='cell'][1]/table/tr/td[1]/input")
+        var unreadCount = "0"
+        if let unreadChar = unreadPath?.first?["value"]?.characters.first {
+            unreadCount = String(unreadChar)
+        }
+        
+        if let count = Int(unreadCount) {
+            Account.shared.unreadCount.value = count
+        }
+
+        let items = path.first?.xpath("./div[@class='cell item']").flatMap({e -> Topic? in
             if let userSrc = e.xpath(".//td[1]/a/img").first?["src"],
                 let nodeHref = e.xpath(".//td[3]/span[1]/a").first?["href"],
                 let nodeName = e.xpath(".//td[3]/span[1]/a").first?.content,
@@ -154,7 +159,7 @@ struct HTMLParser {
             }
             return nil
         })
-        return items
+        return items ?? []
     }
     
     // MARK: - 节点导航

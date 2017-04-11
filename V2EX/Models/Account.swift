@@ -8,14 +8,18 @@
 
 import Foundation
 import RxSwift
+import Moya
 
 struct Account {
-    var isDailyRewards = false //领取每日奖励
+    var isDailyRewards = Variable<Bool>(false) //领取每日奖励
+    let unreadCount = Variable<Int>(0)
     
     let user = Variable<User?>(nil)
     let isLoggedIn = Variable<Bool>(false)
     
     var privacy: Privacy = Privacy()
+    
+    private let disposeBag = DisposeBag()
     
     static var shared = Account()
     private init() {
@@ -24,10 +28,18 @@ struct Account {
     mutating func logout() {
         isLoggedIn.value = false
         user.value = nil
-        isDailyRewards = false
         HTTPCookieStorage.shared.cookies?.forEach({ cookie in
             HTTPCookieStorage.shared.deleteCookie(cookie)
         })
     }
     
+    func redeemDailyRewards() -> Observable<Response> {
+        return API.provider.request(.once()).flatMap { response -> Observable<Response> in
+            if let once = HTMLParser.shared.once(html: response.data) {
+                return API.provider.request(.dailyRewards(once: once))
+            }else {
+                return Observable.error(NetError.message(text: "获取once失败"))
+            }
+            }.shareReplay(1)
+    }
 }

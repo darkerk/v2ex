@@ -9,9 +9,11 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import Moya
+import PKHUD
 
 class ProfileViewController: UITableViewController {
-
+    
     @IBOutlet weak var headerView: ProfileHeaderView!
     
     private let disposeBag = DisposeBag()
@@ -25,10 +27,9 @@ class ProfileViewController: UITableViewController {
         
         tableView.delegate = nil
         tableView.dataSource = nil
-
+        
         Account.shared.user.asObservable().bindTo(headerView.rx.user).addDisposableTo(disposeBag)
         Account.shared.isLoggedIn.asObservable().subscribe(onNext: {isLoggedIn in
-            self.headerView.avatarButton.isUserInteractionEnabled = !isLoggedIn
             if !isLoggedIn {
                 self.headerView.logout()
             }
@@ -39,7 +40,7 @@ class ProfileViewController: UITableViewController {
             let cell: ProfileMenuViewCell = tableView.dequeueReusableCell()
             cell.configure(image: item.0, text: item.1)
             return cell
-        }.addDisposableTo(disposeBag)
+            }.addDisposableTo(disposeBag)
         
         tableView.rx.itemSelected.subscribe(onNext: {[weak self] indexPath in
             guard let `self` = self else { return }
@@ -56,6 +57,9 @@ class ProfileViewController: UITableViewController {
                 self.drawerViewController?.isOpenDrawer = false
                 TimelineViewController.show(from: nav, user: Account.shared.user.value)
             case 1:
+                if Account.shared.unreadCount.value > 0 {
+                    Account.shared.unreadCount.value = 0
+                }
                 self.drawerViewController?.isOpenDrawer = false
                 nav.performSegue(withIdentifier: MessageViewController.segueId, sender: nil)
             case 2:
@@ -68,10 +72,36 @@ class ProfileViewController: UITableViewController {
             }
             
         }).addDisposableTo(disposeBag)
-    }
 
+        if let cell = tableView.cellForRow(at: IndexPath(item: 1, section: 0)) as? ProfileMenuViewCell {
+            Account.shared.unreadCount.asObservable().bindTo(cell.rx.unread).addDisposableTo(disposeBag)
+        }
+        
+        Account.shared.isDailyRewards.asObservable().flatMap { canRedeem -> Observable<Response> in
+            if canRedeem {
+                return Account.shared.redeemDailyRewards()
+            }
+            return Observable.error(NetError.message(text: "每日奖励已经领取过"))
+        }.subscribe(onNext: { response in
+         
+            let str = String(data: response.data, encoding: .utf8) ?? "xxxx"
+            print(str)
+            
+            HUD.showText("已领取每日登录奖励！")
+            
+        }, onError: { error in
+            print(error.message)
+        }).addDisposableTo(disposeBag)
+        
+    }
+    
     @IBAction func loginButtonAction(_ sender: Any) {
-        showLoginView()
+        if let nav = navController, Account.shared.isLoggedIn.value {
+            drawerViewController?.isOpenDrawer = false
+            TimelineViewController.show(from: nav, user: Account.shared.user.value)
+        }else {
+            showLoginView()
+        }
     }
     
     func showLoginView() {
