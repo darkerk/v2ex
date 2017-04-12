@@ -76,18 +76,16 @@ class ProfileViewController: UITableViewController {
         if let cell = tableView.cellForRow(at: IndexPath(item: 1, section: 0)) as? ProfileMenuViewCell {
             Account.shared.unreadCount.asObservable().bindTo(cell.rx.unread).addDisposableTo(disposeBag)
         }
-        
-        Account.shared.isDailyRewards.asObservable().flatMap { canRedeem -> Observable<Response> in
+
+        Account.shared.isDailyRewards.asObservable().flatMapLatest { canRedeem -> Observable<Bool> in
             if canRedeem {
                 return Account.shared.redeemDailyRewards()
             }
-            return Observable.error(NetError.message(text: "每日奖励已经领取过"))
-        }.subscribe(onNext: { response in
-         
-            let str = String(data: response.data, encoding: .utf8) ?? "xxxx"
-            print(str)
-            
-            HUD.showText("已领取每日登录奖励！")
+            return Observable.just(false)
+        }.shareReplay(1).subscribe(onNext: { success in
+            if success {
+                HUD.showText("已领取每日登录奖励！")
+            }
             
         }, onError: { error in
             print(error.message)

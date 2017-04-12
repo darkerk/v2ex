@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import Moya
+import Kanna
 
 struct Account {
     var isDailyRewards = Variable<Bool>(false) //领取每日奖励
@@ -33,10 +34,20 @@ struct Account {
         })
     }
     
-    func redeemDailyRewards() -> Observable<Response> {
-        return API.provider.request(.once()).flatMap { response -> Observable<Response> in
+    func redeemDailyRewards() -> Observable<Bool> {
+        return API.provider.request(.once()).flatMapLatest { response -> Observable<Bool> in
             if let once = HTMLParser.shared.once(html: response.data) {
-                return API.provider.request(.dailyRewards(once: once))
+                return API.provider.request(.dailyRewards(once: once)).flatMapLatest({ resp-> Observable<Bool> in
+                    guard let html = HTML(html: resp.data, encoding: .utf8) else {
+                        return Observable.error(NetError.message(text: "请求获取失败"))
+                    }
+                    let path = html.xpath("//body/div[@id='Wrapper']/div/div/div[@class='message']")
+                    if let content = path.first?.content, content.contains("已成功领取") {
+                        return Observable.just(true)
+                    }else {
+                        return Observable.error(NetError.message(text: "领取奖励失败"))
+                    }
+                }).shareReplay(1)
             }else {
                 return Observable.error(NetError.message(text: "获取once失败"))
             }
