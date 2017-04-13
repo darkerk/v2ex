@@ -33,15 +33,18 @@ class HUDLoadingView: PKHUDRotatingImageView {
 extension HUD {
     static func show() {
         HUD.dimsBackground = true
+        PKHUD.sharedHUD.effect = UIBlurEffect(style: .extraLight)
         PKHUD.sharedHUD.contentView = HUDLoadingView(image: UIImage(named: "hud_progress"))
         PKHUD.sharedHUD.show(onView: UIApplication.shared.windows.last)
     }
     
     static func showSuccess(_ text: String? = nil) {
+        PKHUD.sharedHUD.effect = UIBlurEffect(style: .extraLight)
         HUD.flash(.labeledSuccess(title: nil, subtitle: text), onView: UIApplication.shared.windows.last, delay: 3)
     }
     
     static func showText(_ text: String, delay: TimeInterval = 2) {
+        PKHUD.sharedHUD.effect = UIBlurEffect(style: .extraLight)
         HUD.flash(.label(text), onView: UIApplication.shared.windows.last, delay: delay)
     }
 }

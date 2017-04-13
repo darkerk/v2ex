@@ -41,7 +41,9 @@ struct Account {
                     guard let html = HTML(html: resp.data, encoding: .utf8) else {
                         return Observable.error(NetError.message(text: "请求获取失败"))
                     }
-                    let path = html.xpath("//body/div[@id='Wrapper']/div/div/div[@class='message']")
+                    let str = String(data: resp.data, encoding: .utf8) ?? ""
+                    print(str)
+                    let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='message']")
                     if let content = path.first?.content, content.contains("已成功领取") {
                         return Observable.just(true)
                     }else {

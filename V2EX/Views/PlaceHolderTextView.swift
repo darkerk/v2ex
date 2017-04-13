@@ -23,12 +23,6 @@ class PlaceHolderTextView: UITextView {
         }
     }
 
-    override open var text: String! {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

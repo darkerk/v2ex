@@ -32,10 +32,13 @@ class SettingViewController: UITableViewController {
     
     func privacyAction(type: PrivacyType) {
         var alertTitle = ""
+        var indexPath: IndexPath!
         if case PrivacyType.online(_) = type {
             alertTitle = "谁可以看到我的在线状态"
+            indexPath = IndexPath(row: 0, section: 1)
         }else {
             alertTitle = "谁可以查看我的主题列表"
+            indexPath = IndexPath(row: 1, section: 1)
         }
 
         let alert = UIAlertController(title: alertTitle, message: nil, preferredStyle: .actionSheet)
@@ -96,6 +99,12 @@ class SettingViewController: UITableViewController {
         }))
         
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        if UI_USER_INTERFACE_IDIOM() == .pad {
+            if let cell = tableView.cellForRow(at: indexPath) {
+                alert.popoverPresentationController?.sourceView = cell
+                alert.popoverPresentationController?.sourceRect = cell.bounds
+            }
+        }
         present(alert, animated: true, completion: nil)
     }
 
@@ -134,6 +143,12 @@ class SettingViewController: UITableViewController {
         }))
         
         actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        if UI_USER_INTERFACE_IDIOM() == .pad {
+            if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) {
+                actionSheet.popoverPresentationController?.sourceView = cell
+                actionSheet.popoverPresentationController?.sourceRect = cell.bounds
+            }
+        }
         present(actionSheet, animated: true, completion: nil)
     }
     

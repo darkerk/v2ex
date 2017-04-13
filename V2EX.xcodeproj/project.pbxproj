@@ -408,6 +408,7 @@
 				6D3B1DE75A07926405DCD5C8 /* [CP] Embed Pods Frameworks */,
 				CA5982A4C883D6BEB192AEBF /* [CP] Copy Pods Resources */,
 				CADE11B41E9763E10044DCBC /* ShellScript */,
+				CA8851C91E9F332F00A8E879 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -430,7 +431,7 @@
 				TargetAttributes = {
 					CA86BE061E5EBAC10038DE1D = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = VE7H86BMP3;
+						DevelopmentTeam = EA9SPTEHTA;
 						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
@@ -486,7 +487,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		6D3B1DE75A07926405DCD5C8 /* [CP] Embed Pods Frameworks */ = {
@@ -518,6 +519,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-V2EX/Pods-V2EX-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		CA8851C91E9F332F00A8E879 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 1f93a016591ae96727c4cc87fb5ab34e2e629a49 955c402129e57e7ae448b80c2e303a882e9193778f9f8aa31438b8845ed055a1";
 		};
 		CADE11B41E9763E10044DCBC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -711,11 +725,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = VE7H86BMP3;
+				DEVELOPMENT_TEAM = EA9SPTEHTA;
 				INFOPLIST_FILE = "$(SRCROOT)/V2EX/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.wgh.V2EX;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wgh.v2exapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -728,11 +742,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = VE7H86BMP3;
+				DEVELOPMENT_TEAM = EA9SPTEHTA;
 				INFOPLIST_FILE = "$(SRCROOT)/V2EX/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.wgh.V2EX;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wgh.v2exapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

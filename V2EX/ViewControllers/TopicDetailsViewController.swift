@@ -131,11 +131,17 @@ class TopicDetailsViewController: UITableViewController {
         headerView.addGestureRecognizer(tap)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        becomeFirstResponder()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         canCancelFirstResponder = true
         inputbar.endEditing()
+        resignFirstResponder()
     }
     
     func linkTapAction(type: TapLink) {
@@ -168,7 +174,6 @@ class TopicDetailsViewController: UITableViewController {
             return
         }
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         let isFavorite = viewModel.topic.isFavorite
         let favoriteAction = UIAlertAction(title: isFavorite ? "取消收藏" : "收藏", style: .default, handler: {action in
             viewModel.sendFavorite(completion: {isSuccess in
@@ -193,6 +198,10 @@ class TopicDetailsViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "忽略主题", style: .default, handler: {_ in
             self.sendIgnore()
         }))
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        if UI_USER_INTERFACE_IDIOM() == .pad {
+            alert.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        }
         present(alert, animated: true, completion: nil)
     }
     

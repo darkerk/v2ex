@@ -118,6 +118,9 @@ class TimelineViewController: UITableViewController {
         
         alert.addAction(followAction)
         alert.addAction(blockAction)
+        if UI_USER_INTERFACE_IDIOM() == .pad {
+            alert.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        }
         present(alert, animated: true, completion: nil)
     }
     

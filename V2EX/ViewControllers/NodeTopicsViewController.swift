@@ -98,6 +98,9 @@ class NodeTopicsViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "创建新主题", style: .default, handler: {_ in
             self.performSegue(withIdentifier: CreateTopicViewController.segueId, sender: nil)
         }))
+        if UI_USER_INTERFACE_IDIOM() == .pad {
+            alert.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        }
         present(alert, animated: true, completion: nil)
     }
     

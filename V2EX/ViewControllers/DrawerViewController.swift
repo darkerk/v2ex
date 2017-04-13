@@ -185,7 +185,7 @@ class DrawerViewController: UIViewController {
 }
 
 extension DrawerViewController: UINavigationControllerDelegate {
-    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
         if navigationController.viewControllers.count == 1 {
             if view.gestureRecognizers?.contains(panGesture) != true {
                 view.addGestureRecognizer(panGesture)
