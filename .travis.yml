@@ -4,6 +4,7 @@ os: osx
 osx_image: xcode8.3
 before_install:
     - rvm use system
+    - sudo gem install cocoapods
 script:
   - set -o pipefail
   - xcodebuild -version
