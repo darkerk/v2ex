@@ -4,6 +4,7 @@ os: osx
 osx_image: xcode8.3
 before_install:
   - gem install cocoapods --pre --no-rdoc --no-ri --no-document --quiet
+  - pod repo update
 script:
   - export LC_CTYPE=en_US.UTF-8
   - set -o pipefail
