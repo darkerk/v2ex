@@ -2,7 +2,8 @@
 language: objective-c
 os: osx
 osx_image: xcode8.3
-
+before_install:
+  - gem install cocoapods
 script:
   - set -o pipefail
   - xcodebuild -version
