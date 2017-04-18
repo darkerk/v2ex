@@ -1,7 +1,7 @@
 ## v2ex
-==============
-#### Compatible with Xcode 8.3 / Swift 3.1
-#### The unofficial V2EX app for iOS
+
+Compatible with Xcode 8.3 / Swift 3.1
+The unofficial V2EX app for iOS
 
 ## License
 
