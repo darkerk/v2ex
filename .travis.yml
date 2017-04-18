@@ -11,5 +11,5 @@ script:
   - xcodebuild -version
   - xcodebuild -showsdks
   - xcodebuild clean -workspace V2EX.xcworkspace -scheme V2EX | xcpretty
-  - xcodebuild -workspace V2EX.xcworkspace -scheme V2EX -configuration Release -destination generic/platform=iOS | xcpretty -s
+  - xcodebuild -workspace V2EX.xcworkspace -scheme V2EX -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3' | xcpretty
   
