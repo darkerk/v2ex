@@ -2,11 +2,12 @@
 language: objective-c
 os: osx
 osx_image: xcode8.3
+before_install:
+    - rvm use system
 script:
   - set -o pipefail
   - xcodebuild -version
   - xcodebuild -showsdks
-  - pod install
   - xcodebuild clean -workspace V2EX.xcworkspace -scheme V2EX | xcpretty
   - xcodebuild -workspace V2EX.xcworkspace -scheme V2EX -configuration Release -destination generic/platform=iOS | xcpretty -s
   
