@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/appwgh/v2ex.svg?branch=master)](https://travis-ci.org/appwgh/v2ex)
+[![Swift](http://img.shields.io/badge/swift-3.1-brightgreen.svg)]
+
 ## v2ex
 
 The unofficial V2EX app for iOS
