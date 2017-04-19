@@ -5,7 +5,7 @@
 
 The unofficial V2EX app for iOS
 
-![img1](http://i.imgur.com/zBaLSrJ.png) 
+<img src="http://i.imgur.com/zBaLSrJ.png" width = "640" align=center />
 
 ## Requirements
 
