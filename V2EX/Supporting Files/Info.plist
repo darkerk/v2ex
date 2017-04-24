@@ -18,8 +18,31 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>google</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.339840628717-te6jrsj9e8fhtle5qtrpdh066c6sttvo</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>v2ex</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.darker.v2exapp</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>46-master</string>
+	<string>48</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>

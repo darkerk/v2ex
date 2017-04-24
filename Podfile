@@ -4,7 +4,7 @@ use_frameworks!
 target 'V2EX' do
     pod 'Fabric', '~> 1.6.11'
     pod 'Crashlytics', '~> 3.8.4'
-	pod 'Kanna', '~> 2.1.1'
+	pod 'Kanna', '~> 2.2.1'
     pod 'RxCocoa', '~> 3.2.0'
     pod 'RxDataSources', '~> 1.0.3'
     pod 'Moya/RxSwift', '~> 8.0.2'

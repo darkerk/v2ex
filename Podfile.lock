@@ -3,7 +3,7 @@ PODS:
   - Crashlytics (3.8.4):
     - Fabric (~> 1.6.3)
   - Fabric (1.6.11)
-  - Kanna (2.1.1)
+  - Kanna (2.2.1)
   - Kingfisher (3.5.2)
   - Moya/Core (8.0.3):
     - Alamofire (~> 4.1)
@@ -24,7 +24,7 @@ PODS:
 DEPENDENCIES:
   - Crashlytics (~> 3.8.4)
   - Fabric (~> 1.6.11)
-  - Kanna (~> 2.1.1)
+  - Kanna (~> 2.2.1)
   - Kingfisher (~> 3.5.1)
   - Moya/RxSwift (~> 8.0.2)
   - PKHUD (~> 4.2.1)
@@ -36,7 +36,7 @@ SPEC CHECKSUMS:
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
   Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
   Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
-  Kanna: 9b4b086c218703f2b94f5b21a466217dd2f9332e
+  Kanna: 182789ab065e8f9a6ccc2a74ce6283d3401c0c4a
   Kingfisher: 9950e382c500b6834ce004c7c4131c444e90c3a1
   Moya: d3721622e3cc0cc2f038d69a258686f0b66e7252
   PKHUD: 957ce2a68b3c97a51839b30216120c1dbc0c3a78
@@ -46,6 +46,6 @@ SPEC CHECKSUMS:
   RxSwift: 3789a1af753002a14edecdb698a2424624296a9c
   SKPhotoBrowser: 3a7c6fc02aa1620ab17253a47a49fafda46536e8
 
-PODFILE CHECKSUM: b350f9647f8bcd0eeccf0e640046eedf87a9e47d
+PODFILE CHECKSUM: b66a763d46bc351959c6cd2e64c6c1761c1d5c26
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.2.1

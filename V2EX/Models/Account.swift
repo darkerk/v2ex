@@ -2,8 +2,8 @@
 //  Account.swift
 //  V2EX
 //
-//  Created by wgh on 2017/3/6.
-//  Copyright © 2017年 wgh. All rights reserved.
+//  Created by darker on 2017/3/6.
+//  Copyright © 2017年 darker. All rights reserved.
 //
 
 import Foundation
@@ -41,8 +41,7 @@ struct Account {
                     guard let html = HTML(html: resp.data, encoding: .utf8) else {
                         return Observable.error(NetError.message(text: "请求获取失败"))
                     }
-                    let str = String(data: resp.data, encoding: .utf8) ?? ""
-                    print(str)
+
                     let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='message']")
                     if let content = path.first?.content, content.contains("已成功领取") {
                         self.isDailyRewards.value = false

@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  V2EX
 //
-//  Created by wgh on 2017/2/23.
-//  Copyright © 2017年 wgh. All rights reserved.
+//  Created by darker on 2017/2/23.
+//  Copyright © 2017年 darker. All rights reserved.
 //
 
 import UIKit
@@ -44,6 +44,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    /**
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        return GIDSignIn.sharedInstance().handle(url, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+    }
+    **/
 }
 
+/**
+extension AppDelegate: GIDSignInDelegate {
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        print(user)
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+        
+    }
+}
+**/

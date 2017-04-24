@@ -2,8 +2,8 @@
 //  PlaceHolderTextView.swift
 //  V2EX
 //
-//  Created by wgh on 2017/4/11.
-//  Copyright © 2017年 wgh. All rights reserved.
+//  Created by darker on 2017/4/11.
+//  Copyright © 2017年 darker. All rights reserved.
 //
 
 import UIKit

@@ -2,8 +2,8 @@
 //  LoginViewController.swift
 //  V2EX
 //
-//  Created by wgh on 2017/3/3.
-//  Copyright © 2017年 wgh. All rights reserved.
+//  Created by darker on 2017/3/3.
+//  Copyright © 2017年 darker. All rights reserved.
 //
 
 import UIKit
@@ -16,6 +16,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginButton: LoginButton!
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var googleButton: LoginButton!
     
     private let disposeBag = DisposeBag()
     
@@ -25,7 +26,7 @@ class LoginViewController: UIViewController {
         let usernameValid = usernameTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let passwordValid = passwordTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let allValid = Observable.combineLatest(usernameValid, passwordValid) { $0 && $1 }.shareReplay(1)
-        allValid.bindTo(loginButton.rx.isLoginEnabled).addDisposableTo(disposeBag)
+        allValid.bindTo(loginButton.rx.isEnabled).addDisposableTo(disposeBag)
         
         usernameTextField.rx.controlEvent(.editingDidEndOnExit).subscribe(onNext: {[weak self] in
             guard let strongSelf = self else {
@@ -59,6 +60,11 @@ class LoginViewController: UIViewController {
         
     }
     
+    @IBAction func googleLoginAction(_ sender: Any) {
+        view.endEditing(true)
+
+    }
+    
     @IBAction func cancelButtonAction(_ sender: Any) {
         view.endEditing(true)
         dismiss(animated: true, completion: nil)
@@ -69,8 +75,30 @@ class LoginViewController: UIViewController {
         view.endEditing(true)
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        view.endEditing(true)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 }
+
+/**
+extension LoginViewController: GIDSignInUIDelegate {
+    func sign(inWillDispatch signIn: GIDSignIn!, error: Error!) {
+        
+    }
+    
+    func sign(_ signIn: GIDSignIn!, present viewController: UIViewController!) {
+        present(viewController, animated: true, completion: nil)
+    }
+    
+    func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
+        dismiss(animated: true, completion: nil)
+    }
+}
+**/
