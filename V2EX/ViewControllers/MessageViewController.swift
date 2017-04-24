@@ -22,7 +22,7 @@ class MessageViewController: UITableViewController {
         tableView.dataSource = nil
         
         let viewModel = MessageViewModel()
-        viewModel.items.asObservable().bindTo(tableView.rx.items) { (table, row, item) in
+        viewModel.items.asObservable().bind(to: tableView.rx.items) { (table, row, item) in
             let cell: MessageViewCell = table.dequeueReusableCell()
             cell.message = item
             return cell
@@ -33,7 +33,7 @@ class MessageViewController: UITableViewController {
                 tableView?.infiniteScrollingView?.stopAnimating()
             })
         }
-        viewModel.loadMoreEnabled.asObservable().bindTo(tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
+        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
         
         tableView.rx.modelSelected(Message.self).subscribe(onNext: {[weak navigationController] item in
             if let nav = navigationController, let topic = item.topic {

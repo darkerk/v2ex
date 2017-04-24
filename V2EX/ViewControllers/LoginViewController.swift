@@ -26,7 +26,7 @@ class LoginViewController: UIViewController {
         let usernameValid = usernameTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let passwordValid = passwordTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let allValid = Observable.combineLatest(usernameValid, passwordValid) { $0 && $1 }.shareReplay(1)
-        allValid.bindTo(loginButton.rx.isEnabled).addDisposableTo(disposeBag)
+        allValid.bind(to: loginButton.rx.isEnabled).addDisposableTo(disposeBag)
         
         usernameTextField.rx.controlEvent(.editingDidEndOnExit).subscribe(onNext: {[weak self] in
             guard let strongSelf = self else {
@@ -40,7 +40,7 @@ class LoginViewController: UIViewController {
         
         let loginViewModel = LoginViewModel(input: (username: usernameTextField.rx.text.orEmpty.asObservable(), password: passwordTextField.rx.text.orEmpty.asObservable(), tap: loginButton.rx.tap.asObservable()))
         
-        loginViewModel.isloading.bindTo(PKHUD.sharedHUD.rx.isAnimating).addDisposableTo(disposeBag)
+        loginViewModel.isloading.bind(to: PKHUD.sharedHUD.rx.isAnimating).addDisposableTo(disposeBag)
         
         loginViewModel.response.subscribe(onNext: {[weak self] response in
             let result = HTMLParser.shared.loginResult(html: response.data)

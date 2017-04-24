@@ -89,9 +89,9 @@ class TopicDetailsViewController: UITableViewController {
             return Account.shared.isLoggedIn.value
         }
         
-        viewModel.updateTopic.asObservable().bindTo(headerView.rx.topic).addDisposableTo(disposeBag)
-        viewModel.content.asObservable().bindTo(headerView.rx.htmlString).addDisposableTo(disposeBag)
-        viewModel.sections.asObservable().bindTo(tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
+        viewModel.updateTopic.asObservable().bind(to: headerView.rx.topic).addDisposableTo(disposeBag)
+        viewModel.content.asObservable().bind(to: headerView.rx.htmlString).addDisposableTo(disposeBag)
+        viewModel.sections.asObservable().bind(to: tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
         viewModel.loadingActivityIndicator.asObservable().subscribe(onNext: {[weak self] isLoading in
             guard let `self` = self else { return }
             if isLoading {
@@ -298,7 +298,7 @@ extension TopicDetailsViewController {
         case .more:
             tableView.deselectRow(at: indexPath, animated: true)
             if let cell = tableView.cellForRow(at: indexPath) as? LoadMoreCommentCell {
-                viewModel?.loadMoreActivityIndicator.asObservable().bindTo(cell.activityIndicatorView.rx.isAnimating).addDisposableTo(disposeBag)
+                viewModel?.loadMoreActivityIndicator.asObservable().bind(to: cell.activityIndicatorView.rx.isAnimating).addDisposableTo(disposeBag)
             }
             viewModel?.fetchMoreComments()
         case .data:

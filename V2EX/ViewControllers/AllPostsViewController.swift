@@ -28,9 +28,9 @@ class AllPostsViewController: UITableViewController {
         tableView.dataSource = nil
         
         let viewModel = AllPostsViewModel(href: moreHref, type: type)
-        viewModel.totalCount.asObservable().map({titleText + "(\($0))"}).bindTo(navigationItem.rx.title).addDisposableTo(disposeBag)
+        viewModel.totalCount.asObservable().map({titleText + "(\($0))"}).bind(to: navigationItem.rx.title).addDisposableTo(disposeBag)
         
-        viewModel.items.asObservable().bindTo(tableView.rx.items) { (table, row, item) in
+        viewModel.items.asObservable().bind(to: tableView.rx.items) { (table, row, item) in
             switch item {
             case let .topicItem(topic):
                 let cell: TimelineTopicViewCell = table.dequeueReusableCell()
@@ -64,7 +64,7 @@ class AllPostsViewController: UITableViewController {
                 tableView?.infiniteScrollingView?.stopAnimating()
            })
         }
-        viewModel.loadMoreEnabled.asObservable().bindTo(tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
+        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
     }
 
     override func didReceiveMemoryWarning() {

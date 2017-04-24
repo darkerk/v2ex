@@ -23,7 +23,7 @@ class NodesViewController: UITableViewController {
         
         tableView.delegate = nil
         tableView.dataSource = nil
-        nodeItems?.asObservable().bindTo(tableView.rx.items) { (tableView, row, item) in
+        nodeItems?.asObservable().bind(to: tableView.rx.items) { (tableView, row, item) in
             let cell: UITableViewCell = tableView.dequeueReusableCell()
             cell.textLabel?.text = item.name
             cell.textLabel?.textColor = item.isCurrent ? #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) : #colorLiteral(red: 0.3137254902, green: 0.3137254902, blue: 0.3137254902, alpha: 1)

@@ -25,7 +25,7 @@ class FavoriteViewController: UITableViewController {
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
         
-        viewModel.dataItems.asObservable().bindTo(tableView.rx.items) {[weak self]  (table, row, item) in
+        viewModel.dataItems.asObservable().bind(to: tableView.rx.items) {[weak self]  (table, row, item) in
             switch item {
             case let .topicItem(topic), let .followingItem(topic):
                 let cell: TopicViewCell = table.dequeueReusableCell()
@@ -58,7 +58,7 @@ class FavoriteViewController: UITableViewController {
                 tableView?.infiniteScrollingView?.stopAnimating()
             })
         }
-        viewModel.loadMoreEnabled.asObservable().bindTo(tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
+        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
     }
     
     @IBAction func segmentedChange(_ sender: UISegmentedControl) {

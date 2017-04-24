@@ -28,7 +28,7 @@ class ProfileViewController: UITableViewController {
         tableView.delegate = nil
         tableView.dataSource = nil
         
-        Account.shared.user.asObservable().bindTo(headerView.rx.user).addDisposableTo(disposeBag)
+        Account.shared.user.asObservable().bind(to: headerView.rx.user).addDisposableTo(disposeBag)
         Account.shared.isLoggedIn.asObservable().subscribe(onNext: {isLoggedIn in
             if !isLoggedIn {
                 self.headerView.logout()
@@ -36,7 +36,7 @@ class ProfileViewController: UITableViewController {
         }).addDisposableTo(disposeBag)
         
         let menuItems = [(#imageLiteral(resourceName: "slide_menu_topic"), "个人"), (#imageLiteral(resourceName: "slide_menu_message"), "消息"), (#imageLiteral(resourceName: "slide_menu_favorite"), "收藏"), (#imageLiteral(resourceName: "slide_menu_setting"), "设置")]
-        Observable.just(menuItems).bindTo(tableView.rx.items) { (tableView, row, item) in
+        Observable.just(menuItems).bind(to: tableView.rx.items) { (tableView, row, item) in
             let cell: ProfileMenuViewCell = tableView.dequeueReusableCell()
             cell.configure(image: item.0, text: item.1)
             return cell
@@ -74,7 +74,7 @@ class ProfileViewController: UITableViewController {
         }).addDisposableTo(disposeBag)
 
         if let cell = tableView.cellForRow(at: IndexPath(item: 1, section: 0)) as? ProfileMenuViewCell {
-            Account.shared.unreadCount.asObservable().bindTo(cell.rx.unread).addDisposableTo(disposeBag)
+            Account.shared.unreadCount.asObservable().bind(to: cell.rx.unread).addDisposableTo(disposeBag)
         }
 
         Account.shared.isDailyRewards.asObservable().flatMapLatest { canRedeem -> Observable<Bool> in

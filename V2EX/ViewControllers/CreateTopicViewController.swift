@@ -38,7 +38,7 @@ class CreateTopicViewController: UIViewController {
         let titleValid = textField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let contentValid = textView.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let allValid = Observable.combineLatest(titleValid, contentValid) { $0 && $1 }.shareReplay(1)
-        allValid.bindTo(sendButton.rx.isEnabled).addDisposableTo(disposeBag)
+        allValid.bind(to: sendButton.rx.isEnabled).addDisposableTo(disposeBag)
         
         textField.rx.controlEvent(.editingDidEndOnExit).subscribe(onNext: {[weak textView] in
             textView?.becomeFirstResponder()

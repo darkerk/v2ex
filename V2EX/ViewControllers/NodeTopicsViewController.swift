@@ -36,7 +36,7 @@ class NodeTopicsViewController: UITableViewController {
         viewModel.nodeHref = nodeHref
         viewModel.fetcData()
 
-        viewModel.items.asObservable().bindTo(tableView.rx.items) {[weak navigationController] (table, row, item) in
+        viewModel.items.asObservable().bind(to: tableView.rx.items) {[weak navigationController] (table, row, item) in
             let cell: NodeTopicsViewCell = table.dequeueReusableCell()
             cell.topic = item
             if let nav = navigationController {
@@ -57,7 +57,7 @@ class NodeTopicsViewController: UITableViewController {
             viewModel?.fetchMoreData()
         }
         
-        viewModel.loadMoreEnabled.asObservable().bindTo(tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
+        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
         viewModel.loadMoreCompleted.asObservable().subscribe(onNext: {[weak tableView] isFinished in
             if isFinished {
                 tableView?.infiniteScrollingView?.stopAnimating()

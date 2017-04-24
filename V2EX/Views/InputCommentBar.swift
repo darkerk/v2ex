@@ -80,7 +80,7 @@ class InputCommentBar: UIToolbar {
                 return !content.isEmpty && atText != content && !atText.contains(content)
             }
             return !content.isEmpty
-        }.shareReplay(1).bindTo(sendButton.rx.isEnabled).addDisposableTo(disposeBag)
+        }.shareReplay(1).bind(to: sendButton.rx.isEnabled).addDisposableTo(disposeBag)
     }
     
     func clear() {

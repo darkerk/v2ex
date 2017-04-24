@@ -38,7 +38,7 @@ class HomeViewController: UITableViewController {
             print("error: ", error)
         }).addDisposableTo(disposeBag)
 
-        viewModel.loadingActivityIndicator.asObservable().bindTo(refreshControl!.rx.isRefreshing).addDisposableTo(disposeBag)
+        viewModel.loadingActivityIndicator.asObservable().bind(to: refreshControl!.rx.isRefreshing).addDisposableTo(disposeBag)
         
         dataSource.configureCell = {[weak self] (ds, table, indexPath, _) in
             let cell: TopicViewCell = table.dequeueReusableCell()
@@ -50,7 +50,7 @@ class HomeViewController: UITableViewController {
             return cell
         }
         
-        viewModel.sections.asObservable().bindTo(tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
+        viewModel.sections.asObservable().bind(to: tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
         viewModel.defaultNodes.asObservable().subscribe(onNext: {[weak self] nodes in
             guard let `self` = self else { return }
             if let currentNode = nodes.filter({$0.isCurrent}).first {

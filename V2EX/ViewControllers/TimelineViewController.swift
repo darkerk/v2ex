@@ -65,8 +65,8 @@ class TimelineViewController: UITableViewController {
             return ds[section].title
         }
         
-        viewModel.joinTime.asObservable().bindTo(headerView.rx.text).addDisposableTo(disposeBag)
-        viewModel.sections.asObservable().bindTo(tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
+        viewModel.joinTime.asObservable().bind(to: headerView.rx.text).addDisposableTo(disposeBag)
+        viewModel.sections.asObservable().bind(to: tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
         
         headerView.heightUpdate.asObservable().subscribe(onNext: {[weak self] isUpdate in
             if let `self` = self, isUpdate {
