@@ -42,13 +42,26 @@ class TopicDetailsCommentCell: UITableViewCell {
         }
     }
     
+    private let css = "a:link, a:visited, a:active {" +
+                            "color: #778087;" +
+                            "text-decoration: none;" +
+                            "word-break: break-all;" +
+                    "}" +
+                    ".reply_content {" +
+                            "font-size: 14px;" +
+                            "line-height: 1.6;" +
+                            "color: #646464;" +
+                            "word-break: break-all;" +
+                            "word-wrap: break-word;" +
+                    "}"
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         avatarView.clipsToBounds = true
         avatarView.layer.cornerRadius = 4.0
         
-        textView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: -18, right: 0)
+        textView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: -20, right: 0)
         textView.textContainer.lineFragmentPadding = 0
         textView.linkTextAttributes = [NSForegroundColorAttributeName: #colorLiteral(red: 0.4666666667, green: 0.5019607843, blue: 0.5294117647, alpha: 1)]
         textView.delegate = self
@@ -87,7 +100,7 @@ class TopicDetailsCommentCell: UITableViewCell {
         timeLabel.text = model.time
         
         var content = model.content
-        
+
         guard let html = HTML(html: content, encoding: .utf8) else {
             textView.text = content
             return
@@ -100,10 +113,14 @@ class TopicDetailsCommentCell: UITableViewCell {
             let id = "\(img.hashValue)"
             if let index = srcs.index(where: {img.contains($0)}) {
                 content = content.replacingOccurrences(of: img, with: id)
-                imgsrcs.append((id, srcs[index]))
+                var src = srcs[index]
+                if src.hasPrefix("//") {
+                    src = "http:" + src
+                }
+                imgsrcs.append((id, src))
             }
         })
-        let htmlText = "<style>\(AppStyle.shared.css)</style>" + content
+        let htmlText = "<style>\(css)</style>" + content
         if let htmlData = htmlText.data(using: .unicode) {
             do {
                 let attributedString = try NSMutableAttributedString(data: htmlData, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
