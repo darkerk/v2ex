@@ -35,11 +35,9 @@ struct AppStyle {
     }
     
     private init() {
-        if let stylePath = Bundle.main.path(forResource: "style", ofType: "css"), let mobilePath = Bundle.main.path(forResource: "mobile", ofType: "css") {
+        if let stylePath = Bundle.main.path(forResource: "style", ofType: "css") {
             do {
-                let css1 = try String(contentsOfFile: mobilePath, encoding: .utf8)
-                let css2 = try String(contentsOfFile: stylePath, encoding: .utf8)
-                self.css = css1 + css2
+                self.css  = try String(contentsOfFile: stylePath, encoding: .utf8)
             } catch  {
                 
             }

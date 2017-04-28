@@ -108,7 +108,7 @@ extension Theme {
     var webSubBackgroundColorHex: String {
         switch self {
         case .normal:
-            return "#666666"
+            return "#fffff9"
         case .night:
             return "#243447"
         }

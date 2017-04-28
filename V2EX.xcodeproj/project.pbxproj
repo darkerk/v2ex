@@ -61,7 +61,6 @@
 		CA58105F1E80FEC70003B7C2 /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA58105E1E80FEC70003B7C2 /* SettingViewModel.swift */; };
 		CA5E467F1E95E67A00A4B621 /* NodeNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5E467E1E95E67A00A4B621 /* NodeNavigationViewController.swift */; };
 		CA5E46811E95E73000A4B621 /* NodeNavigationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5E46801E95E73000A4B621 /* NodeNavigationViewCell.swift */; };
-		CA6605F41E764D6300BB19A7 /* mobile.css in Resources */ = {isa = PBXBuildFile; fileRef = CA6605F31E764D6300BB19A7 /* mobile.css */; };
 		CA6605F61E768C2D00BB19A7 /* LoadMoreCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6605F51E768C2D00BB19A7 /* LoadMoreCommentCell.swift */; };
 		CA670E6D1E8E37850091FBC8 /* TapLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA670E6C1E8E37850091FBC8 /* TapLink.swift */; };
 		CA864BB41E77864D00997D4E /* HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA864BB31E77864D00997D4E /* HUD.swift */; };
@@ -149,7 +148,6 @@
 		CA58105E1E80FEC70003B7C2 /* SettingViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
 		CA5E467E1E95E67A00A4B621 /* NodeNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeNavigationViewController.swift; sourceTree = "<group>"; };
 		CA5E46801E95E73000A4B621 /* NodeNavigationViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeNavigationViewCell.swift; sourceTree = "<group>"; };
-		CA6605F31E764D6300BB19A7 /* mobile.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = mobile.css; sourceTree = "<group>"; };
 		CA6605F51E768C2D00BB19A7 /* LoadMoreCommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadMoreCommentCell.swift; sourceTree = "<group>"; };
 		CA670E6C1E8E37850091FBC8 /* TapLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapLink.swift; sourceTree = "<group>"; };
 		CA864BB31E77864D00997D4E /* HUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUD.swift; sourceTree = "<group>"; };
@@ -322,7 +320,6 @@
 				CA360AB91E68228900DED2FD /* LaunchScreen.storyboard */,
 				CA477A831E6660F4000FC1F5 /* Assets.xcassets */,
 				CA477A891E6660F4000FC1F5 /* Info.plist */,
-				CA6605F31E764D6300BB19A7 /* mobile.css */,
 				CA4BA89F1E712BB300FEE50E /* style.css */,
 				CA47EB3D1E8270ED00737EA5 /* LICENSES.html */,
 				CA47EB3F1E82716A00737EA5 /* ABOUT.html */,
@@ -472,7 +469,6 @@
 				CA360ABC1E68228E00DED2FD /* Main.storyboard in Resources */,
 				CA55A36C1E7FB36500A99D6C /* Timeline.storyboard in Resources */,
 				CA4BA8A01E712BB300FEE50E /* style.css in Resources */,
-				CA6605F41E764D6300BB19A7 /* mobile.css in Resources */,
 				CA477A8A1E6660F4000FC1F5 /* Assets.xcassets in Resources */,
 				CA360ABA1E68228900DED2FD /* LaunchScreen.storyboard in Resources */,
 				CA47EB3E1E8270ED00737EA5 /* LICENSES.html in Resources */,

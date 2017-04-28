@@ -49,6 +49,13 @@ extension NodeNavigationViewController {
         return navigationItems[section].name
     }
     
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if view is UITableViewHeaderFooterView {
+            let header = view as! UITableViewHeaderFooterView
+            header.textLabel?.textColor = AppStyle.shared.theme.black153Color
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: NodeNavigationViewCell = tableView.dequeueReusableCell(for: indexPath)
         cell.content = navigationItems[indexPath.section].content

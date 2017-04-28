@@ -27,13 +27,9 @@ h3 {
 hr {
     border: none;
     height: 1px;
-    color: #e2e2e2;
-    background-color: #e2e2e2;
+    color: #separator#;
+    background-color: #separator#;
     margin-bottom: 1em;
-}
-
-body {
-    background-color: #background#;
 }
 
 pre {
@@ -109,18 +105,10 @@ ol {
 
 .subtle {
     background-color: #subtle#;
-    padding: 10px;
+    padding: 5px 10px 0px 10px;
     font-size: 12px;
     line-height: 120%;
     text-align: left;
-}
-
-.reply_content {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #646464;
-    word-break: break-all;
-    word-wrap: break-word;
 }
 
 .topic_content {
@@ -128,31 +116,6 @@ ol {
     line-height: 1.6;
     color: #topic_content#;
     word-wrap: break-word;
-}
-
-.gist {
-    word-break: normal;
-}
-
-.topic_content .gist .gist-data, .reply_content .gist .gist-data {
-    max-height: 20em;
-}
-
-.topic_content>*:first-child, .reply_content>*:first-child {
-    margin-top: 0 !important;
-}
-
-.topic_content>*:last-child, .reply_content>*:last-child, .gist>*:last-child {
-    margin-bottom: 0 !important;
-}
-
-.syntax_error {
-    background-color: #e2e2e2;
-    padding: 7px;
-    color: #000;
-    font-size: 12px;
-    line-height: 100%;
-    margin-top: -10px;
 }
 
 .embedded_image {
@@ -186,6 +149,22 @@ ol {
     margin-top: 0; }
 .markdown_body table tr th :last-child, .markdown_body table tr td :last-child {
     margin-bottom: 0; }
+
+body {
+    background-color: #background#;
+}
+
+img {
+    max-width: 100%;
+}
+
+.imgly {
+    max-width: 100%;
+}
+
+.markdown_body>p>img {
+    max-width: 100%;
+}
 
 
 
