@@ -221,7 +221,7 @@ extension Theme {
     var topicReplyCountBackgroundColor: UIColor {
         switch self {
         case .normal:
-            return #colorLiteral(red: 0.5333333333, green: 0.6, blue: 0.6509803922, alpha: 1)
+            return #colorLiteral(red: 0.6666666667, green: 0.6901960784, blue: 0.7764705882, alpha: 1)
         case .night:
             return #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1)
         }

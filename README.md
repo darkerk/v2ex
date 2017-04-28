@@ -5,7 +5,8 @@
 
 The unofficial V2EX app for iOS
 
-<img src="http://i.imgur.com/zBaLSrJ.png" width = "640" align=center />
+<img src="http://i.imgur.com/bt9Brrj.png" width = "320" align=center />
+<img src="http://i.imgur.com/tSKZ9c0.png" width = "320" align=center />
 
 ## Download
 
