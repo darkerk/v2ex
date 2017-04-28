@@ -17,6 +17,9 @@ class MessageViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        
+        tableView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        tableView.separatorColor = AppStyle.shared.theme.separatorColor
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
@@ -33,6 +36,11 @@ class MessageViewController: UITableViewController {
                 tableView?.infiniteScrollingView?.stopAnimating()
             })
         }
+        
+        if AppStyle.shared.theme == .night {
+            tableView.infiniteScrollingView?.activityIndicatorView.activityIndicatorViewStyle = .white
+        }
+        
         viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
         
         tableView.rx.modelSelected(Message.self).subscribe(onNext: {[weak navigationController] item in

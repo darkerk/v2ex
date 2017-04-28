@@ -17,10 +17,15 @@ class TimelineTopicViewCell: UITableViewCell {
     var topic: Topic? {
         willSet {
             if let model = newValue {
-                titleLabel.text = model.title
                 timeLabel.text = model.lastReplyTime
                 countLabel.text = "  \(model.replyCount)  "
                 countLabel.isHidden = model.replyCount == "0"
+                
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = 3
+                
+                let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 15), NSForegroundColorAttributeName: AppStyle.shared.theme.black102Color, NSParagraphStyleAttributeName: paragraphStyle]
+                titleLabel.attributedText = NSAttributedString(string: model.title, attributes: attributes)
             }
         }
     }
@@ -30,6 +35,15 @@ class TimelineTopicViewCell: UITableViewCell {
         // Initialization code
         countLabel.clipsToBounds = true
         countLabel.layer.cornerRadius = 9
+        
+        let selectedView = UIView()
+        selectedView.backgroundColor = AppStyle.shared.theme.cellSelectedBackgroundColor
+        self.selectedBackgroundView = selectedView
+        
+        self.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+        timeLabel.textColor = AppStyle.shared.theme.black153Color
+        countLabel.backgroundColor = AppStyle.shared.theme.topicReplyCountBackgroundColor
+        countLabel.textColor = AppStyle.shared.theme.topicReplyCountTextColor
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

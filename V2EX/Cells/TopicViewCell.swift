@@ -8,8 +8,9 @@
 
 import UIKit
 import Kingfisher
+import RxSwift
 
-class TopicViewCell: UITableViewCell {
+class TopicViewCell: UITableViewCell, ThemeUpdating {
     
     @IBOutlet weak var avatarView: UIImageView!
     @IBOutlet weak var nodeLabel: UILabel!
@@ -28,12 +29,19 @@ class TopicViewCell: UITableViewCell {
                 ownerNameLabel.text = model.owner?.name
                 timeLabel.text = model.lastReplyTime
                 countLabel.text = "  \(model.replyCount)  "
-                titleLabel.text = model.title
                 countLabel.isHidden = model.replyCount == "0"
+                
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = 3
+                
+                let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 15), NSForegroundColorAttributeName: AppStyle.shared.theme.black102Color, NSParagraphStyleAttributeName: paragraphStyle]
+                titleLabel.attributedText = NSAttributedString(string: model.title, attributes: attributes)
             }
         }
     }
 
+    private let disposeBag = DisposeBag()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -56,6 +64,32 @@ class TopicViewCell: UITableViewCell {
         nodeLabel.isUserInteractionEnabled = true
         let nodeTap = UITapGestureRecognizer(target: self, action: #selector(nodeTapAction(_:)))
         nodeLabel.addGestureRecognizer(nodeTap)
+        
+        updateTheme()
+        AppStyle.shared.themeUpdateVariable.asObservable().subscribe(onNext: { update in
+            if update {
+                self.updateTheme()
+            }
+        }).addDisposableTo(disposeBag)
+    }
+    
+    func updateTheme() {
+        let selectedView = UIView()
+        selectedView.backgroundColor = AppStyle.shared.theme.cellSelectedBackgroundColor
+        self.selectedBackgroundView = selectedView
+        
+        self.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+        
+        ownerNameLabel.textColor = AppStyle.shared.theme.black102Color
+        nodeLabel.backgroundColor = AppStyle.shared.theme.topicCellNodeBackgroundColor
+        nodeLabel.textColor = AppStyle.shared.theme.black153Color
+        timeLabel.textColor = AppStyle.shared.theme.black153Color
+        countLabel.backgroundColor = AppStyle.shared.theme.topicReplyCountBackgroundColor
+        countLabel.textColor = AppStyle.shared.theme.topicReplyCountTextColor
+        
+        if let data = topic {
+            topic = data
+        }
     }
     
     func userTapAction(_ sender: Any) {

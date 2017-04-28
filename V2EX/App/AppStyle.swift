@@ -7,11 +7,32 @@
 //
 
 import UIKit
+import RxSwift
+
+let nightOnKey = "theme.night.on"
+
+struct CSSColorMark {
+    static let background = "#background#"
+    static let subtleBackground = "#subtle#"
+    static let topicContent = "#topic_content#"
+    static let replyContent = "#reply_content#"
+    static let hyperlink = "#hyperlink#"
+    static let codePre = "#codePre#"
+    static let separator = "#separator#"
+}
 
 struct AppStyle {
-    static let shared = AppStyle()
+    static var shared = AppStyle()
+    
+    let themeUpdateVariable = Variable<Bool>(false)
     
     var css: String = ""
+    var theme: Theme = UserDefaults.standard.bool(forKey: nightOnKey) ? .night : .normal {
+        didSet {
+            UserDefaults.standard.set(theme == .night, forKey: nightOnKey)
+            self.themeUpdateVariable.value = true
+        }
+    }
     
     private init() {
         if let stylePath = Bundle.main.path(forResource: "style", ofType: "css"), let mobilePath = Bundle.main.path(forResource: "mobile", ofType: "css") {
@@ -25,10 +46,13 @@ struct AppStyle {
         }
     }
     
-    func setupBarStyle() {
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: #colorLiteral(red: 0.1568627451, green: 0.1568627451, blue: 0.1568627451, alpha: 1), NSFontAttributeName: UIFont.systemFont(ofSize: 17)]
-        UINavigationBar.appearance().backIndicatorImage = #imageLiteral(resourceName: "nav_back")
-        UINavigationBar.appearance().backIndicatorTransitionMaskImage = #imageLiteral(resourceName: "nav_back")
-        UIBarButtonItem.appearance().setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: 16), NSForegroundColorAttributeName: #colorLiteral(red: 0.2509803922, green: 0.2509803922, blue: 0.2509803922, alpha: 1)], for: .normal)
+    func setupBarStyle(_ navigationBar: UINavigationBar = UINavigationBar.appearance()) {
+        navigationBar.isTranslucent = false
+        navigationBar.tintColor = theme.tintColor
+        navigationBar.barTintColor = theme.barTintColor
+        navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: theme.navigationBarTitleColor, NSFontAttributeName: UIFont.systemFont(ofSize: 17)]
+        navigationBar.backIndicatorImage = #imageLiteral(resourceName: "nav_back")
+        navigationBar.backIndicatorTransitionMaskImage = #imageLiteral(resourceName: "nav_back")
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: 16)], for: .normal)
     }
 }

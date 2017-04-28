@@ -13,6 +13,7 @@ import RxCocoa
 import Kingfisher
 
 class TopicDetailsHeaderView: UIView {
+    
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var avatarView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -21,6 +22,8 @@ class TopicDetailsHeaderView: UIView {
     @IBOutlet weak var nodeLabel: UILabel!
     @IBOutlet weak var contentView: UIView!
     lazy var webView: WKWebView = WKWebView()
+    
+    private var cssText = ""
     
     var linkTap: ((TapLink) -> Void)?
     var heightUpdate = Variable<Bool>(false)
@@ -54,7 +57,7 @@ class TopicDetailsHeaderView: UIView {
                     self.frame = rect
                     self.heightUpdate.value = true
                 }else {
-                    let head = "<head><meta name=\"viewport\" content=\"width=device-width, user-scalable=no\"><style>\(AppStyle.shared.css)</style></head>"
+                    let head = "<head><meta name=\"viewport\" content=\"width=device-width, user-scalable=no\"><style>\(cssText)</style></head>"
                     let body = "<body><div id=\"Wrapper\">\(content)</div></body>"
                     let html = "<html>\(head)\(body)</html>"
                     webView.loadHTMLString(html, baseURL: URL(string: "https://www.v2ex.com"))
@@ -103,6 +106,26 @@ class TopicDetailsHeaderView: UIView {
         nodeLabel.isUserInteractionEnabled = true
         let nodeTap = UITapGestureRecognizer(target: self, action: #selector(nodeTapAction(_:)))
         nodeLabel.addGestureRecognizer(nodeTap)
+        
+        if AppStyle.shared.theme == .night {
+            lineView.backgroundColor = UIColor.black
+        }
+        
+        backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+        titleView.backgroundColor = backgroundColor
+        contentView.backgroundColor = backgroundColor
+        nameLabel.textColor =  AppStyle.shared.theme.black64Color
+        timeLabel.textColor = AppStyle.shared.theme.black153Color
+        nodeLabel.backgroundColor = AppStyle.shared.theme.topicCellNodeBackgroundColor
+        nodeLabel.textColor = AppStyle.shared.theme.black153Color
+        titleLabel.textColor = AppStyle.shared.theme.black64Color
+        
+        cssText = AppStyle.shared.css.replacingOccurrences(of: CSSColorMark.background, with: AppStyle.shared.theme.webBackgroundColorHex)
+        cssText = cssText.replacingOccurrences(of: CSSColorMark.subtleBackground, with: AppStyle.shared.theme.webSubBackgroundColorHex)
+        cssText = cssText.replacingOccurrences(of: CSSColorMark.topicContent, with: AppStyle.shared.theme.webTopicTextColorHex)
+        cssText = cssText.replacingOccurrences(of: CSSColorMark.hyperlink, with: AppStyle.shared.theme.webLinkColorHex)
+        cssText = cssText.replacingOccurrences(of: CSSColorMark.codePre, with: AppStyle.shared.theme.webCodePreColorHex)
+        cssText = cssText.replacingOccurrences(of: CSSColorMark.separator, with: AppStyle.shared.theme.webLineColorHex)
     }
     
     func userTapAction(_ sender: Any) {

@@ -21,12 +21,16 @@ class HomeViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+
+        AppStyle.shared.themeUpdateVariable.asObservable().subscribe(onNext: { update in
+            self.updateTheme()
+        }).addDisposableTo(disposeBag)
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
         tableView.delegate = nil
         tableView.dataSource = nil
-        
+
         refreshControl = UIRefreshControl()
         refreshControl?.rx.controlEvent(.valueChanged)
             .flatMapLatest({[unowned viewModel]_ in
@@ -70,6 +74,8 @@ class HomeViewController: UITableViewController {
     }
     
     @IBAction func leftBarItemAction(_ sender: Any) {
+        self.presentationController?.presentedViewController.dismiss(animated: true, completion: nil)
+        
         guard let drawerViewController = drawerViewController else { return }
         drawerViewController.isOpenDrawer = !drawerViewController.isOpenDrawer
     }
@@ -99,7 +105,7 @@ class HomeViewController: UITableViewController {
 
             let controller = segue.destination as! NodesViewController
             controller.popoverPresentationController?.delegate = self
-            controller.nodeItems = viewModel.defaultNodes
+            controller.nodeItems = viewModel.defaultNodes.value
             controller.nodesNavigation = viewModel.nodesNavigation
             controller.selectedItem.asObservable().subscribe(onNext: {[weak self] node in
                 if let node = node {
@@ -145,6 +151,10 @@ extension HomeViewController: TopicDetailsViewControllerDelegate {
 extension HomeViewController: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
+    }
+    
+    func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+        popoverPresentationController.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
     }
 }
 

@@ -23,6 +23,8 @@ class NodeNavigationViewController: UITableViewController {
         navigationItem.title = "节点导航"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         
+        tableView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        tableView.separatorColor = AppStyle.shared.theme.separatorColor
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
     }

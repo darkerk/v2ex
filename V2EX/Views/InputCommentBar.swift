@@ -50,11 +50,18 @@ class InputCommentBar: UIToolbar {
         textView.placeHolderLeftMargin = 5.0
         textView.font = UIFont.systemFont(ofSize: 15)
         textView.delegate = self
+        textView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        if AppStyle.shared.theme == .night {
+            textView.textColor = #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)
+            textView.placeHolderColor = #colorLiteral(red: 0.4196078431, green: 0.4901960784, blue: 0.5490196078, alpha: 1)
+            textView.clipsToBounds = true
+            textView.layer.cornerRadius = 4
+        }
         
         translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = UIColor.white
+        backgroundColor = AppStyle.shared.theme.barTintColor
         isTranslucent = false
-        barTintColor = UIColor.white
+        barTintColor = AppStyle.shared.theme.barTintColor
         addSubview(textView)
         
         sendButton.translatesAutoresizingMaskIntoConstraints = false
@@ -81,6 +88,9 @@ class InputCommentBar: UIToolbar {
             }
             return !content.isEmpty
         }.shareReplay(1).bind(to: sendButton.rx.isEnabled).addDisposableTo(disposeBag)
+        
+        
+        
     }
     
     func clear() {

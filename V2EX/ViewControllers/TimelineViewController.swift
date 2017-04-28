@@ -36,6 +36,8 @@ class TimelineViewController: UITableViewController {
         navigationItem.title = user.name
         viewModel.fetcTimeline(href: user.href)
         
+        tableView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        tableView.separatorColor = AppStyle.shared.theme.separatorColor
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
@@ -51,6 +53,8 @@ class TimelineViewController: UITableViewController {
                 }else {
                     let cell: UITableViewCell = table.dequeueReusableCell(for: indexPath)
                     cell.selectionStyle = .none
+                    cell.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+                    cell.textLabel?.textColor = AppStyle.shared.theme.black64Color
                     cell.textLabel?.text = privacy
                     return cell
                 }
@@ -78,7 +82,7 @@ class TimelineViewController: UITableViewController {
         viewModel.loadingActivityIndicator.asObservable().subscribe(onNext: {[weak self] isLoading in
             guard let `self` = self else { return }
             if isLoading {
-                let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+                let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: AppStyle.shared.theme.activityIndicatorStyle)
                 activityIndicator.startAnimating()
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
             }else {
@@ -164,16 +168,16 @@ extension TimelineViewController {
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if view is UITableViewHeaderFooterView {
             let header = view as! UITableViewHeaderFooterView
-            header.contentView.backgroundColor = UIColor(red:0.97, green:0.97, blue:0.97, alpha:1.00)
+            header.contentView.backgroundColor = AppStyle.shared.theme.tableHeaderBackgroundColor
             header.textLabel?.font = UIFont.systemFont(ofSize: 14)
-            header.textLabel?.textColor = #colorLiteral(red: 0.2509803922, green: 0.2509803922, blue: 0.2509803922, alpha: 1)
+            header.textLabel?.textColor = AppStyle.shared.theme.black64Color
             
             let showMoreButton = dataSource[section].privacy.isEmpty
             if showMoreButton  {
                 let moreButton = UIButton()
                 moreButton.translatesAutoresizingMaskIntoConstraints = false
                 moreButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-                moreButton.setTitleColor(#colorLiteral(red: 0.2509803922, green: 0.2509803922, blue: 0.2509803922, alpha: 1), for: .normal)
+                moreButton.setTitleColor(AppStyle.shared.theme.black64Color, for: .normal)
                 if section == 0 {
                     moreButton.setTitle("全部主题>", for: .normal)
                 }else {

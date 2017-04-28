@@ -68,7 +68,7 @@ class DrawerViewController: UIViewController {
         performSegue(withIdentifier: "left", sender: self)
         performSegue(withIdentifier: "center", sender: self)
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -106,7 +106,7 @@ class DrawerViewController: UIViewController {
                 let velocity = sender.velocity(in: centerViewController.view)
                 let animationThreshold: CGFloat = 200.0
                 let animationVelocity = max(abs(velocity.x), animationThreshold * 2)
-
+                
                 let oldFrame = centerViewController.view.frame
                 var newFrame = oldFrame
                 if newFrame.minX <= self.leftDrawerWidth / 2.0 {
@@ -122,7 +122,7 @@ class DrawerViewController: UIViewController {
                 let distance = abs(oldFrame.minX - newFrame.origin.x)
                 let minimumAnimationDuration: CGFloat = 0.15
                 let duration: TimeInterval = TimeInterval(max(distance / abs(animationVelocity), minimumAnimationDuration))
-
+                
                 let alpha = (newFrame.minX / self.leftDrawerWidth) * 0.3
                 UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: animationVelocity / distance, options: [],
                                animations: {
@@ -135,6 +135,15 @@ class DrawerViewController: UIViewController {
             default: break
             }
         }).addDisposableTo(disposeBag)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        switch AppStyle.shared.theme {
+        case .normal:
+            return .default
+        case .night:
+            return .lightContent
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -162,7 +171,7 @@ class DrawerViewController: UIViewController {
             }else if segue.destination is UINavigationController {
                 centerViewController = segue.destination
                 (centerViewController as! UINavigationController).delegate = self
-
+                
                 centerOverlayView = UIView()
                 centerOverlayView?.translatesAutoresizingMaskIntoConstraints = false
                 centerOverlayView?.backgroundColor = UIColor.black

@@ -10,7 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class ProfileMenuViewCell: UITableViewCell {
+class ProfileMenuViewCell: UITableViewCell, ThemeUpdating {
 
     @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -22,7 +22,7 @@ class ProfileMenuViewCell: UITableViewCell {
             unreadLabel.text = "  \(newValue)  "
         }
     }
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -31,8 +31,18 @@ class ProfileMenuViewCell: UITableViewCell {
         unreadLabel.isHidden = true
     }
     
+    func updateTheme() {
+        self.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        contentView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        let selectedView = UIView()
+        selectedView.backgroundColor = AppStyle.shared.theme.cellSelectedBackgroundColor
+        self.selectedBackgroundView = selectedView
+        
+        nameLabel.textColor = AppStyle.shared.theme.black64Color
+    }
+    
     func configure(image: UIImage, text: String) {
-        iconView.image = image
+        iconView.image = AppStyle.shared.theme == .night ? image.imageWithTintColor(#colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)) : image
         nameLabel.text = text
     }
 

@@ -12,7 +12,7 @@ import Moya
 import Kanna
 
 struct Account {
-    var isDailyRewards = Variable<Bool>(false) //领取每日奖励
+    let isDailyRewards = Variable<Bool>(false) //领取每日奖励
     let unreadCount = Variable<Int>(0)
     
     let user = Variable<User?>(nil)

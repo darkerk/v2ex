@@ -10,6 +10,7 @@ import UIKit
 
 class TimelineReplyViewCell: UITableViewCell {
 
+    @IBOutlet weak var titleContentView: UIView!
     @IBOutlet weak var topicTitleLabel: UILabel!
     @IBOutlet weak var replyContentLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
@@ -17,9 +18,18 @@ class TimelineReplyViewCell: UITableViewCell {
     var reply: Reply? {
         willSet {
             if let model = newValue {
-                topicTitleLabel.text = model.topic?.title
-                replyContentLabel.text = model.content
                 timeLabel.text = model.topic?.lastReplyTime
+                
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = 3
+                
+                let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 15), NSForegroundColorAttributeName: AppStyle.shared.theme.black102Color, NSParagraphStyleAttributeName: paragraphStyle]
+                replyContentLabel.attributedText = NSAttributedString(string: model.content, attributes: attributes)
+                
+                if let title = model.topic?.title {
+                    let titleAttributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 13), NSForegroundColorAttributeName: AppStyle.shared.theme.black102Color, NSParagraphStyleAttributeName: paragraphStyle]
+                    topicTitleLabel.attributedText = NSAttributedString(string: title, attributes: titleAttributes)
+                }
             }
         }
     }
@@ -27,6 +37,15 @@ class TimelineReplyViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        let selectedView = UIView()
+        selectedView.backgroundColor = AppStyle.shared.theme.cellSelectedBackgroundColor
+        self.selectedBackgroundView = selectedView
+        
+        self.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+        timeLabel.textColor = AppStyle.shared.theme.black153Color
+        titleContentView.backgroundColor = AppStyle.shared.theme.cellSubBackgroundColor
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

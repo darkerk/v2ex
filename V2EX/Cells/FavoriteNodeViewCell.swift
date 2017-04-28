@@ -29,9 +29,18 @@ class FavoriteNodeViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        self.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+        contentView.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+        let selectedView = UIView()
+        selectedView.backgroundColor = AppStyle.shared.theme.cellSelectedBackgroundColor
+        self.selectedBackgroundView = selectedView
+        
+        nameLabel.textColor = AppStyle.shared.theme.black64Color
         
         countLabel.clipsToBounds = true
         countLabel.layer.cornerRadius = 9
+        countLabel.backgroundColor = AppStyle.shared.theme.topicReplyCountBackgroundColor
+        countLabel.textColor = AppStyle.shared.theme.topicReplyCountTextColor
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

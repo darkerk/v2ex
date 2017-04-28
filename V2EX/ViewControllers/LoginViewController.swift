@@ -17,11 +17,38 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var googleButton: LoginButton!
+    @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var sublitLabel: UILabel!
+    @IBOutlet weak var line1View: UIImageView!
+    @IBOutlet weak var line2View: UIImageView!
     
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if AppStyle.shared.theme == .night {
+            view.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+            cancelButton.setImage(#imageLiteral(resourceName: "cancel_X").imageWithTintColor(#colorLiteral(red: 0.1137254902, green: 0.631372549, blue: 0.9490196078, alpha: 1)), for: .normal)
+            titleLabel.textColor = UIColor.white
+            sublitLabel.textColor = UIColor.white
+            
+            let lineImage = #imageLiteral(resourceName: "line").imageWithTintColor(UIColor.black)
+            line1View.image = lineImage
+            line2View.image = lineImage
+            
+            let attributes = [NSForegroundColorAttributeName: #colorLiteral(red: 0.4196078431, green: 0.4901960784, blue: 0.5490196078, alpha: 1)]
+            usernameTextField.attributedPlaceholder = NSAttributedString(string: "用户名或邮箱", attributes: attributes)
+            passwordTextField.attributedPlaceholder = NSAttributedString(string: "密码", attributes: attributes)
+            usernameTextField.textColor = #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)
+            passwordTextField.textColor = #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)
+            
+            loginButton.backgroundColor = #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1)
+            loginButton.layer.borderColor = #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1).cgColor
+            loginButton.setTitleColor(UIColor.white, for: .normal)
+            loginButton.setTitleColor(#colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1), for: .disabled)
+        }
         
         let usernameValid = usernameTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let passwordValid = passwordTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
@@ -79,6 +106,15 @@ class LoginViewController: UIViewController {
         super.touchesBegan(touches, with: event)
         
         view.endEditing(true)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        switch AppStyle.shared.theme {
+        case .normal:
+            return .default
+        case .night:
+            return .lightContent
+        }
     }
     
     override func didReceiveMemoryWarning() {

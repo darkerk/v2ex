@@ -30,6 +30,12 @@ class TimelineHeaderView: UIView {
         }
     }
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+        textLabel.textColor = AppStyle.shared.theme.black64Color
+    }
 }
 
 extension Reactive where Base: TimelineHeaderView {

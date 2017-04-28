@@ -13,7 +13,7 @@ h2 {
     line-height: 100%;
     margin: 20px 0px 20px 0px;
     padding: 0px 0px 8px 0px;
-    border-bottom: 1px solid #e2e2e2;
+    border-bottom: 1px solid #separator#;
 }
 
 h3 {
@@ -32,6 +32,10 @@ hr {
     margin-bottom: 1em;
 }
 
+body {
+    background-color: #background#;
+}
+
 pre {
     font-family: 'Consolas', 'Panic Sans', 'Consolas', 'DejaVu Sans Mono',
     'Bitstream Vera Sans Mono', 'Menlo', 'Microsoft Yahei', monospace;
@@ -41,7 +45,7 @@ pre {
     white-space: pre;
     overflow-x: auto;
     overflow-y: auto;
-    background-color: #f8f8f8;
+    background-color: #codePre#;
     padding: 5px;
 }
 
@@ -56,7 +60,7 @@ code {
 }
 
 a:link, a:visited, a:active {
-    color: #778087;
+    color: #hyperlink#;
     text-decoration: none;
     word-break: break-all;
 }
@@ -89,18 +93,6 @@ ol {
     color: #ccc;
 }
 
-.snow {
-    color: #e2e2e2;
-}
-
-.green {
-    color: #393;
-}
-
-.blue {
-    color: #485CC7;
-}
-
 .bigger {
     font-size: 16px;
 }
@@ -116,7 +108,7 @@ ol {
 }
 
 .subtle {
-    background-color: #fffff9;
+    background-color: #subtle#;
     padding: 10px;
     font-size: 12px;
     line-height: 120%;
@@ -134,7 +126,7 @@ ol {
 .topic_content {
     font-size: 15px;
     line-height: 1.6;
-    color: #404040;
+    color: #topic_content#;
     word-wrap: break-word;
 }
 

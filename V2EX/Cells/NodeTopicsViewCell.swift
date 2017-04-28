@@ -24,8 +24,13 @@ class NodeTopicsViewCell: UITableViewCell {
                 avatarView.kf.setImage(with: URL(string: model.owner?.avatar(.large) ?? ""), placeholder: #imageLiteral(resourceName: "avatar_default"))
                 ownerNameLabel.text = model.owner?.name
                 countLabel.text = "  \(model.replyCount)  "
-                titleLabel.text = model.title
                 countLabel.isHidden = model.replyCount == "0"
+                
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = 3
+                
+                let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 15), NSForegroundColorAttributeName: AppStyle.shared.theme.black64Color, NSParagraphStyleAttributeName: paragraphStyle]
+                titleLabel.attributedText = NSAttributedString(string: model.title, attributes: attributes)
             }
         }
     }
@@ -33,11 +38,21 @@ class NodeTopicsViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        self.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+        contentView.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+        let selectedView = UIView()
+        selectedView.backgroundColor = AppStyle.shared.theme.cellSelectedBackgroundColor
+        self.selectedBackgroundView = selectedView
+        
+        ownerNameLabel.textColor = AppStyle.shared.theme.black102Color
+        
         avatarView.clipsToBounds = true
         avatarView.layer.cornerRadius = 4.0
         
         countLabel.clipsToBounds = true
         countLabel.layer.cornerRadius = 9
+        countLabel.backgroundColor = AppStyle.shared.theme.topicReplyCountBackgroundColor
+        countLabel.textColor = AppStyle.shared.theme.topicReplyCountTextColor
         
         avatarView.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(avatarTapAction(_:)))

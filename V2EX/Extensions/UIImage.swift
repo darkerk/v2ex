@@ -49,4 +49,22 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return image!
     }
+    
+    func imageWithTintColor(_ tintColor: UIColor, blendMode: CGBlendMode = .destinationIn) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        tintColor.setFill()
+        
+        let rect = CGRect(origin: CGPoint.zero, size: size)
+        UIRectFill(rect)
+        
+        //Draw the tinted image in context
+        draw(in: rect, blendMode: blendMode, alpha: 1.0)
+        if blendMode != .destinationIn {
+            draw(in: rect, blendMode: .destinationIn, alpha: 1.0)
+        }
+        
+        let tintedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return tintedImage!
+    }
 }

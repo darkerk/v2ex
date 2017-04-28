@@ -31,10 +31,6 @@ body {
     word-break: break-all;
 }
 
-.cell_ops {
-    padding: 6px;
-}
-
 .subtle {
     padding: 5px;
 }
@@ -42,34 +38,6 @@ body {
 .inner {
     padding: 5px;
     word-break: break-all;
-}
-
-.caution {
-    padding: 5px;
-}
-
-.sl {
-    width: 210px;
-}
-
-.ml {
-    width: 210px;
-}
-
-.mll {
-    width: 100%;
-    padding: 5px;
-    box-sizing: border-box;
-}
-
-.mle {
-    width: 100%;
-    padding: 5px;
-    box-sizing: border-box;
-}
-
-.tall {
-    height: 220px;
 }
 
 img {

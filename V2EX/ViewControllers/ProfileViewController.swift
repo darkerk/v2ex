@@ -15,6 +15,10 @@ import PKHUD
 class ProfileViewController: UITableViewController {
     
     @IBOutlet weak var headerView: ProfileHeaderView!
+    lazy var menuItems = [(#imageLiteral(resourceName: "slide_menu_topic"), "个人"),
+                          (#imageLiteral(resourceName: "slide_menu_message"), "消息"),
+                          (#imageLiteral(resourceName: "slide_menu_favorite"), "收藏"),
+                          (#imageLiteral(resourceName: "slide_menu_setting"), "设置")]
     
     private let disposeBag = DisposeBag()
     
@@ -25,6 +29,14 @@ class ProfileViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        AppStyle.shared.themeUpdateVariable.asObservable().subscribe(onNext: { update in
+            self.updateTheme()
+            if update {
+                self.headerView.updateTheme()
+                self.tableView.reloadData()
+            }
+        }).addDisposableTo(disposeBag)
+        
         tableView.delegate = nil
         tableView.dataSource = nil
         
@@ -34,10 +46,10 @@ class ProfileViewController: UITableViewController {
                 self.headerView.logout()
             }
         }).addDisposableTo(disposeBag)
-        
-        let menuItems = [(#imageLiteral(resourceName: "slide_menu_topic"), "个人"), (#imageLiteral(resourceName: "slide_menu_message"), "消息"), (#imageLiteral(resourceName: "slide_menu_favorite"), "收藏"), (#imageLiteral(resourceName: "slide_menu_setting"), "设置")]
+    
         Observable.just(menuItems).bind(to: tableView.rx.items) { (tableView, row, item) in
             let cell: ProfileMenuViewCell = tableView.dequeueReusableCell()
+            cell.updateTheme()
             cell.configure(image: item.0, text: item.1)
             return cell
             }.addDisposableTo(disposeBag)
@@ -82,11 +94,10 @@ class ProfileViewController: UITableViewController {
                 return Account.shared.redeemDailyRewards()
             }
             return Observable.just(false)
-        }.shareReplay(1).subscribe(onNext: { success in
+        }.shareReplay(1).delay(2, scheduler: MainScheduler.instance).subscribe(onNext: { success in
             if success {
                 HUD.showText("已领取每日登录奖励！")
             }
-            
         }, onError: { error in
             print(error.message)
         }).addDisposableTo(disposeBag)

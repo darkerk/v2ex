@@ -42,6 +42,8 @@ class TopicDetailsViewController: UITableViewController {
         super.viewDidLoad()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
 
+        tableView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        tableView.separatorColor = AppStyle.shared.theme.separatorColor
         tableView.keyboardDismissMode = .onDrag
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
@@ -95,7 +97,7 @@ class TopicDetailsViewController: UITableViewController {
         viewModel.loadingActivityIndicator.asObservable().subscribe(onNext: {[weak self] isLoading in
             guard let `self` = self else { return }
             if isLoading {
-                let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+                let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: AppStyle.shared.theme.activityIndicatorStyle)
                 activityIndicator.startAnimating()
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
             }else {
@@ -279,7 +281,8 @@ extension TopicDetailsViewController {
         if section == 0 && view is UITableViewHeaderFooterView {
             let header = view as! UITableViewHeaderFooterView
             header.textLabel?.font = UIFont.systemFont(ofSize: 13)
-            header.textLabel?.textColor = #colorLiteral(red: 0.2509803922, green: 0.2509803922, blue: 0.2509803922, alpha: 1)
+            header.textLabel?.textColor = AppStyle.shared.theme.black64Color
+            header.contentView.backgroundColor = AppStyle.shared.theme.tableHeaderBackgroundColor
         }
     }
     

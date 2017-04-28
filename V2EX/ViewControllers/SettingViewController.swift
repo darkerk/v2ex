@@ -25,6 +25,8 @@ class SettingViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        updateTheme()
+        
         viewModel.fetchPrivacyStatus(completion: {[weak tableView] in
             tableView?.reloadData()
         })
@@ -157,6 +159,15 @@ class SettingViewController: UITableViewController {
         viewModel.setPrivacy(type: PrivacyType.search(on: sender.isOn))
     }
     
+    func nightSwitch(_ sender: UISwitch) {
+        AppStyle.shared.theme = sender.isOn ? .night : .normal
+        
+        drawerViewController?.setNeedsStatusBarAppearanceUpdate()
+        AppStyle.shared.setupBarStyle(navigationController!.navigationBar)
+        updateTheme()
+        tableView.reloadData()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -202,7 +213,7 @@ extension SettingViewController: UIImagePickerControllerDelegate, UINavigationCo
 
 extension SettingViewController {
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        if section == 3 {
+        if section == 4 {
             let version = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
             let build = Bundle.main.infoDictionary!["CFBundleVersion"] as! String
             return "Version" + version + "（build \(build)）"
@@ -210,9 +221,17 @@ extension SettingViewController {
         return nil
     }
     
-    override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-        if section == 3 && view is UITableViewHeaderFooterView {
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if view is UITableViewHeaderFooterView {
             let header = view as! UITableViewHeaderFooterView
+            header.textLabel?.textColor = AppStyle.shared.theme.black153Color
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        if section == 4 && view is UITableViewHeaderFooterView {
+            let header = view as! UITableViewHeaderFooterView
+            header.textLabel?.textColor = AppStyle.shared.theme.black153Color
             header.textLabel?.font = UIFont.systemFont(ofSize: 13)
             header.textLabel?.textAlignment = .center
         }
@@ -220,7 +239,14 @@ extension SettingViewController {
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.accessoryView = nil
-        if indexPath.section == 0 && indexPath.row == 0 {
+        let selectedView = UIView()
+        selectedView.backgroundColor = AppStyle.shared.theme.cellSelectedBackgroundColor
+        cell.selectedBackgroundView = selectedView
+        cell.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+        cell.textLabel?.textColor = AppStyle.shared.theme.black64Color
+        cell.detailTextLabel?.textColor = AppStyle.shared.theme.black102Color
+        cell.selectionStyle = .default
+        if indexPath.section == 0 {
             let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 35, height: 35))
             imageView.clipsToBounds = true
             imageView.layer.cornerRadius = 4
@@ -230,19 +256,35 @@ extension SettingViewController {
             cell.accessoryView = imageView
             avatarView = imageView
         }else if indexPath.section == 1 {
+            cell.selectionStyle = .none
+            let switchy = UISwitch()
+            switchy.isOn = AppStyle.shared.theme == .night
+            switchy.addTarget(self, action: #selector(nightSwitch(_:)), for: .valueChanged)
+            cell.accessoryView = switchy
+            if AppStyle.shared.theme == .night {
+                switchy.onTintColor = #colorLiteral(red: 0.1137254902, green: 0.631372549, blue: 0.9490196078, alpha: 1)
+            }
+        }else if indexPath.section == 2 {
             switch indexPath.row {
             case 0:
                 cell.detailTextLabel?.text = privacyOptions[Account.shared.privacy.online]
             case 1:
                 cell.detailTextLabel?.text = privacyOptions[Account.shared.privacy.topic]
             case 2:
+                cell.selectionStyle = .none
                 let switchy = UISwitch()
                 switchy.isOn = Account.shared.privacy.search
                 switchy.addTarget(self, action: #selector(searchSwitch(_:)), for: .valueChanged)
                 cell.accessoryView = switchy
-            
+                if AppStyle.shared.theme == .night {
+                    switchy.onTintColor = #colorLiteral(red: 0.1137254902, green: 0.631372549, blue: 0.9490196078, alpha: 1)
+                }
             default:
                 break
+            }
+        }else if indexPath.section == 4 {
+            if AppStyle.shared.theme == .normal {
+                cell.textLabel?.textColor = UIColor.red
             }
         }
     }
@@ -251,11 +293,11 @@ extension SettingViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 && indexPath.row == 0 {
             openImagePicker()
-        }else if indexPath.section == 1 && indexPath.row < 2 {
+        }else if indexPath.section == 2 && indexPath.row < 2 {
             privacyAction(type: indexPath.row == 0 ? .online(value: Account.shared.privacy.online) : .topic(value: Account.shared.privacy.topic))
-        }else if indexPath.section == 2 {
-            performSegue(withIdentifier: AboutLicensesViewController.segueId, sender: indexPath)
         }else if indexPath.section == 3 {
+            performSegue(withIdentifier: AboutLicensesViewController.segueId, sender: indexPath)
+        }else if indexPath.section == 4 {
             let alert = UIAlertController(title: "退出 V2EX?", message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
             alert.addAction(UIAlertAction(title: "退出", style: .default, handler: {_ in

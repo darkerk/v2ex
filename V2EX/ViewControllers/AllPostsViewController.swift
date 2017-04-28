@@ -23,6 +23,8 @@ class AllPostsViewController: UITableViewController {
         let titleText = type == .topic ? "全部主题" : "全部回复"
         navigationItem.title = titleText
         
+        tableView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        tableView.separatorColor = AppStyle.shared.theme.separatorColor
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
@@ -64,6 +66,11 @@ class AllPostsViewController: UITableViewController {
                 tableView?.infiniteScrollingView?.stopAnimating()
            })
         }
+        
+        if AppStyle.shared.theme == .night {
+            tableView.infiniteScrollingView?.activityIndicatorView.activityIndicatorViewStyle = .white
+        }
+        
         viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
     }
 

@@ -11,7 +11,7 @@ import Kingfisher
 import RxCocoa
 import RxSwift
 
-class ProfileHeaderView: UIView {
+class ProfileHeaderView: UIView, ThemeUpdating {
     @IBOutlet weak var avatarButton: UIButton!
     @IBOutlet weak var nameLabel: UILabel!
     
@@ -28,9 +28,21 @@ class ProfileHeaderView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         avatarButton.clipsToBounds = true
         avatarButton.layer.cornerRadius = 40
         nameLabel.isHidden = true
+        
+        updateTheme()
+    }
+    
+    func updateTheme() {
+        backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        nameLabel.textColor = AppStyle.shared.theme.black64Color
+        if AppStyle.shared.theme == .night {
+            avatarButton.backgroundColor = #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1)
+        }
+        avatarButton.setTitleColor(AppStyle.shared.theme.black102Color, for: .normal)
     }
     
     func logout() {
