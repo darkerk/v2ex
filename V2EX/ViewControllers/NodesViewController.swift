@@ -47,6 +47,12 @@ extension NodesViewController {
             cell.node = nodeItems[indexPath.row]
         }else {
             cell.textLabel?.text = "更多节点"
+            switch AppStyle.shared.theme {
+            case .normal:
+                cell.textLabel?.textColor = #colorLiteral(red: 0.3137254902, green: 0.3137254902, blue: 0.3137254902, alpha: 1)
+            case .night:
+                cell.textLabel?.textColor = #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)
+            }
         }
         return cell
     }

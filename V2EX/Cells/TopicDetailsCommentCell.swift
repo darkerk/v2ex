@@ -147,7 +147,7 @@ class TopicDetailsCommentCell: UITableViewCell {
                         image = cacheImage
                         imgSize = cacheImage.size
                     }else {
-                        image = UIImage(color: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1), size: imgSize)
+                        image = UIImage(color: AppStyle.shared.theme.topicCellNodeBackgroundColor, size: imgSize)
                     }
                     
                     let attachment = ImageAttachment()
