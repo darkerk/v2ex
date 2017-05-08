@@ -22,4 +22,19 @@ extension UITableViewController: ThemeUpdating {
         }
         tableView.separatorColor = AppStyle.shared.theme.separatorColor
     }
+    
+    func showLoginAlert(isPopBack: Bool = false) {
+        let alert = UIAlertController(title: "需要您登录V2EX", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: {_ in
+            if isPopBack {
+                self.navigationController?.popViewController(animated: true)
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "登录", style: .default, handler: {_ in
+            self.drawerViewController?.performSegue(withIdentifier: LoginViewController.segueId, sender: nil)
+        }))
+        present(alert, animated: true, completion: nil)
+
+    }
+    
 }

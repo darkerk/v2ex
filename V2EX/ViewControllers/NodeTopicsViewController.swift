@@ -50,12 +50,6 @@ class NodeTopicsViewController: UITableViewController {
             return cell
             }.addDisposableTo(disposeBag)
         
-        tableView.rx.modelSelected(Topic.self).subscribe(onNext: {[weak navigationController] item in
-            if let nav = navigationController {
-                TopicDetailsViewController.show(from: nav, topic: item)
-            }
-        }).addDisposableTo(disposeBag)
-        
         tableView.addInfiniteScrolling {[weak viewModel] in
             viewModel?.fetchMoreData()
         }
@@ -78,11 +72,21 @@ class NodeTopicsViewController: UITableViewController {
                 activityIndicator.startAnimating()
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
             }else {
-                if Account.shared.isLoggedIn.value {
-                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
-                }else {
-                    self.navigationItem.rightBarButtonItem = nil
-                }
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
+            }
+        }).addDisposableTo(disposeBag)
+        
+        var shouldLogin = false
+        viewModel.shouldLogin.asObservable().subscribe(onNext: {[weak self] should in
+            if should {
+                shouldLogin = true
+                self?.showLoginAlert(isPopBack: true)
+            }
+        }).addDisposableTo(disposeBag)
+        
+        Account.shared.isLoggedIn.asObservable().subscribe(onNext: {isLoggedIn in
+            if isLoggedIn && shouldLogin {
+                self.viewModel.fetcData()
             }
         }).addDisposableTo(disposeBag)
     }
@@ -136,5 +140,9 @@ extension NodeTopicsViewController: CreateTopicViewControllerDelegate {
 extension NodeTopicsViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let item = viewModel.items.value[indexPath.row]
+        if let nav = navigationController {
+            TopicDetailsViewController.show(from: nav, topic: item)
+        }
     }
 }

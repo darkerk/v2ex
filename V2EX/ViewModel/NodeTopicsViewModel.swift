@@ -14,7 +14,7 @@ class NodeTopicsViewModel {
     let loadMoreEnabled = Variable<Bool>(false)
     let loadMoreCompleted = Variable<Bool>(false)
     let loadingActivityIndicator = ActivityIndicator()
-    
+    let shouldLogin = Variable<Bool>(false)
     var nodeHref: String = ""
     
     private var favoriteHref: String = ""
@@ -36,6 +36,7 @@ class NodeTopicsViewModel {
                 self.isFavorited = data.favoriteHref.contains("/unfavorite/")
                 
                 if page == 1 {
+                    self.shouldLogin.value = data.shouldLogin
                     self.items.value = data.topics
                 }else {
                     self.items.value.append(contentsOf: data.topics)
