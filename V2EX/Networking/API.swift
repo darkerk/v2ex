@@ -30,6 +30,8 @@ enum API {
     case once()
     /// 登录
     case login(usernameKey: String, passwordKey: String, username: String, password: String, once: String)
+    /// 注销
+    case logout(once: String)
     /// 首页话题（切换节点）
     case topics(nodeHref: String)
     /// 领取每日奖励
@@ -66,6 +68,8 @@ enum API {
     case block(id: String, token: String, isCancel: Bool)
     /// 发布新话题
     case createTopic(nodeHref: String, title: String, content: String, once: String)
+    /// 两步验证登录
+    case twoStepVerify(code: String, once: String)
 }
 
 extension API: TargetType {
@@ -89,6 +93,8 @@ extension API: TargetType {
             return "/signin"
         case .login(_, _, _, _, _):
             return "/signin"
+        case .logout(_):
+            return "/signout"
         case .dailyRewards(_):
             return "/mission/daily/redeem"
         case let .timeline(userHref):
@@ -132,6 +138,8 @@ extension API: TargetType {
             return (isCancel ? "/unblock" :  "/block") + "/\(id)"
         case let .createTopic(nodeHref, _, _, _):
             return nodeHref.replacingOccurrences(of: "go", with: "new")
+        case .twoStepVerify(_, _):
+            return "/2fa"
         default:
             return ""
         }
@@ -141,7 +149,7 @@ extension API: TargetType {
         switch self {
         case .login(_, _, _, _, _):
             return .post
-        case .updateAvatar(_), .privacy(_, _), .comment(_, _, _), .thank(_, _), .createTopic(_, _, _, _):
+        case .updateAvatar(_), .privacy(_, _), .comment(_, _, _), .thank(_, _), .createTopic(_, _, _, _), .twoStepVerify(_, _):
             return .post
         default:
             return .get
@@ -156,7 +164,7 @@ extension API: TargetType {
         switch self {
         case let .login(userNameKey, passwordKey, userName, password, once):
             return [userNameKey: userName, passwordKey: password, "once": once, "next": "/"]
-        case let .dailyRewards(once):
+        case let .dailyRewards(once), let .logout(once):
             return ["once": once]
         case let .topics(nodeHref):
             if nodeHref.isEmpty {
@@ -196,6 +204,8 @@ extension API: TargetType {
             return ["t": token]
         case let .createTopic(_, title, content, once):
             return ["title": title, "content": content, "once": once]
+        case let .twoStepVerify(code, once):
+            return ["code": code, "once": once]
         default:
             return nil
         }

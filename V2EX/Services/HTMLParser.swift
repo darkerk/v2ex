@@ -24,6 +24,10 @@ struct HTMLParser {
         var nodePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell'][1]/a")
         let infoPath = html.xpath("//body/div[@id='Top']/div[@class='content']//table/tr/td[3]/a[1]")
         if let nameHref = infoPath.first?["href"], nameHref.hasPrefix("/member/") {
+            if let title = html.xpath("//head/title").first?.content, title.contains("两步验证登录") {
+                Account.shared.logout()
+                return []
+            }
             //已经登录
             let username = nameHref.replacingOccurrences(of: "/member/", with: "")
             let src = infoPath.first?.xpath("./img").first?["src"] ?? ""
@@ -92,13 +96,13 @@ struct HTMLParser {
         return nil
     }
     
-    // MARK: - 登录结果
-    func loginResult(html data: Data) -> (user: User?, problem: String?) {
+    // MARK: - 两步验证结果
+    func twoStepVerifyResult(html data: Data) -> (user: User?, problem: String?) {
         guard let html = HTML(html: data, encoding: .utf8) else {
-            return (nil, "登录失败，请稍后再试")
+            return (nil, "验证失败，请稍后再试")
         }
-
-        let problemPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='problem']/ul")
+        
+        let problemPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='message']")
         if let problem = problemPath.first?.content {
             return (nil, problem)
         }
@@ -110,7 +114,31 @@ struct HTMLParser {
             let user = User(name: name, href: href, src: src)
             return (user, nil)
         }
-        return (nil, "登录失败，请稍后再试")
+        return (nil, "验证失败，请重新输入验证码")
+    }
+    
+    func loginResult(html data: Data) -> (isTwoStepVerification: Bool, user: User?, problem: String?) {
+        guard let html = HTML(html: data, encoding: .utf8) else {
+            return (false, nil, "登录失败，请稍后再试")
+        }
+        
+        if let title = html.xpath("//head/title").first?.content, title.contains("两步验证登录") {
+            return (true, nil, "两步验证登录")
+        }
+        
+        let problemPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='problem']/ul")
+        if let problem = problemPath.first?.content {
+            return (false, nil, problem)
+        }
+        
+        let path = html.xpath("//body/div[@id='Top']/div[@class='content']/div/table/tr/td[3]/a[1]")
+        if let href = path.first?["href"], href.contains("/member/")  {
+            let name = href.replacingOccurrences(of: "/member/", with: "")
+            let src = path.first?.xpath("./img").first?["src"] ?? ""
+            let user = User(name: name, href: href, src: src)
+            return (false, user, nil)
+        }
+        return (false, nil, "登录失败，请稍后再试")
     }
     
     // MARK: - 首页话题列表

@@ -32,6 +32,18 @@ struct Account {
         HTTPCookieStorage.shared.cookies?.forEach({ cookie in
             HTTPCookieStorage.shared.deleteCookie(cookie)
         })
+        
+        API.provider.request(.once()).flatMapLatest { response -> Observable<Response> in
+            if let once = HTMLParser.shared.once(html: response.data) {
+                return API.provider.request(API.logout(once: once))
+            }else {
+                return Observable.error(NetError.message(text: "获取once失败"))
+            }
+            }.shareReplay(1).subscribe(onNext: { response in
+            
+            }, onError: {error in
+             
+            }).addDisposableTo(disposeBag)
     }
     
     func redeemDailyRewards() -> Observable<Bool> {
