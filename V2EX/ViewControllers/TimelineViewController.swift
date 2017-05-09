@@ -86,16 +86,16 @@ class TimelineViewController: UITableViewController {
                 activityIndicator.startAnimating()
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
             }else {
-                if Account.shared.isLoggedIn.value && user.href != Account.shared.user.value?.href {
-                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
-                }else {
-                    self.navigationItem.rightBarButtonItem = nil
-                }
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
             }
         }).addDisposableTo(disposeBag)
     }
     
     func moreAction(_ sender: Any) {
+        guard Account.shared.isLoggedIn.value && user?.href != Account.shared.user.value?.href else {
+            self.showLoginAlert()
+            return
+        }
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         let isFollowed = viewModel.isFollowed

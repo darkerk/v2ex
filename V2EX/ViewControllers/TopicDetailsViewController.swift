@@ -101,15 +101,15 @@ class TopicDetailsViewController: UITableViewController {
                 activityIndicator.startAnimating()
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
             }else {
-                if Account.shared.isLoggedIn.value {
-                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
-                }else {
-                    self.navigationItem.rightBarButtonItem = nil
-                }
+                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
             }
         }).addDisposableTo(disposeBag)
         
         inputbar.rx.sendEvent.subscribe(onNext: {[weak viewModel, weak inputbar, weak self] (text, atName) in
+            guard Account.shared.isLoggedIn.value else {
+                self?.showLoginAlert()
+                return
+            }
             HUD.show()
             viewModel?.sendComment(content: text, atName: atName, completion: {error in
                 if let error = error {
@@ -172,6 +172,12 @@ class TopicDetailsViewController: UITableViewController {
     
     func moreAction(_ sender: Any) {
         inputbar.endEditing()
+        
+        guard Account.shared.isLoggedIn.value else {
+            self.showLoginAlert()
+            return
+        }
+        
         guard let viewModel = viewModel else {
             return
         }
@@ -246,10 +252,7 @@ class TopicDetailsViewController: UITableViewController {
     }
     
     override var inputAccessoryView: UIView? {
-        if Account.shared.isLoggedIn.value {
-            return inputbar
-        }
-        return nil
+        return inputbar
     }
     
     override var canBecomeFirstResponder: Bool {

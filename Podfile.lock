@@ -13,12 +13,12 @@ PODS:
     - RxSwift (~> 3.0)
   - PKHUD (4.2.1)
   - Result (3.2.1)
-  - RxCocoa (3.4.0):
+  - RxCocoa (3.4.1):
     - RxSwift (~> 3.4)
   - RxDataSources (1.0.3):
     - RxCocoa (~> 3.0)
     - RxSwift (~> 3.0)
-  - RxSwift (3.4.0)
+  - RxSwift (3.4.1)
   - SKPhotoBrowser (4.0.1)
 
 DEPENDENCIES:
@@ -41,9 +41,9 @@ SPEC CHECKSUMS:
   Moya: d3721622e3cc0cc2f038d69a258686f0b66e7252
   PKHUD: 957ce2a68b3c97a51839b30216120c1dbc0c3a78
   Result: 2453a22e5c5b11c0c3a478736e82cd02f763b781
-  RxCocoa: d14ef6b6029e1ddc6e966508c09289090de68ff9
+  RxCocoa: a8a5f1d061d0043e28f56976829f31ce63e8eb09
   RxDataSources: a021a0e944ba5f7991259829d973afdbfa719c0b
-  RxSwift: 3789a1af753002a14edecdb698a2424624296a9c
+  RxSwift: 656f8fbeca5bc372121a72d9ebdd3cd3bc0ffade
   SKPhotoBrowser: 3a7c6fc02aa1620ab17253a47a49fafda46536e8
 
 PODFILE CHECKSUM: 5044196f57f3f5093a9c7d7ea96d95fcbcaf82e4
