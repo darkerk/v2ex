@@ -62,7 +62,7 @@ extension Theme {
     var cellSubBackgroundColor: UIColor {
         switch self {
         case .normal:
-            return #colorLiteral(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)
+            return #colorLiteral(red: 0.9607843137, green: 0.9607843137, blue: 0.9607843137, alpha: 1)
         case .night:
             return #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1)
         }
