@@ -41,6 +41,8 @@ class ProfileHeaderView: UIView, ThemeUpdating {
         nameLabel.textColor = AppStyle.shared.theme.black64Color
         if AppStyle.shared.theme == .night {
             avatarButton.backgroundColor = #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1)
+        }else {
+            avatarButton.backgroundColor = #colorLiteral(red: 0.9019607843, green: 0.9019607843, blue: 0.9019607843, alpha: 1)
         }
         avatarButton.setTitleColor(AppStyle.shared.theme.black102Color, for: .normal)
     }

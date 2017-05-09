@@ -664,6 +664,9 @@
                                 <state key="disabled">
                                     <color key="titleColor" red="0.58823529409999997" green="0.58823529409999997" blue="0.58823529409999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="loginButtonAction:" destination="Aqq-pH-XRa" eventType="touchUpInside" id="kYC-Gl-0AP"/>
+                                </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="line" translatesAutoresizingMaskIntoConstraints="NO" id="usy-hY-n6R" userLabel="Line2View">
                                 <rect key="frame" x="30" y="255" width="335" height="1"/>

@@ -1,4 +1,5 @@
 PODS:
+  - 1PasswordExtension (1.8.4)
   - Alamofire (4.4.0)
   - Crashlytics (3.8.4):
     - Fabric (~> 1.6.3)
@@ -22,6 +23,7 @@ PODS:
   - SKPhotoBrowser (4.0.1)
 
 DEPENDENCIES:
+  - 1PasswordExtension (~> 1.8.4)
   - Crashlytics (~> 3.8.4)
   - Fabric (~> 1.6.11)
   - Kanna (~> 2.2.1)
@@ -33,6 +35,7 @@ DEPENDENCIES:
   - SKPhotoBrowser (~> 4.0.1)
 
 SPEC CHECKSUMS:
+  1PasswordExtension: e775a29310c65851e5a6cec1afc349ab4e334e47
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
   Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
   Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
@@ -46,6 +49,6 @@ SPEC CHECKSUMS:
   RxSwift: 656f8fbeca5bc372121a72d9ebdd3cd3bc0ffade
   SKPhotoBrowser: 3a7c6fc02aa1620ab17253a47a49fafda46536e8
 
-PODFILE CHECKSUM: 5044196f57f3f5093a9c7d7ea96d95fcbcaf82e4
+PODFILE CHECKSUM: 73936f19140ba14abdf88f5c7529622a5b9c81eb
 
 COCOAPODS: 1.2.1

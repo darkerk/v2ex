@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import PKHUD
+import OnePasswordExtension
 
 class LoginViewController: UIViewController {
     
@@ -51,45 +52,46 @@ class LoginViewController: UIViewController {
             loginButton.setTitleColor(#colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1), for: .disabled)
         }
         
+        if OnePasswordExtension.shared().isAppExtensionAvailable() {
+            let bundlePath = Bundle(for: OnePasswordExtension.self).path(forResource: "OnePasswordExtensionResources", ofType: "bundle")
+            let image = UIImage(named: AppStyle.shared.theme == .night ? "onepassword-button-light" : "onepassword-button",
+                                in: Bundle(path: bundlePath!),
+                                compatibleWith: nil)
+            let button = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+            button.setImage(image, for: .normal)
+            button.addTarget(self, action: #selector(findLoginFrom1Password(_:)), for: .touchUpInside)
+            passwordTextField.rightViewMode = .always
+            passwordTextField.rightView = button
+            
+        }
+        
         let usernameValid = usernameTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let passwordValid = passwordTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let allValid = Observable.combineLatest(usernameValid, passwordValid) { $0 && $1 }.shareReplay(1)
         allValid.bind(to: loginButton.rx.isEnabled).addDisposableTo(disposeBag)
         
         usernameTextField.rx.controlEvent(.editingDidEndOnExit).subscribe(onNext: {[weak self] in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.passwordTextField.becomeFirstResponder()
+            self?.passwordTextField.becomeFirstResponder()
             
         }).addDisposableTo(disposeBag)
         
         passwordTextField.rx.controlEvent(.editingDidEndOnExit).subscribe().addDisposableTo(disposeBag)
         
         viewModel.activityIndicator.asObservable().bind(to: PKHUD.sharedHUD.rx.isAnimating).addDisposableTo(disposeBag)
-        viewModel.loginRequest(input: (username: usernameTextField.rx.text.orEmpty.asObservable(),
-                                       password: passwordTextField.rx.text.orEmpty.asObservable(),
-                                       tap: loginButton.rx.tap.asObservable()))
-            .subscribe(onNext: {[weak self] response in
-                let result = HTMLParser.shared.loginResult(html: response.data)
-                if result.isTwoStepVerification {
-                    self?.showTwoStepVerify()
-                    return
-                }
-                if let user = result.user {
-                    Account.shared.user.value = user
-                    Account.shared.isLoggedIn.value = true
-                    self?.dismiss(animated: true, completion: nil)
-                }else {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                        let errorMsg = result.problem ?? "登录失败，请稍后再试"
-                        HUD.showText(errorMsg)
-                    })
-                }
-                }, onError: {error in
-                    HUD.showText(error.message)
-            }).addDisposableTo(disposeBag)
-        
+    }
+    
+    func findLoginFrom1Password(_ sender: Any) {
+        view.endEditing(true)
+        OnePasswordExtension.shared().findLogin(forURLString: "www.v2ex.com", for: self, sender: sender) { (result, error) in
+            if let result = result as? [String: String], let username = result[AppExtensionUsernameKey], let password = result[AppExtensionPasswordKey] {
+                
+                self.usernameTextField.text = username
+                self.passwordTextField.text = password
+                
+                self.loginButton.isEnabled = true
+                self.loginButton.sendActions(for: .touchUpInside)
+            }
+        }
     }
     
     func showTwoStepVerify() {
@@ -125,6 +127,31 @@ class LoginViewController: UIViewController {
         
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func loginButtonAction(_ sender: Any) {
+        guard let username = usernameTextField.text, let password = passwordTextField.text else {
+            return
+        }
+        viewModel.loginRequest(username: username, password: password).subscribe(onNext: {[weak self] response in
+            let result = HTMLParser.shared.loginResult(html: response.data)
+            if result.isTwoStepVerification {
+                self?.showTwoStepVerify()
+                return
+            }
+            if let user = result.user {
+                Account.shared.user.value = user
+                Account.shared.isLoggedIn.value = true
+                self?.dismiss(animated: true, completion: nil)
+            }else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                    let errorMsg = result.problem ?? "登录失败，请稍后再试"
+                    HUD.showText(errorMsg)
+                })
+            }
+            }, onError: {error in
+                HUD.showText(error.message)
+        }).addDisposableTo(disposeBag)
     }
     
     @IBAction func googleLoginAction(_ sender: Any) {

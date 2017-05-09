@@ -11,4 +11,5 @@ target 'V2EX' do
     pod 'Kingfisher', '~> 3.6.2'
     pod 'PKHUD', '~> 4.2.1'
     pod 'SKPhotoBrowser', '~> 4.0.1'
+    pod '1PasswordExtension', '~> 1.8.4'
 end
