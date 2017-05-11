@@ -97,6 +97,7 @@ class ProfileViewController: UITableViewController {
         }.shareReplay(1).delay(2, scheduler: MainScheduler.instance).subscribe(onNext: { success in
             if success {
                 HUD.showText("已领取每日登录奖励！")
+                Account.shared.isDailyRewards.value = false
             }
         }, onError: { error in
             print(error.message)

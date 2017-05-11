@@ -56,7 +56,6 @@ struct Account {
 
                     let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='message']")
                     if let content = path.first?.content, content.contains("已成功领取") {
-                        self.isDailyRewards.value = false
                         return Observable.just(true)
                     }else {
                         return Observable.error(NetError.message(text: "领取奖励失败"))

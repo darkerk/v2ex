@@ -6,10 +6,10 @@ PODS:
   - Fabric (1.6.11)
   - Kanna (2.2.1)
   - Kingfisher (3.6.2)
-  - Moya/Core (8.0.3):
+  - Moya/Core (8.0.4):
     - Alamofire (~> 4.1)
     - Result (~> 3.0)
-  - Moya/RxSwift (8.0.3):
+  - Moya/RxSwift (8.0.4):
     - Moya/Core
     - RxSwift (~> 3.0)
   - PKHUD (4.2.1)
@@ -41,7 +41,7 @@ SPEC CHECKSUMS:
   Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
   Kanna: 182789ab065e8f9a6ccc2a74ce6283d3401c0c4a
   Kingfisher: 2c94e72c6830622c71d06adf4ea024c37d316830
-  Moya: d3721622e3cc0cc2f038d69a258686f0b66e7252
+  Moya: a08bc060c7a44eee27447b239ed33a189b641e2b
   PKHUD: 957ce2a68b3c97a51839b30216120c1dbc0c3a78
   Result: 2453a22e5c5b11c0c3a478736e82cd02f763b781
   RxCocoa: a8a5f1d061d0043e28f56976829f31ce63e8eb09
