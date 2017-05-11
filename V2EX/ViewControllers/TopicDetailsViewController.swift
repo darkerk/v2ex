@@ -65,6 +65,7 @@ class TopicDetailsViewController: UITableViewController {
             }
         }).addDisposableTo(disposeBag)
         
+        let ownerHref = viewModel.topic.owner?.href
         dataSource.configureCell = {[weak self] (ds, tv, indexPath, item) in
             switch ds[indexPath.section].type {
             case .more:
@@ -73,6 +74,7 @@ class TopicDetailsViewController: UITableViewController {
             case .data:
                 let cell: TopicDetailsCommentCell = tv.dequeueReusableCell()
                 cell.comment = item
+                cell.isLZ = (item.user?.href == ownerHref) && ownerHref?.isEmpty == false
                 cell.linkTap = {type in
                     self?.linkTapAction(type: type)
                 }

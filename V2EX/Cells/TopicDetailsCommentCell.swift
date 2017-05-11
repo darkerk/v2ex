@@ -33,12 +33,19 @@ class TopicDetailsCommentCell: UITableViewCell {
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var floorLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var lzFlagLabel: UILabel!
     
     var linkTap: ((TapLink) -> Void)?
     
     var comment: Comment? {
         didSet {
             configure()
+        }
+    }
+    
+    var isLZ: Bool = false {
+        willSet {
+            lzFlagLabel.isHidden = !newValue
         }
     }
     
@@ -86,7 +93,7 @@ class TopicDetailsCommentCell: UITableViewCell {
         nameLabel.textColor = AppStyle.shared.theme.black64Color
         timeLabel.textColor = AppStyle.shared.theme.black153Color
         floorLabel.textColor = AppStyle.shared.theme.black153Color
-        
+        lzFlagLabel.textColor = AppStyle.shared.theme.black153Color
         cssText = cssText.replacingOccurrences(of: CSSColorMark.replyContent, with: AppStyle.shared.theme.webTopicTextColorHex)
     }
     
