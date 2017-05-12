@@ -86,13 +86,25 @@ class TimelineViewController: UITableViewController {
                 activityIndicator.startAnimating()
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
             }else {
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
+                if user.href == Account.shared.user.value?.href {
+                    self.navigationItem.rightBarButtonItem = nil
+                }else {
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
+                }
             }
         }).addDisposableTo(disposeBag)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if user?.href == Account.shared.user.value?.href {
+            self.navigationItem.rightBarButtonItem = nil
+        }
+    }
+    
     func moreAction(_ sender: Any) {
-        guard Account.shared.isLoggedIn.value && user?.href != Account.shared.user.value?.href else {
+        guard Account.shared.isLoggedIn.value else {
             self.showLoginAlert()
             return
         }
