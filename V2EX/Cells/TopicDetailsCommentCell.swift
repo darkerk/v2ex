@@ -34,7 +34,7 @@ class TopicDetailsCommentCell: UITableViewCell {
     @IBOutlet weak var floorLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var lzFlagLabel: UILabel!
-    
+
     var linkTap: ((TapLink) -> Void)?
     
     var comment: Comment? {
@@ -50,16 +50,16 @@ class TopicDetailsCommentCell: UITableViewCell {
     }
     
     private var cssText = "a:link, a:visited, a:active {" +
-                            "text-decoration: none;" +
-                            "word-break: break-all;" +
-                    "}" +
-                    ".reply_content {" +
-                            "font-size: 14px;" +
-                            "line-height: 1.6;" +
-                            "color: #reply_content#;" +
-                            "word-break: break-all;" +
-                            "word-wrap: break-word;" +
-                    "}"
+        "text-decoration: none;" +
+        "word-break: break-all;" +
+        "}" +
+        ".reply_content {" +
+        "font-size: 14px;" +
+        "line-height: 1.6;" +
+        "color: #reply_content#;" +
+        "word-break: break-all;" +
+        "word-wrap: break-word;" +
+    "}"
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -119,12 +119,12 @@ class TopicDetailsCommentCell: UITableViewCell {
         timeLabel.text = model.time
         
         var content = model.content
-
+        
         guard let html = HTML(html: content, encoding: .utf8) else {
             textView.text = content
             return
         }
-
+        
         var imgsrcs: [(id: String, src: String)] = []
         let srcs = html.xpath("//img").flatMap({$0["src"]})
         let imgTags = matchImgTags(text: content)
@@ -139,55 +139,57 @@ class TopicDetailsCommentCell: UITableViewCell {
                 imgsrcs.append((id, src))
             }
         })
+        
         let htmlText = "<style>\(cssText)</style>" + content
-        if let htmlData = htmlText.data(using: .unicode) {
-            do {
-                let attributedString = try NSMutableAttributedString(data: htmlData, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
-                imgsrcs.forEach({ item in
-                    
-                    let url = URL(string: item.src)!
-                    var imgSize = CGSize(width: 100, height: 100)
-                    var image: UIImage?
-                    var isImageCached = false
-                    if let cacheImage = ImageCache.default.retrieveImageInDiskCache(forKey: item.id) {
-                        isImageCached = true
-                        image = cacheImage
-                        imgSize = cacheImage.size
-                    }else {
-                        image = UIImage(color: AppStyle.shared.theme.topicCellNodeBackgroundColor, size: imgSize)
-                    }
-                    
-                    let attachment = ImageAttachment()
-                    attachment.imageSize = imgSize
-                    attachment.image = image
-                    attachment.src = item.src
-                    
-                    let imgString = NSAttributedString(attachment: attachment)
-                    if let range = attributedString.string.range(of: item.id) {
-                        let nsRange = attributedString.string.nsRange(from: range)
-                        attributedString.replaceCharacters(in: nsRange, with: imgString)
-                        
-                        if !isImageCached {
-                            ImageDownloader.default.downloadImage(with: url, completionHandler: { (newImage, _, _, _) in
-                                if let newImage = newImage {
-                                    let smallImage = newImage.thumbnailForMaxPixelSize(200)
-                                    attachment.imageSize = smallImage.size
-                                    attachment.image = smallImage
-                                    self.textView.textContainer.layoutManager?.invalidateLayout(forCharacterRange: nsRange, actualCharacterRange: nil)
-                                    ImageCache.default.store(smallImage, forKey: item.id)
-                                    SKCache.sharedCache.setImage(newImage, forKey: item.src)
-                                }
-                            })
+        
+        guard let htmlData = htmlText.data(using: .unicode),
+            let attributedString = try? NSMutableAttributedString(data: htmlData, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil) else {
+                
+                return
+        }
+        
+        imgsrcs.forEach({ item in
+            let url = URL(string: item.src)!
+            var imgSize = CGSize(width: 100, height: 100)
+            var image: UIImage?
+            var isImageCached = false
+            if let cacheImage = ImageCache.default.retrieveImageInDiskCache(forKey: item.id) {
+                isImageCached = true
+                image = cacheImage
+                imgSize = cacheImage.size
+            }else {
+                image = UIImage(color: AppStyle.shared.theme.topicCellNodeBackgroundColor, size: imgSize)
+            }
+            
+            let attachment = ImageAttachment()
+            attachment.imageSize = imgSize
+            attachment.image = image
+            attachment.src = item.src
+            
+            let imgString = NSAttributedString(attachment: attachment)
+            if let range = attributedString.string.range(of: item.id) {
+                let nsRange = attributedString.string.nsRange(from: range)
+                attributedString.replaceCharacters(in: nsRange, with: imgString)
+            }
+            
+            if !isImageCached {
+              ImageDownloader.default.downloadImage(with: url, completionHandler: { (newImage, _, _, _) in
+                    if let newImage = newImage {
+                        let smallImage = newImage.thumbnailForMaxPixelSize(200)
+                        attachment.image = smallImage
+                        if smallImage.size != attachment.imageSize {
+                            attachment.imageSize = smallImage.size
+                            self.textView.textContainer.layoutManager?.setNeedsLayout(forAttachment: attachment)
+                        }else {
+                            self.textView.textContainer.layoutManager?.setNeedsDisplay(forAttachment: attachment)
                         }
+                        ImageCache.default.store(smallImage, forKey: item.id)
+                        SKCache.sharedCache.setImage(newImage, forKey: item.src)
                     }
                 })
-                textView.attributedText = attributedString
-            } catch {
-                textView.text = model.content
             }
-        }else {
-            textView.text = model.content
-        }
+        })
+        textView.attributedText = attributedString
     }
     
     func matchImgTags(text: String) -> [String] {
