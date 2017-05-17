@@ -5,14 +5,14 @@ PODS:
     - Fabric (~> 1.6.3)
   - Fabric (1.6.11)
   - Kanna (2.2.1)
-  - Kingfisher (3.6.2)
+  - Kingfisher (3.9.1)
   - Moya/Core (8.0.4):
     - Alamofire (~> 4.1)
     - Result (~> 3.0)
   - Moya/RxSwift (8.0.4):
     - Moya/Core
     - RxSwift (~> 3.0)
-  - PKHUD (4.2.1)
+  - PKHUD (4.2.2)
   - Result (3.2.1)
   - RxCocoa (3.4.1):
     - RxSwift (~> 3.4)
@@ -27,10 +27,10 @@ DEPENDENCIES:
   - Crashlytics (~> 3.8.4)
   - Fabric (~> 1.6.11)
   - Kanna (~> 2.2.1)
-  - Kingfisher (~> 3.6.2)
-  - Moya/RxSwift (~> 8.0.3)
-  - PKHUD (~> 4.2.1)
-  - RxCocoa (~> 3.4.0)
+  - Kingfisher (~> 3.9.1)
+  - Moya/RxSwift (~> 8.0.4)
+  - PKHUD (~> 4.2.2)
+  - RxCocoa (~> 3.4.1)
   - RxDataSources (~> 1.0.3)
   - SKPhotoBrowser (~> 4.0.1)
 
@@ -40,15 +40,15 @@ SPEC CHECKSUMS:
   Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
   Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
   Kanna: 182789ab065e8f9a6ccc2a74ce6283d3401c0c4a
-  Kingfisher: 2c94e72c6830622c71d06adf4ea024c37d316830
+  Kingfisher: 6729a0baaa458245bfb8cd5a1296c71c10d6eb6c
   Moya: a08bc060c7a44eee27447b239ed33a189b641e2b
-  PKHUD: 957ce2a68b3c97a51839b30216120c1dbc0c3a78
+  PKHUD: 9a3599e04d57676ec14746c40e423a52fb6588c0
   Result: 2453a22e5c5b11c0c3a478736e82cd02f763b781
   RxCocoa: a8a5f1d061d0043e28f56976829f31ce63e8eb09
   RxDataSources: a021a0e944ba5f7991259829d973afdbfa719c0b
   RxSwift: 656f8fbeca5bc372121a72d9ebdd3cd3bc0ffade
   SKPhotoBrowser: 3a7c6fc02aa1620ab17253a47a49fafda46536e8
 
-PODFILE CHECKSUM: 73936f19140ba14abdf88f5c7529622a5b9c81eb
+PODFILE CHECKSUM: bc5133433ed6e5a688f60fcd61d78854eea90ffd
 
 COCOAPODS: 1.2.1
