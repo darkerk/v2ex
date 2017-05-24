@@ -55,15 +55,10 @@ code {
     'Bitstream Vera Sans Mono', 'Menlo', 'Microsoft Yahei', monospace;
 }
 
-a:link, a:visited, a:active {
+a:link, a:visited, a:hover, a:active {
     color: #hyperlink#;
     text-decoration: none;
     word-break: break-all;
-}
-
-a:hover {
-    color: #4d5256;
-    text-decoration: none;
 }
 
 ul {

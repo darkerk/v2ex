@@ -94,7 +94,7 @@ class ProfileViewController: UITableViewController {
                 return Account.shared.redeemDailyRewards()
             }
             return Observable.just(false)
-        }.shareReplay(1).delay(2, scheduler: MainScheduler.instance).subscribe(onNext: { success in
+        }.shareReplay(1).delay(1, scheduler: MainScheduler.instance).subscribe(onNext: { success in
             if success {
                 HUD.showText("已领取每日登录奖励！")
                 Account.shared.isDailyRewards.value = false
@@ -102,7 +102,7 @@ class ProfileViewController: UITableViewController {
         }, onError: { error in
             print(error.message)
         }).addDisposableTo(disposeBag)
-        
+
     }
     
     @IBAction func loginButtonAction(_ sender: Any) {
