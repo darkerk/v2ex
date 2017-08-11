@@ -12,4 +12,5 @@ target 'V2EX' do
     pod 'PKHUD', '~> 4.2.3'
     pod 'SKPhotoBrowser', '~> 4.0.1'
     pod '1PasswordExtension', '~> 1.8.4'
+    pod 'MonkeyKing', '~> 1.3.0'
 end

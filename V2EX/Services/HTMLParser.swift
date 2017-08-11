@@ -15,6 +15,13 @@ struct HTMLParser {
     private init() {
     }
     
+    func htmlContent(html string: String) -> String? {
+        guard let html = HTML(html: string, encoding: .utf8) else {
+            return nil
+        }
+        return html.content
+    }
+    
     // MARK: - 首页默认节点
     func homeNodes(html data: Data) -> [Node] {
         guard let html = HTML(html: data, encoding: .utf8) else {
