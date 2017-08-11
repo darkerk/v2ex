@@ -71,7 +71,7 @@ class DrawerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
         // Do any additional setup after loading the view.
         panGesture.rx.event.subscribe(onNext: {[weak self ]sender in
             guard let `self` = self else {

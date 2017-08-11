@@ -56,6 +56,8 @@ class InputCommentBar: UIToolbar {
             textView.placeHolderColor = #colorLiteral(red: 0.4196078431, green: 0.4901960784, blue: 0.5490196078, alpha: 1)
             textView.clipsToBounds = true
             textView.layer.cornerRadius = 4
+            
+            textView.keyboardAppearance = .dark
         }
         
         translatesAutoresizingMaskIntoConstraints = false

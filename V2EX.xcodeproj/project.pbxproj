@@ -53,6 +53,7 @@
 		CA4BA8C61E713D7300FEE50E /* TopicDetailsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4BA8C51E713D7300FEE50E /* TopicDetailsHeaderView.swift */; };
 		CA505D9F1E6D2C17004F738C /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA505D9E1E6D2C17004F738C /* ActivityIndicator.swift */; };
 		CA505DA31E6D4440004F738C /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA505DA21E6D4440004F738C /* Account.swift */; };
+		CA52B9FB1F05EBA400E83663 /* NSLayoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA52B9FA1F05EBA400E83663 /* NSLayoutManager.swift */; };
 		CA55A3641E7F726A00A99D6C /* FavoriteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA55A3631E7F726A00A99D6C /* FavoriteItem.swift */; };
 		CA55A3661E7FA6B900A99D6C /* FavoriteNodeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA55A3651E7FA6B900A99D6C /* FavoriteNodeViewCell.swift */; };
 		CA55A36C1E7FB36500A99D6C /* Timeline.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA55A36B1E7FB36500A99D6C /* Timeline.storyboard */; };
@@ -72,7 +73,6 @@
 		CA864BC71E77DCBE00997D4E /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA864BC61E77DCBE00997D4E /* TimelineViewController.swift */; };
 		CA864BCA1E77E39F00997D4E /* TimelineSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA864BC91E77E39F00997D4E /* TimelineSection.swift */; };
 		CA864BCC1E77E61E00997D4E /* TimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA864BCB1E77E61E00997D4E /* TimelineViewModel.swift */; };
-		CA8CF30E1EC588E100AF8F7F /* NSLayoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA8CF30D1EC588E100AF8F7F /* NSLayoutManager.swift */; };
 		CA90CD8D1E66717500CD0B98 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA90CD8C1E66717500CD0B98 /* HTMLParser.swift */; };
 		CA90CD911E66AD7400CD0B98 /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA90CD901E66AD7400CD0B98 /* Topic.swift */; };
 		CA90CD951E66ADEC00CD0B98 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA90CD941E66ADEC00CD0B98 /* Node.swift */; };
@@ -141,6 +141,7 @@
 		CA4BA8C51E713D7300FEE50E /* TopicDetailsHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicDetailsHeaderView.swift; sourceTree = "<group>"; };
 		CA505D9E1E6D2C17004F738C /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		CA505DA21E6D4440004F738C /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		CA52B9FA1F05EBA400E83663 /* NSLayoutManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSLayoutManager.swift; sourceTree = "<group>"; };
 		CA55A3631E7F726A00A99D6C /* FavoriteItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteItem.swift; sourceTree = "<group>"; };
 		CA55A3651E7FA6B900A99D6C /* FavoriteNodeViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteNodeViewCell.swift; sourceTree = "<group>"; };
 		CA55A36B1E7FB36500A99D6C /* Timeline.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Timeline.storyboard; sourceTree = "<group>"; };
@@ -161,7 +162,6 @@
 		CA864BC91E77E39F00997D4E /* TimelineSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineSection.swift; sourceTree = "<group>"; };
 		CA864BCB1E77E61E00997D4E /* TimelineViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewModel.swift; sourceTree = "<group>"; };
 		CA86BE071E5EBAC10038DE1D /* V2EX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = V2EX.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CA8CF30D1EC588E100AF8F7F /* NSLayoutManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSLayoutManager.swift; sourceTree = "<group>"; };
 		CA90CD8C1E66717500CD0B98 /* HTMLParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
 		CA90CD901E66AD7400CD0B98 /* Topic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
 		CA90CD941E66ADEC00CD0B98 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
@@ -271,7 +271,7 @@
 				CA01C5711E83BF8100DA8728 /* String.swift */,
 				CAF418F51E8B509F005F26AF /* Error.swift */,
 				CA98D5B81EB1EC1100319218 /* UITableViewController.swift */,
-				CA8CF30D1EC588E100AF8F7F /* NSLayoutManager.swift */,
+				CA52B9FA1F05EBA400E83663 /* NSLayoutManager.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -489,13 +489,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-V2EX-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6D3B1DE75A07926405DCD5C8 /* [CP] Embed Pods Frameworks */ = {
@@ -504,9 +507,32 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-V2EX/Pods-V2EX-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/1PasswordExtension/OnePasswordExtension.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Kanna/Kanna.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
+				"${BUILT_PRODUCTS_DIR}/PKHUD/PKHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SKPhotoBrowser/SKPhotoBrowser.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OnePasswordExtension.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kanna.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PKHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SKPhotoBrowser.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -586,7 +612,6 @@
 				CA4AB5E71E9C7DD500EC3D2F /* CreateTopicViewController.swift in Sources */,
 				CA0C0B1E1E7FC58800B68208 /* NodeTopicsViewCell.swift in Sources */,
 				CA3FFAE51E6FDBD300470DAD /* TopicDetailsViewModel.swift in Sources */,
-				CA8CF30E1EC588E100AF8F7F /* NSLayoutManager.swift in Sources */,
 				CA90CD951E66ADEC00CD0B98 /* Node.swift in Sources */,
 				CA2DB6EF1E6EACA600E585B8 /* TopicDetailsCommentCell.swift in Sources */,
 				CA9DE8901E7BCED5003BA25F /* SettingViewController.swift in Sources */,
@@ -614,6 +639,7 @@
 				CA90CD8D1E66717500CD0B98 /* HTMLParser.swift in Sources */,
 				CA58105F1E80FEC70003B7C2 /* SettingViewModel.swift in Sources */,
 				CA864BBF1E779F2A00997D4E /* ProfileHeaderView.swift in Sources */,
+				CA52B9FB1F05EBA400E83663 /* NSLayoutManager.swift in Sources */,
 				CA360AB01E67EF4400DED2FD /* User.swift in Sources */,
 				CA477A8F1E6661B2000FC1F5 /* API.swift in Sources */,
 				CA477A7F1E6660ED000FC1F5 /* DrawerViewController.swift in Sources */,
