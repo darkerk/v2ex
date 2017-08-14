@@ -235,4 +235,13 @@ extension Theme {
             return #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)
         }
     }
+    
+    var textPlaceHolderColor: UIColor {
+        switch self {
+        case .normal:
+            return UIColor(white: 0.8, alpha: 1.0)
+        case .night:
+            return #colorLiteral(red: 0.4196078431, green: 0.4901960784, blue: 0.5490196078, alpha: 1)
+        }
+    }
 }

@@ -22,6 +22,7 @@ class CreateTopicViewController: UIViewController {
     @IBOutlet weak var textView: PlaceHolderTextView!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var textViewBottom: NSLayoutConstraint!
+    @IBOutlet weak var lineView: UIView!
     
     weak var delegate: CreateTopicViewControllerDelegate?
     var nodeHref: String = ""
@@ -34,6 +35,18 @@ class CreateTopicViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        textField.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        textField.attributedPlaceholder = NSAttributedString(string: "标题", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 15), NSForegroundColorAttributeName: AppStyle.shared.theme.textPlaceHolderColor])
+        
+        textView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        textView.placeHolderColor = AppStyle.shared.theme.textPlaceHolderColor
+        if AppStyle.shared.theme == .night {
+            textField.keyboardAppearance = .dark
+            textView.keyboardAppearance = .dark
+        }
+        lineView.backgroundColor = AppStyle.shared.theme.separatorColor
         
         let titleValid = textField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let contentValid = textView.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)

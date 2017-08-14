@@ -15,6 +15,13 @@ struct HTMLParser {
     private init() {
     }
     
+    func htmlContent(html string: String) -> String? {
+        guard let html = HTML(html: string, encoding: .utf8) else {
+            return nil
+        }
+        return html.content
+    }
+    
     // MARK: - 首页默认节点
     func homeNodes(html data: Data) -> [Node] {
         guard let html = HTML(html: data, encoding: .utf8) else {
@@ -161,7 +168,7 @@ struct HTMLParser {
         if let count = Int(unreadCount) {
             Account.shared.unreadCount.value = count
         }
-
+        
         let items = path.first?.xpath("./div[@class='cell item']").flatMap({e -> Topic? in
             if let userSrc = e.xpath(".//td[1]/a/img").first?["src"],
                 let nodeHref = e.xpath(".//td[3]/span[1]/a").first?["href"],
@@ -265,14 +272,42 @@ struct HTMLParser {
                 let user = User(name: userName, href: userHref, src: src)
                 
                 let replyId = e["id"]?.replacingOccurrences(of: "r_", with: "") ?? ""
-
-                return Comment(id: replyId, content: text, time: time, thanks: thanks, number: number, user: user)
+                var replyContent = text
+                if text.contains("</iframe>") {
+                    replyContent = replacingIframe(text: text)
+                }
+                return Comment(id: replyId, content: replyContent, time: time, thanks: thanks, number: number, user: user)
             }
             return nil
         })
-
+        
         let topic = Topic(title: title, content: content, owner: owner, node: node, creatTime: creatTime, token: token, isFavorite: isFavorite, isThank: isThank)
         return (topic, currentPage, countTime, comments)
+    }
+    
+    // MARK: - 评论里面的视频替换成链接地址
+    func replacingIframe(text: String) -> String {
+        let pattern = "<iframe(.*?)</iframe>"
+        let regx = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive, .dotMatchesLineSeparators])
+        guard let results = regx?.matches(in: text, options: .reportProgress, range: text.nsRange) else {
+            return text
+        }
+        
+        var content = text
+        results.forEach {result in
+            if let range = result.range.range(for: text) {
+                let iframe = text.substring(with: range)
+                let arr = iframe.components(separatedBy: " ")
+                if let srcIndex = arr.index(where: {$0.contains("src")}) {
+                    let srcText = arr[srcIndex]
+                    let href = srcText.replacingOccurrences(of: "src", with: "href")
+                    let urlString = srcText.replacingOccurrences(of: "src=", with: "").replacingOccurrences(of: "\"", with: "")
+                    let a = "<a \(href)>\(urlString)</a>"
+                    content = text.replacingOccurrences(of: iframe, with: a)
+                }
+            }
+        }
+        return content
     }
     
     // MARK: - 个人的主题和回复
@@ -526,7 +561,7 @@ struct HTMLParser {
         if let title = html.xpath("//head/title").first?.content, title.contains("登录") {
             return (true, [], 0, 0, "")
         }
-
+        
         let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell']")
         let items = path.flatMap({e -> Topic? in
             if let userSrc = e.xpath("./table/tr/td[1]/a/img").first?["src"],

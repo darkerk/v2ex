@@ -12,6 +12,7 @@ import RxCocoa
 import RxDataSources
 import SKPhotoBrowser
 import PKHUD
+import MonkeyKing
 
 @objc protocol TopicDetailsViewControllerDelegate: class {
     @objc optional func topicDetailsViewController(viewcontroller: TopicDetailsViewController, ignoreTopic topicId: String?)
@@ -159,6 +160,11 @@ class TopicDetailsViewController: UITableViewController {
             AppSetting.openWebBrowser(from: nav, URL: url)
         case let .node(info):
             NodeTopicsViewController.show(from: nav, node: info)
+        case let .topic(info):
+            guard let nav = self.navigationController else {
+                return
+            }
+            TopicDetailsViewController.show(from: nav, topic: info)
         }
     }
     
@@ -209,10 +215,55 @@ class TopicDetailsViewController: UITableViewController {
             self.sendIgnore()
         }))
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "分享", style: .default, handler: { _ in
+            self.showShareActionSheet()
+        }))
         if UI_USER_INTERFACE_IDIOM() == .pad {
             alert.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
         }
         present(alert, animated: true, completion: nil)
+    }
+    
+    func showShareActionSheet() {
+        let actionSheet = UIAlertController(title: "分享到", message: nil, preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "微信好友", style: .default, handler: {_ in
+            self.shareToWechat(type: .session(info: (title: nil, description: nil, thumbnail: nil, media: nil)))
+        }))
+        actionSheet.addAction(UIAlertAction(title: "朋友圈", style: .default, handler: {_ in
+            self.shareToWechat(type: .timeline(info: (title: nil, description: nil, thumbnail: nil, media: nil)))
+        }))
+        present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func shareToWechat(type: MonkeyKing.Message.WeChatSubtype) {
+        guard let topic = self.viewModel?.topic else {
+            return
+        }
+        
+        guard let url = URL(string: "https://www.v2ex.com".appending(topic.href)) else {
+            return
+        }
+        
+        let description = self.viewModel?.htmlContent ?? ""
+        let info: MonkeyKing.Info = (title: topic.title, description: description, thumbnail: #imageLiteral(resourceName: "share_thumbnail"), media: .url(url))
+        
+        var message: MonkeyKing.Message?
+        
+        switch type {
+        case .session(info: (_, _, _, _)):
+            message = MonkeyKing.Message.weChat(.session(info: info))
+        case .timeline(info: (_, _, _, _)):
+            message = MonkeyKing.Message.weChat(.timeline(info: info))
+        default:
+            break
+        }
+        
+        if let message = message {
+            MonkeyKing.deliver(message, completionHandler: { result in
+                
+            })
+        }
     }
     
     func sendThank(type: ThankType, username: String? = nil) {

@@ -8,6 +8,7 @@
 
 import RxSwift
 import Moya
+import Kanna
 
 class TopicDetailsViewModel {
     
@@ -23,7 +24,7 @@ class TopicDetailsViewModel {
     private let disposeBag = DisposeBag()
     
     var topic: Topic
-    
+    var htmlContent: String?
     init(topic: Topic) {
         self.topic = topic
         fetchDetails(href: topic.href)
@@ -79,6 +80,8 @@ class TopicDetailsViewModel {
                 }else {
                     self.sections.value = [TopicDetailsSection(type: .data, comments: data.comments)]
                 }
+                
+                self.htmlContent = HTMLParser.shared.htmlContent(html: data.topic.content)
             }
             
         }, onError: {error in

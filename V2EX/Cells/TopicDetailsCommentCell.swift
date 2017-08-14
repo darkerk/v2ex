@@ -224,6 +224,10 @@ extension TopicDetailsCommentCell: UITextViewDelegate {
             let name = href.replacingOccurrences(of: "/member/", with: "")
             let user = User(name: name, href: href, src: "")
             linkTap?(TapLink.user(info: user))
+        }else if link.hasPrefix("applewebdata://") && link.contains("/t/") {
+            let href = URL.path
+            let topic = Topic(href: href)
+            linkTap?(TapLink.topic(info: topic))
         }
         return false
     }

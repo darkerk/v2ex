@@ -17,6 +17,10 @@ The unofficial V2EX app for iOS
 - Xcode 8.3
 - Swift 3.1
 
+### Contact
+
+Follow and contact me with [email](mailto:appwgh@gmail.com). If you find an issue, just [open a ticket](https://github.com/darkerk/v2ex/issues/new). Pull requests are warmly welcome as well.
+
 ## License
 
 Copyright (c) 2017 darker

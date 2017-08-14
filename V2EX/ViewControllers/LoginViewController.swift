@@ -50,6 +50,9 @@ class LoginViewController: UIViewController {
             loginButton.layer.borderColor = #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1).cgColor
             loginButton.setTitleColor(UIColor.white, for: .normal)
             loginButton.setTitleColor(#colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1), for: .disabled)
+            
+            usernameTextField.keyboardAppearance = .dark
+            passwordTextField.keyboardAppearance = .dark
         }
         
         if OnePasswordExtension.shared().isAppExtensionAvailable() {
