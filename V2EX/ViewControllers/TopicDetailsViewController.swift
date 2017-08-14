@@ -160,6 +160,11 @@ class TopicDetailsViewController: UITableViewController {
             AppSetting.openWebBrowser(from: nav, URL: url)
         case let .node(info):
             NodeTopicsViewController.show(from: nav, node: info)
+        case let .topic(info):
+            guard let nav = self.navigationController else {
+                return
+            }
+            TopicDetailsViewController.show(from: nav, topic: info)
         }
     }
     

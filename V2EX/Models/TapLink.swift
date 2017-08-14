@@ -11,6 +11,7 @@ import Foundation
 enum TapLink {
     case user(info: User)
     case node(info: Node)
+    case topic(info: Topic)
     case image(src: String)
     case web(url: URL)
 }
