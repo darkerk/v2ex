@@ -23,6 +23,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var sublitLabel: UILabel!
     @IBOutlet weak var line1View: UIImageView!
     @IBOutlet weak var line2View: UIImageView!
+    @IBOutlet weak var captchaView: UIImageView!
+    @IBOutlet weak var verifcodeTextField: UITextField!
     
     var viewModel: LoginViewModel = LoginViewModel()
     private let disposeBag = DisposeBag()
@@ -70,6 +72,7 @@ class LoginViewController: UIViewController {
         
         let usernameValid = usernameTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let passwordValid = passwordTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
+       // let codeValid = verifcodeTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
         let allValid = Observable.combineLatest(usernameValid, passwordValid) { $0 && $1 }.shareReplay(1)
         allValid.bind(to: loginButton.rx.isEnabled).addDisposableTo(disposeBag)
         
@@ -79,8 +82,11 @@ class LoginViewController: UIViewController {
         }).addDisposableTo(disposeBag)
         
         passwordTextField.rx.controlEvent(.editingDidEndOnExit).subscribe().addDisposableTo(disposeBag)
+        verifcodeTextField.rx.controlEvent(.editingDidEndOnExit).subscribe().addDisposableTo(disposeBag)
         
         viewModel.activityIndicator.asObservable().bind(to: PKHUD.sharedHUD.rx.isAnimating).addDisposableTo(disposeBag)
+        
+        viewModel.fetchCaptchaImage().asObservable().bind(to: captchaView.rx.image).addDisposableTo(disposeBag)
     }
     
     func findLoginFrom1Password(_ sender: Any) {
@@ -104,22 +110,22 @@ class LoginViewController: UIViewController {
         let action = UIAlertAction(title: "登录", style: .default, handler: {_ in
             let code = alert.textFields?.first?.text ?? ""
             
-            self.viewModel.twoStepVerifyLogin(code: code).asObservable().subscribe(onNext: { resp in
+            self.viewModel.twoStepVerifyLogin(code: code).asObservable().subscribe(onNext: {[weak self] resp in
                 let result = HTMLParser.shared.twoStepVerifyResult(html: resp.data)
                 if let user = result.user {
                     Account.shared.user.value = user
                     Account.shared.isLoggedIn.value = true
-                    self.dismiss(animated: true, completion: nil)
+                    self?.dismiss(animated: true, completion: nil)
                 }else {
-                    self.showTwoStepVerify()
+                    self?.showTwoStepVerify()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
                         let errorMsg = result.problem ?? "验证失败，请重新输入验证码"
                         HUD.showText(errorMsg)
                     })
                 }
-            }, onError: {error in
+            }, onError: {[weak self] error in
                 HUD.showText(error.message)
-                self.showTwoStepVerify()
+                self?.showTwoStepVerify()
             }).addDisposableTo(self.disposeBag)
         })
         alert.addTextField { textField in
@@ -133,10 +139,10 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginButtonAction(_ sender: Any) {
-        guard let username = usernameTextField.text, let password = passwordTextField.text else {
+        guard let username = usernameTextField.text, let password = passwordTextField.text, let code = verifcodeTextField.text else {
             return
         }
-        viewModel.loginRequest(username: username, password: password).subscribe(onNext: {[weak self] response in
+        viewModel.loginRequest(username: username, password: password, code: code).subscribe(onNext: {[weak self] response in
             let result = HTMLParser.shared.loginResult(html: response.data)
             if result.isTwoStepVerification {
                 self?.showTwoStepVerify()

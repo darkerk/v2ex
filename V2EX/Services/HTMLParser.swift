@@ -75,30 +75,24 @@ struct HTMLParser {
     }
     
     // MARK: - 登录的用户名key，密码key，once值
-    func keyAndOnce(html data: Data) -> (usernameKey: String, passwordKey: String, once: String)? {
+    func keyAndOnce(html data: Data) -> (usernameKey: String, passwordKey: String, codeKey: String, once: String)? {
         guard let html = HTML(html: data, encoding: .utf8) else {
             return nil
         }
-        var unName = ""
-        var pwName = ""
-        var once = ""
-        if let unElement = html.css(".sl").first(where: {$0["type"] == "text"}) {
-            if let name = unElement["name"] {
-                unName = name
-            }
-        }
-        if let pwElement = html.css(".sl").first(where: {$0["type"] == "password"}) {
-            if let name = pwElement["name"] {
-                pwName = name
-            }
-        }
-        if let onceElement = html.css("input").first(where: {$0["name"] == "once"}) {
-            if let value = onceElement["value"] {
-                once = value
-            }
-        }
-        if !unName.isEmpty && !pwName.isEmpty && !once.isEmpty {
-            return (unName, pwName, once)
+
+        let path = "//body/div[@id='Wrapper']/div[@class='content']/div[@id='Main']/div[@class='box']/div[@class='cell']/form/table"
+        let usernamePath = html.xpath(path + "/tr[1]/td[2]/input")
+        let passwordPath = html.xpath(path + "/tr[2]/td[2]/input")
+        let codePath = html.xpath(path + "/tr[3]/td[2]/input")
+        let oncePath = html.xpath(path + "/tr[4]/td[2]/input[1]")
+        
+        let usernameKey = usernamePath.first?["name"] ?? ""
+        let passwordKey = passwordPath.first?["name"] ?? ""
+        let codeKey = codePath.first?["name"] ?? ""
+        let once = oncePath.first?["value"] ?? ""
+        
+        if !usernameKey.isEmpty && !passwordKey.isEmpty && !once.isEmpty {
+            return (usernameKey, passwordKey, codeKey, once)
         }
         return nil
     }
