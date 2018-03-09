@@ -134,7 +134,7 @@ class DrawerViewController: UIViewController {
                 })
             default: break
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -186,7 +186,7 @@ class DrawerViewController: UIViewController {
                 let tap = UITapGestureRecognizer()
                 tap.rx.event.subscribe(onNext: {_ in
                     self.isOpenDrawer = false
-                }).addDisposableTo(disposeBag)
+                }).disposed(by: disposeBag)
                 centerOverlayView?.addGestureRecognizer(tap)
             }
         }

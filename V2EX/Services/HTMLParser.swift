@@ -161,7 +161,7 @@ struct HTMLParser {
             
             let unreadPath = path.first?.xpath("./div[@class='cell'][1]/table/tr/td[1]/input")
             var unreadCount = "0"
-            if let unreadChar = unreadPath?.first?["value"]?.characters.first {
+            if let unreadChar = unreadPath?.first?["value"]?.dropFirst() {
                 unreadCount = String(unreadChar)
             }
             

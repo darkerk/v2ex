@@ -81,7 +81,7 @@ class TopicDetailsCommentCell: UITableViewCell {
         nameLabel.addGestureRecognizer(nameTap)
         
         let cellTap = UITapGestureRecognizer(target: self, action: #selector(cellTapAction(_:)))
-        addGestureRecognizer(cellTap)
+        textView.addGestureRecognizer(cellTap)
         
         let selectedView = UIView()
         selectedView.backgroundColor = AppStyle.shared.theme.cellSelectedBackgroundColor
@@ -98,7 +98,11 @@ class TopicDetailsCommentCell: UITableViewCell {
     }
     
     func cellTapAction(_ sender: Any) {
-        if let tableView = superview?.superview as? UITableView, let indexPath = tableView.indexPath(for: self) {
+        var view = superview
+        while (view != nil && view?.isKind(of: UITableView.self) == false) {
+            view = view?.superview
+        }
+        if let tableView = view as? UITableView, let indexPath = tableView.indexPath(for: self) {
             tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
         }
     }

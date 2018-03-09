@@ -70,7 +70,7 @@ class TopicViewCell: UITableViewCell, ThemeUpdating {
             if update {
                 self.updateTheme()
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     func updateTheme() {

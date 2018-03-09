@@ -17,7 +17,7 @@ extension String {
     }
     
     var nsRange: NSRange {
-        return NSRange(location: 0, length: self.characters.count)
+        return NSRange(location: 0, length: self.count)
     }
 }
 
