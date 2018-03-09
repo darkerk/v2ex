@@ -25,7 +25,7 @@ class TopicDetailsViewController: UITableViewController {
     var viewModel: TopicDetailsViewModel?
     weak var delegate: TopicDetailsViewControllerDelegate?
     
-    fileprivate lazy var dataSource = RxTableViewSectionedAnimatedDataSource<TopicDetailsSection>()
+    fileprivate var dataSource: RxTableViewSectionedAnimatedDataSource<TopicDetailsSection>!
     fileprivate let disposeBag = DisposeBag()
     
     fileprivate lazy var inputbar: InputCommentBar = InputCommentBar()
@@ -64,10 +64,11 @@ class TopicDetailsViewController: UITableViewController {
                 self.tableView.beginUpdates()
                 self.tableView.endUpdates()
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         let ownerHref = viewModel.topic.owner?.href
-        dataSource.configureCell = {[weak self] (ds, tv, indexPath, item) in
+        
+        dataSource = RxTableViewSectionedAnimatedDataSource<TopicDetailsSection>(configureCell: {[weak self] (ds, tv, indexPath, item) in
             switch ds[indexPath.section].type {
             case .more:
                 let cell: LoadMoreCommentCell = tv.dequeueReusableCell()
@@ -81,10 +82,10 @@ class TopicDetailsViewController: UITableViewController {
                 }
                 return cell
             }
-        }
-        
-        dataSource.titleForHeaderInSection = {[weak viewModel] (ds, section) in
-            if section == 0, let viewModel = viewModel {
+        })
+
+        dataSource.titleForHeaderInSection = {(ds, section) in
+            if section == 0 {
                 return ds[section].comments.isEmpty ? "目前尚无回复" : viewModel.countTime.value
             }
             return nil
@@ -94,9 +95,9 @@ class TopicDetailsViewController: UITableViewController {
             return Account.shared.isLoggedIn.value
         }
         
-        viewModel.updateTopic.asObservable().bind(to: headerView.rx.topic).addDisposableTo(disposeBag)
-        viewModel.content.asObservable().bind(to: headerView.rx.htmlString).addDisposableTo(disposeBag)
-        viewModel.sections.asObservable().bind(to: tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
+        viewModel.updateTopic.asObservable().bind(to: headerView.rx.topic).disposed(by: disposeBag)
+        viewModel.content.asObservable().bind(to: headerView.rx.htmlString).disposed(by: disposeBag)
+        viewModel.sections.asObservable().bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         viewModel.loadingActivityIndicator.asObservable().subscribe(onNext: {[weak self] isLoading in
             guard let `self` = self else { return }
             if isLoading {
@@ -106,7 +107,7 @@ class TopicDetailsViewController: UITableViewController {
             }else {
                  self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         inputbar.rx.sendEvent.subscribe(onNext: {[weak viewModel, weak inputbar, weak self] (text, atName) in
             guard Account.shared.isLoggedIn.value else {
@@ -123,7 +124,7 @@ class TopicDetailsViewController: UITableViewController {
                     inputbar?.endEditing(isClear: true)
                 }
             })
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         /// 处理当键盘弹出时，点击web会造成inputbar取消第一响应
         inputbar.shouldBeginEditing = {[weak self] isEditing in
@@ -357,7 +358,7 @@ extension TopicDetailsViewController {
         case .more:
             tableView.deselectRow(at: indexPath, animated: true)
             if let cell = tableView.cellForRow(at: indexPath) as? LoadMoreCommentCell {
-                viewModel?.loadMoreActivityIndicator.asObservable().bind(to: cell.activityIndicatorView.rx.isAnimating).addDisposableTo(disposeBag)
+                viewModel?.loadMoreActivityIndicator.asObservable().bind(to: cell.activityIndicatorView.rx.isAnimating).disposed(by: disposeBag)
             }
             viewModel?.fetchMoreComments()
         case .data:

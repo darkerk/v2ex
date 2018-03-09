@@ -70,23 +70,23 @@ class LoginViewController: UIViewController {
             
         }
         
-        let usernameValid = usernameTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
-        let passwordValid = passwordTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
+        let usernameValid = usernameTextField.rx.text.orEmpty.map({$0.isEmpty == false}).share(replay: 1)
+        let passwordValid = passwordTextField.rx.text.orEmpty.map({$0.isEmpty == false}).share(replay: 1)
        // let codeValid = verifcodeTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
-        let allValid = Observable.combineLatest(usernameValid, passwordValid) { $0 && $1 }.shareReplay(1)
-        allValid.bind(to: loginButton.rx.isEnabled).addDisposableTo(disposeBag)
+        let allValid = Observable.combineLatest(usernameValid, passwordValid) { $0 && $1 }.share(replay: 1)
+        allValid.bind(to: loginButton.rx.isEnabled).disposed(by: disposeBag)
         
         usernameTextField.rx.controlEvent(.editingDidEndOnExit).subscribe(onNext: {[weak self] in
             self?.passwordTextField.becomeFirstResponder()
             
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
-        passwordTextField.rx.controlEvent(.editingDidEndOnExit).subscribe().addDisposableTo(disposeBag)
-        verifcodeTextField.rx.controlEvent(.editingDidEndOnExit).subscribe().addDisposableTo(disposeBag)
+        passwordTextField.rx.controlEvent(.editingDidEndOnExit).subscribe().disposed(by: disposeBag)
+        verifcodeTextField.rx.controlEvent(.editingDidEndOnExit).subscribe().disposed(by: disposeBag)
         
-        viewModel.activityIndicator.asObservable().bind(to: PKHUD.sharedHUD.rx.isAnimating).addDisposableTo(disposeBag)
+        viewModel.activityIndicator.asObservable().bind(to: PKHUD.sharedHUD.rx.isAnimating).disposed(by: disposeBag)
         
-        viewModel.fetchCaptchaImage().asObservable().bind(to: captchaView.rx.image).addDisposableTo(disposeBag)
+        viewModel.fetchCaptchaImage().asObservable().bind(to: captchaView.rx.image).disposed(by: disposeBag)
     }
     
     func findLoginFrom1Password(_ sender: Any) {
@@ -126,12 +126,12 @@ class LoginViewController: UIViewController {
             }, onError: {[weak self] error in
                 HUD.showText(error.message)
                 self?.showTwoStepVerify()
-            }).addDisposableTo(self.disposeBag)
+            }).disposed(by: self.disposeBag)
         })
         alert.addTextField { textField in
             textField.keyboardType = .numberPad
             textField.placeholder = "验证码"
-            textField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1).bind(to: action.rx.isEnabled).addDisposableTo(self.disposeBag)
+            textField.rx.text.orEmpty.map({$0.isEmpty == false}).share(replay: 1).bind(to: action.rx.isEnabled).disposed(by: self.disposeBag)
         }
         
         alert.addAction(action)
@@ -160,7 +160,7 @@ class LoginViewController: UIViewController {
             }
             }, onError: {error in
                 HUD.showText(error.message)
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     @IBAction func googleLoginAction(_ sender: Any) {

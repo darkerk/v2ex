@@ -29,7 +29,7 @@ class MessageViewController: UITableViewController {
             let cell: MessageViewCell = table.dequeueReusableCell()
             cell.message = item
             return cell
-            }.addDisposableTo(disposeBag)
+            }.disposed(by: disposeBag)
         
         tableView.addInfiniteScrolling {[weak tableView] in
             viewModel.fetchMoreData(completion: {
@@ -41,13 +41,13 @@ class MessageViewController: UITableViewController {
             tableView.infiniteScrollingView?.activityIndicatorView.activityIndicatorViewStyle = .white
         }
         
-        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
+        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).disposed(by: disposeBag)
         
         tableView.rx.modelSelected(Message.self).subscribe(onNext: {[weak navigationController] item in
             if let nav = navigationController, let topic = item.topic {
                 TopicDetailsViewController.show(from: nav, topic: topic)
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     override func didReceiveMemoryWarning() {

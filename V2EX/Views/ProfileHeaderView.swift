@@ -55,14 +55,14 @@ class ProfileHeaderView: UIView, ThemeUpdating {
 }
 
 extension Reactive where Base: ProfileHeaderView {
-    var user: UIBindingObserver<Base, User?> {
-        return UIBindingObserver(UIElement: self.base) { view, value in
+    var user: Binder<User?> {
+        return Binder(self.base) { view, value in
             view.user = value
         }
     }
     
-    var isLoginEnabled: UIBindingObserver<Base, Bool> {
-        return UIBindingObserver(UIElement: self.base) { view, value in
+    var isLoginEnabled: Binder<Bool> {
+        return Binder(self.base) { view, value in
             view.avatarButton.isUserInteractionEnabled = value
         }
     }

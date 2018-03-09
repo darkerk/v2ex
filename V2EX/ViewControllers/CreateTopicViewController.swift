@@ -48,14 +48,14 @@ class CreateTopicViewController: UIViewController {
         }
         lineView.backgroundColor = AppStyle.shared.theme.separatorColor
         
-        let titleValid = textField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
-        let contentValid = textView.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
-        let allValid = Observable.combineLatest(titleValid, contentValid) { $0 && $1 }.shareReplay(1)
-        allValid.bind(to: sendButton.rx.isEnabled).addDisposableTo(disposeBag)
+        let titleValid = textField.rx.text.orEmpty.map({$0.isEmpty == false}).share(replay: 1)
+        let contentValid = textView.rx.text.orEmpty.map({$0.isEmpty == false}).share(replay: 1)
+        let allValid = Observable.combineLatest(titleValid, contentValid) { $0 && $1 }.share(replay: 1)
+        allValid.bind(to: sendButton.rx.isEnabled).disposed(by: disposeBag)
         
         textField.rx.controlEvent(.editingDidEndOnExit).subscribe(onNext: {[weak textView] in
             textView?.becomeFirstResponder()
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
         
@@ -74,13 +74,13 @@ class CreateTopicViewController: UIViewController {
             }else {
                 return Observable.error(NetError.message(text: "获取once失败"))
             }
-            }.shareReplay(1).subscribe(onNext: { response in
+            }.share(replay: 1).subscribe(onNext: { response in
                 HUD.showText("发布成功！")
                 self.delegate?.createTopicSuccess?(viewcontroller: self)
                 self.navigationController?.popViewController(animated: true)
             }, onError: {error in
                 HUD.showText(error.message)
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
         
     }
     

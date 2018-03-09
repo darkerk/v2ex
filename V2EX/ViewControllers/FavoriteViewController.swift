@@ -42,7 +42,7 @@ class FavoriteViewController: UITableViewController {
                 cell.node = node
                 return cell
             }
-        }.addDisposableTo(disposeBag)
+            }.disposed(by: disposeBag)
         
         tableView.rx.modelSelected(FavoriteItem.self).subscribe(onNext: {[weak self] item in
             switch item {
@@ -54,14 +54,14 @@ class FavoriteViewController: UITableViewController {
                 self?.performSegue(withIdentifier: NodeTopicsViewController.segueId, sender: node)
                 break
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         tableView.addInfiniteScrolling {[weak tableView, weak viewModel] in
             viewModel?.fetchMoreData(completion: {
                 tableView?.infiniteScrollingView?.stopAnimating()
             })
         }
-        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
+        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).disposed(by: disposeBag)
     }
     
     @IBAction func segmentedChange(_ sender: UISegmentedControl) {

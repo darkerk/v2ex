@@ -49,7 +49,7 @@ class NodeTopicsViewModel {
         }, onError: { error in
             print(error)
             self.loadMoreCompleted.value = true
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     func fetchMoreData() {
@@ -70,11 +70,11 @@ class NodeTopicsViewModel {
             }else {
                 return Observable.error(NetError.message(text: "获取once失败"))
             }
-            }.shareReplay(1).subscribe(onNext: { response in
+            }.share(replay: 1).subscribe(onNext: { response in
                 self.isFavorited = !isCancel
                 completion?(true)
             }, onError: {error in
                 completion?(false)
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
     }
 }

@@ -242,7 +242,7 @@ extension API: TargetType {
 extension API {
     static let provider = MoyaProvider<API>(plugins: [networkActivityPlugin])
 
-    static let networkActivityPlugin = NetworkActivityPlugin(networkActivityClosure: {(change: NetworkActivityChangeType) in
+    static let networkActivityPlugin = NetworkActivityPlugin(networkActivityClosure: {(change: NetworkActivityChangeType, self) in
         switch change {
         case .began:
             UIApplication.shared.isNetworkActivityIndicatorVisible = true

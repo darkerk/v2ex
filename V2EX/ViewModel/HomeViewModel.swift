@@ -31,7 +31,7 @@ class HomeViewModel {
             let topics = HTMLParser.shared.homeTopics(html: response.data)
             self.sections.value = [TopicListSection(header: "home", topics: topics)]
             return Observable.just(topics.isEmpty)
-        }).shareReplay(1).observeOn(MainScheduler.instance).trackActivity(loadingActivityIndicator)
+        }).share(replay: 1).observeOn(MainScheduler.instance).trackActivity(loadingActivityIndicator)
     }
     
     func removeTopic(for id: String) {

@@ -35,7 +35,7 @@ class MessageViewModel {
             print(error)
         }, onCompleted: {
             completion?()
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     func fetchMoreData(completion: (() -> Void)? = nil) {

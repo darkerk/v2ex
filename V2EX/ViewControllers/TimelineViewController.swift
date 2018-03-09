@@ -17,7 +17,29 @@ class TimelineViewController: UITableViewController {
     
     var user: User?
     let viewModel = TimelineViewModel()
-    let dataSource = RxTableViewSectionedReloadDataSource<TimelineSection>()
+    let dataSource = RxTableViewSectionedReloadDataSource<TimelineSection>(configureCell: {(ds, table, indexPath, _) in
+        switch ds[indexPath] {
+        case let .topicItem(topic):
+            let privacy = ds[indexPath.section].privacy
+            if privacy.isEmpty {
+                let cell: TimelineTopicViewCell = table.dequeueReusableCell(for: indexPath)
+                cell.topic = topic
+                return cell
+            }else {
+                let cell: UITableViewCell = table.dequeueReusableCell(for: indexPath)
+                cell.selectionStyle = .none
+                cell.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
+                cell.textLabel?.textColor = AppStyle.shared.theme.black64Color
+                cell.textLabel?.text = privacy
+                return cell
+            }
+        case let .replyItem(reply):
+            let cell: TimelineReplyViewCell = table.dequeueReusableCell(for: indexPath)
+            cell.reply = reply
+            return cell
+        }
+    })
+    
     fileprivate let disposeBag = DisposeBag()
     
     class func show(from navigationController: UINavigationController, user: User?) {
@@ -42,42 +64,19 @@ class TimelineViewController: UITableViewController {
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
         
-        dataSource.configureCell = {(ds, table, indexPath, _) in
-            switch ds[indexPath] {
-            case let .topicItem(topic):
-                let privacy = ds[indexPath.section].privacy
-                if privacy.isEmpty {
-                    let cell: TimelineTopicViewCell = table.dequeueReusableCell(for: indexPath)
-                    cell.topic = topic
-                    return cell
-                }else {
-                    let cell: UITableViewCell = table.dequeueReusableCell(for: indexPath)
-                    cell.selectionStyle = .none
-                    cell.backgroundColor = AppStyle.shared.theme.cellBackgroundColor
-                    cell.textLabel?.textColor = AppStyle.shared.theme.black64Color
-                    cell.textLabel?.text = privacy
-                    return cell
-                }
-            case let .replyItem(reply):
-                let cell: TimelineReplyViewCell = table.dequeueReusableCell(for: indexPath)
-                cell.reply = reply
-                return cell
-            }
-        }
-        
         dataSource.titleForHeaderInSection = {(ds, section) in
             return ds[section].title
         }
         
-        viewModel.joinTime.asObservable().bind(to: headerView.rx.text).addDisposableTo(disposeBag)
-        viewModel.sections.asObservable().bind(to: tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
+        viewModel.joinTime.asObservable().bind(to: headerView.rx.text).disposed(by: disposeBag)
+        viewModel.sections.asObservable().bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         
         headerView.heightUpdate.asObservable().subscribe(onNext: {[weak self] isUpdate in
             if let `self` = self, isUpdate {
                 self.tableView.beginUpdates()
                 self.tableView.endUpdates()
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         viewModel.loadingActivityIndicator.asObservable().subscribe(onNext: {[weak self] isLoading in
             guard let `self` = self else { return }
@@ -92,7 +91,7 @@ class TimelineViewController: UITableViewController {
                     self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
                 }
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -201,7 +200,7 @@ extension TimelineViewController {
                 
                 moreButton.rx.tap.subscribe(onNext: {
                     self.performSegue(withIdentifier: AllPostsViewController.segueId, sender: section)
-                }).addDisposableTo(disposeBag)
+                }).disposed(by: disposeBag)
             }
         }
     }

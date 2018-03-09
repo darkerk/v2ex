@@ -33,7 +33,7 @@ class LoginViewModel {
     
     func loginRequest(username: String, password: String, code: String) -> Observable<Response> {
         let api = API.login(usernameKey: keyOnce.usernameKey, passwordKey: keyOnce.passwordKey, codeKey: keyOnce.codeKey, username: username, password: password, code: code, once: keyOnce.once)
-        return API.provider.request(api).shareReplay(1).observeOn(MainScheduler.instance).trackActivity(activityIndicator)
+        return API.provider.request(api).share(replay: 1).observeOn(MainScheduler.instance).trackActivity(activityIndicator)
     }
     
     func twoStepVerifyLogin(code: String) -> Observable<Response> {

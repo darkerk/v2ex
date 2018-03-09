@@ -55,8 +55,8 @@ class ProfileMenuViewCell: UITableViewCell, ThemeUpdating {
 }
 
 extension Reactive where Base: ProfileMenuViewCell {
-    var unread: UIBindingObserver<Base, Int> {
-        return UIBindingObserver(UIElement: self.base) { view, value in
+    var unread: Binder<Int> {
+        return Binder(self.base) { view, value in
             view.unreadCount = value
         }
     }

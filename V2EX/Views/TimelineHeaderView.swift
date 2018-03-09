@@ -39,8 +39,8 @@ class TimelineHeaderView: UIView {
 }
 
 extension Reactive where Base: TimelineHeaderView {
-    var text: UIBindingObserver<Base, String?> {
-        return UIBindingObserver(UIElement: self.base) { view, content in
+    var text: Binder<String?> {
+        return Binder(self.base) { view, content in
             view.text = content
         }
     }

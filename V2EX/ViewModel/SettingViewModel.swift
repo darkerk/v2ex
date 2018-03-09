@@ -28,7 +28,7 @@ class SettingViewModel {
                 }
             }, onError: {_ in
                 completion?(nil)
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
     }
     
     func fetchPrivacyStatus(completion: (() -> Void)? = nil) {
@@ -40,7 +40,7 @@ class SettingViewModel {
             completion?()
         }) { error in
             completion?()
-        }.addDisposableTo(disposeBag)
+            }.disposed(by: disposeBag)
     }
     
     func setPrivacy(type: PrivacyType) {
@@ -48,6 +48,6 @@ class SettingViewModel {
 
         }, onError: {error in
             print("error: ", error)
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
 }

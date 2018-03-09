@@ -11,8 +11,8 @@ import RxSwift
 import RxCocoa
 
 extension Reactive where Base: UIScrollView {
-    var showsInfiniteScrolling: UIBindingObserver<Base, Bool> {
-        return UIBindingObserver(UIElement: self.base) { view, show in
+    var showsInfiniteScrolling: Binder<Bool> {
+        return Binder(self.base) { view, show in
       
            view.showsInfiniteScrolling = show
         }

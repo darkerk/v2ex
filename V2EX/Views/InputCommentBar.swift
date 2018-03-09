@@ -89,7 +89,7 @@ class InputCommentBar: UIToolbar {
                 return !content.isEmpty && atText != content && !atText.contains(content)
             }
             return !content.isEmpty
-        }.shareReplay(1).bind(to: sendButton.rx.isEnabled).addDisposableTo(disposeBag)
+            }.share(replay: 1).bind(to: sendButton.rx.isEnabled).disposed(by: disposeBag)
         
         
         
@@ -146,7 +146,7 @@ extension Reactive where Base: InputCommentBar {
     var sendEvent: ControlEvent<(String, String?)> {
         let source = self.base.sendButton.rx.tap.map {_ -> (String, String?) in
             return (self.base.textView.text, self.base.atName)
-        }.shareReplay(1)
+            }.share(replay: 1)
         return ControlEvent(events: source)
     }
 }

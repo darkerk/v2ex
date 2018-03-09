@@ -30,7 +30,7 @@ class AllPostsViewController: UITableViewController {
         tableView.dataSource = nil
         
         let viewModel = AllPostsViewModel(href: moreHref, type: type)
-        viewModel.totalCount.asObservable().map({titleText + "(\($0))"}).bind(to: navigationItem.rx.title).addDisposableTo(disposeBag)
+        viewModel.totalCount.asObservable().map({titleText + "(\($0))"}).bind(to: navigationItem.rx.title).disposed(by: disposeBag)
         
         viewModel.items.asObservable().bind(to: tableView.rx.items) { (table, row, item) in
             switch item {
@@ -43,7 +43,7 @@ class AllPostsViewController: UITableViewController {
                 cell.reply = reply
                 return cell
             }
-        }.addDisposableTo(disposeBag)
+            }.disposed(by: disposeBag)
         
         tableView.rx.modelSelected(SectionTimelineItem.self).subscribe(onNext: {[weak navigationController] item in
             guard let nav = navigationController else { return }
@@ -55,11 +55,11 @@ class AllPostsViewController: UITableViewController {
                     TopicDetailsViewController.show(from: nav, topic: topic)
                 }
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         tableView.rx.itemSelected.subscribe(onNext: {[weak tableView] indexPath in
             tableView?.deselectRow(at: indexPath, animated: true)
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
 
         tableView.addInfiniteScrolling {[weak tableView] in
            viewModel.fetchMoreData(completion: {
@@ -71,7 +71,7 @@ class AllPostsViewController: UITableViewController {
             tableView.infiniteScrollingView?.activityIndicatorView.activityIndicatorViewStyle = .white
         }
         
-        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
+        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).disposed(by: disposeBag)
     }
 
     override func didReceiveMemoryWarning() {

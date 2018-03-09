@@ -48,7 +48,7 @@ class NodeTopicsViewController: UITableViewController {
                 }
             }
             return cell
-            }.addDisposableTo(disposeBag)
+            }.disposed(by: disposeBag)
         
         tableView.addInfiniteScrolling {[weak viewModel] in
             viewModel?.fetchMoreData()
@@ -58,12 +58,12 @@ class NodeTopicsViewController: UITableViewController {
             tableView.infiniteScrollingView?.activityIndicatorView.activityIndicatorViewStyle = .white
         }
         
-        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).addDisposableTo(disposeBag)
+        viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).disposed(by: disposeBag)
         viewModel.loadMoreCompleted.asObservable().subscribe(onNext: {[weak tableView] isFinished in
             if isFinished {
                 tableView?.infiniteScrollingView?.stopAnimating()
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         viewModel.loadingActivityIndicator.asObservable().subscribe(onNext: {[weak self] isLoading in
             guard let `self` = self else { return }
@@ -74,7 +74,7 @@ class NodeTopicsViewController: UITableViewController {
             }else {
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "nav_more"), style: .plain, target: self, action: #selector(self.moreAction(_:)))
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         var shouldLogin = false
         viewModel.shouldLogin.asObservable().subscribe(onNext: {[weak self] should in
@@ -82,13 +82,13 @@ class NodeTopicsViewController: UITableViewController {
                 shouldLogin = true
                 self?.showLoginAlert(isPopBack: true)
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         Account.shared.isLoggedIn.asObservable().subscribe(onNext: {isLoggedIn in
             if isLoggedIn && shouldLogin {
                 self.viewModel.fetcData()
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
 
     func moreAction(_ sender: Any) {

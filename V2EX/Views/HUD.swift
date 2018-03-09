@@ -50,8 +50,8 @@ extension HUD {
 }
 
 extension Reactive where Base: PKHUD {
-    var isAnimating: UIBindingObserver<Base, Bool> {
-        return UIBindingObserver(UIElement: self.base, binding: { (hud, animating) in
+    var isAnimating: Binder<Bool> {
+        return Binder(self.base, binding: { (hud, animating) in
             if animating {
                 HUD.show()
             }else {
