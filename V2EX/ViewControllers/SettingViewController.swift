@@ -154,12 +154,12 @@ class SettingViewController: UITableViewController {
         present(actionSheet, animated: true, completion: nil)
     }
     
-    func searchSwitch(_ sender: UISwitch) {
+    @objc func searchSwitch(_ sender: UISwitch) {
         Account.shared.privacy.search = sender.isOn
         viewModel.setPrivacy(type: PrivacyType.search(on: sender.isOn))
     }
     
-    func nightSwitch(_ sender: UISwitch) {
+    @objc func nightSwitch(_ sender: UISwitch) {
         AppStyle.shared.theme = sender.isOn ? .night : .normal
         
         drawerViewController?.setNeedsStatusBarAppearanceUpdate()

@@ -15,7 +15,7 @@ import RxDataSources
 class HomeViewController: UITableViewController {
     
     fileprivate lazy var viewModel = HomeViewModel()
-    fileprivate let dataSource = RxTableViewSectionedAnimatedDataSource<TopicListSection>()
+    fileprivate var dataSource: RxTableViewSectionedAnimatedDataSource<TopicListSection>!
     private let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
@@ -24,7 +24,17 @@ class HomeViewController: UITableViewController {
 
         AppStyle.shared.themeUpdateVariable.asObservable().subscribe(onNext: { update in
             self.updateTheme()
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
+        
+        dataSource = RxTableViewSectionedAnimatedDataSource<TopicListSection>(configureCell: {[weak self] (ds, table, indexPath, _) in
+            let cell: TopicViewCell = table.dequeueReusableCell()
+            let item = ds[indexPath]
+            cell.topic = item
+            cell.linkTap = {type in
+                self?.linkTapAction(type: type)
+            }
+            return cell
+        })
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
@@ -35,26 +45,15 @@ class HomeViewController: UITableViewController {
         refreshControl?.rx.controlEvent(.valueChanged)
             .flatMapLatest({[unowned viewModel]_ in
                 viewModel.fetchTopics()})
-            .shareReplay(1)
+            .share(replay: 1)
             .subscribe(onNext: {isEmpty in
                 
         }, onError: {error in
             print("error: ", error)
-        }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
 
-        viewModel.loadingActivityIndicator.asObservable().bind(to: refreshControl!.rx.isRefreshing).addDisposableTo(disposeBag)
-        
-        dataSource.configureCell = {[weak self] (ds, table, indexPath, _) in
-            let cell: TopicViewCell = table.dequeueReusableCell()
-            let item = ds[indexPath]
-            cell.topic = item
-            cell.linkTap = {type in
-                self?.linkTapAction(type: type)
-            }
-            return cell
-        }
-        
-        viewModel.sections.asObservable().bind(to: tableView.rx.items(dataSource: dataSource)).addDisposableTo(disposeBag)
+        viewModel.loadingActivityIndicator.asObservable().bind(to: refreshControl!.rx.isRefreshing).disposed(by: disposeBag)
+        viewModel.sections.asObservable().bind(to: tableView.rx.items(dataSource: dataSource!)).disposed(by: disposeBag)
         viewModel.defaultNodes.asObservable().subscribe(onNext: {[weak self] nodes in
             guard let `self` = self else { return }
             if let currentNode = nodes.filter({$0.isCurrent}).first {
@@ -62,12 +61,12 @@ class HomeViewController: UITableViewController {
             }else {
                 self.navigationItem.rightBarButtonItem?.title = nil
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
 
         tableView.rx.itemSelected.subscribe(onNext: {[weak self] indexPath in
             guard let strongSelf = self else { return }
             strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
 
         refreshControl?.sendActions(for: .valueChanged)
         tableView.setContentOffset(CGPoint(x: 0, y: -60), animated: true)
@@ -125,7 +124,7 @@ class HomeViewController: UITableViewController {
                         self.refreshControl?.sendActions(for: .valueChanged)
                     }
                 }
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
         case is TopicDetailsViewController:
             guard let cell = sender as? TopicViewCell, let indexPath = tableView.indexPath(for: cell) else {
                 return

@@ -42,7 +42,7 @@ class TimelineViewModel {
             }
         }, onError: { error in
             print(error)
-        }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
     }
     
     func sendFollow(completion: ((Bool) -> Void)? = nil) {
@@ -53,12 +53,12 @@ class TimelineViewModel {
             }else {
                 return Observable.error(NetError.message(text: "获取once失败"))
             }
-            }.shareReplay(1).subscribe(onNext: { response in
+            }.share(replay: 1).subscribe(onNext: { response in
                 self.isFollowed = !isCancel
                 completion?(true)
             }, onError: {error in
                 completion?(false)
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
     }
     
     func sendBlock(completion: ((Bool) -> Void)? = nil) {
@@ -69,6 +69,6 @@ class TimelineViewModel {
                 completion?(true)
             }, onError: {error in
                 completion?(false)
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
     }
 }

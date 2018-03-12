@@ -29,7 +29,7 @@ class NodeTopicsViewCell: UITableViewCell {
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.lineSpacing = 3
                 
-                let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 15), NSForegroundColorAttributeName: AppStyle.shared.theme.black64Color, NSParagraphStyleAttributeName: paragraphStyle]
+                let attributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15), NSAttributedStringKey.foregroundColor: AppStyle.shared.theme.black64Color, NSAttributedStringKey.paragraphStyle: paragraphStyle]
                 titleLabel.attributedText = NSAttributedString(string: model.title, attributes: attributes)
             }
         }
@@ -59,7 +59,7 @@ class NodeTopicsViewCell: UITableViewCell {
         avatarView.addGestureRecognizer(tap)
     }
     
-    func avatarTapAction(_ sender: Any) {
+    @objc func avatarTapAction(_ sender: Any) {
         avatarTap?()
     }
 

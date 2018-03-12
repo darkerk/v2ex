@@ -38,7 +38,7 @@ class CreateTopicViewController: UIViewController {
         
         view.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
         textField.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
-        textField.attributedPlaceholder = NSAttributedString(string: "标题", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 15), NSForegroundColorAttributeName: AppStyle.shared.theme.textPlaceHolderColor])
+        textField.attributedPlaceholder = NSAttributedString(string: "标题", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15), NSAttributedStringKey.foregroundColor: AppStyle.shared.theme.textPlaceHolderColor])
         
         textView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
         textView.placeHolderColor = AppStyle.shared.theme.textPlaceHolderColor
@@ -48,14 +48,14 @@ class CreateTopicViewController: UIViewController {
         }
         lineView.backgroundColor = AppStyle.shared.theme.separatorColor
         
-        let titleValid = textField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
-        let contentValid = textView.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
-        let allValid = Observable.combineLatest(titleValid, contentValid) { $0 && $1 }.shareReplay(1)
-        allValid.bind(to: sendButton.rx.isEnabled).addDisposableTo(disposeBag)
+        let titleValid = textField.rx.text.orEmpty.map({$0.isEmpty == false}).share(replay: 1)
+        let contentValid = textView.rx.text.orEmpty.map({$0.isEmpty == false}).share(replay: 1)
+        let allValid = Observable.combineLatest(titleValid, contentValid) { $0 && $1 }.share(replay: 1)
+        allValid.bind(to: sendButton.rx.isEnabled).disposed(by: disposeBag)
         
         textField.rx.controlEvent(.editingDidEndOnExit).subscribe(onNext: {[weak textView] in
             textView?.becomeFirstResponder()
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
         
@@ -74,17 +74,17 @@ class CreateTopicViewController: UIViewController {
             }else {
                 return Observable.error(NetError.message(text: "获取once失败"))
             }
-            }.shareReplay(1).subscribe(onNext: { response in
+            }.share(replay: 1).subscribe(onNext: { response in
                 HUD.showText("发布成功！")
                 self.delegate?.createTopicSuccess?(viewcontroller: self)
                 self.navigationController?.popViewController(animated: true)
             }, onError: {error in
                 HUD.showText(error.message)
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
         
     }
     
-    func keyboardWillChangeFrame(_ notification: Notification) {
+    @objc func keyboardWillChangeFrame(_ notification: Notification) {
         guard let info = notification.userInfo as? [String: Any] else {
             return
         }

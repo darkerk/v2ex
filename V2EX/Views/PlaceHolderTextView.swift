@@ -33,7 +33,7 @@ class PlaceHolderTextView: UITextView {
         NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: NSNotification.Name.UITextViewTextDidChange, object: self)
     }
     
-    func textDidChange(notification: Notification) {
+    @objc func textDidChange(notification: Notification) {
         if let notificationObject = notification.object as? PlaceHolderTextView {
             if notificationObject === self {
                 setNeedsDisplay()
@@ -53,12 +53,12 @@ class PlaceHolderTextView: UITextView {
                               width:   frame.size.width - textContainerInset.left - textContainerInset.right,
                               height: frame.size.height)
             
-            var attributes: [String: Any] = [
-                NSForegroundColorAttributeName: placeHolderColor,
-                NSParagraphStyleAttributeName: paragraphStyle
+            var attributes: [NSAttributedStringKey: Any] = [
+                NSAttributedStringKey.foregroundColor: placeHolderColor,
+                NSAttributedStringKey.paragraphStyle: paragraphStyle
             ]
             if let font = font {
-                attributes[NSFontAttributeName] = font
+                attributes[NSAttributedStringKey.font] = font
             }
             placeHolder.draw(in: rect, withAttributes: attributes)
         }

@@ -86,7 +86,7 @@ class TopicDetailsViewModel {
             
         }, onError: {error in
             print(error)
-        }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
     }
     
     func fetchMoreComments() {
@@ -110,7 +110,7 @@ class TopicDetailsViewModel {
                 
             }, onError: { error in
                 print(error)
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
     }
     
     func sendComment(content: String, atName: String? = nil, completion: ((Swift.Error?) -> Void)? = nil) {
@@ -120,12 +120,12 @@ class TopicDetailsViewModel {
             }else {
                 return Observable.error(NetError.message(text: "获取once失败"))
             }
-            }.shareReplay(1).subscribe(onNext: { response in
+            }.share(replay: 1).subscribe(onNext: { response in
                 self.insertNew(text: content, atName: atName)
                 completion?(nil)
             }, onError: {error in
                 completion?(error)
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
     }
     
     func sendThank(type: ThankType, completion: ((Bool) -> Void)? = nil) {
@@ -135,7 +135,7 @@ class TopicDetailsViewModel {
             completion?(true)
         }, onError: {error in
             completion?(false)
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     func sendIgnore(completion: ((Bool) -> Void)? = nil) {
@@ -145,11 +145,11 @@ class TopicDetailsViewModel {
             }else {
                 return Observable.error(NetError.message(text: "获取once失败"))
             }
-            }.shareReplay(1).subscribe(onNext: { response in
+            }.share(replay: 1).subscribe(onNext: { response in
                 completion?(true)
             }, onError: {error in
                 completion?(false)
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
     }
     
     func sendFavorite(completion: ((Bool) -> Void)? = nil) {
@@ -159,6 +159,6 @@ class TopicDetailsViewModel {
             completion?(true)
         }, onError: {error in
             completion?(false)
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
 }

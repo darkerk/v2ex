@@ -8,6 +8,7 @@
 
 import Foundation
 import Moya
+import RxSwift
 
 enum PrivacyType {
     case online(value: Int)
@@ -28,8 +29,10 @@ enum FavoriteType {
 enum API {
     /// once凭证
     case once()
+    /// 机器图片验证码
+    case captcha(once: String)
     /// 登录
-    case login(usernameKey: String, passwordKey: String, username: String, password: String, once: String)
+    case login(usernameKey: String, passwordKey: String, codeKey: String, username: String, password: String, code: String, once: String)
     /// 注销
     case logout(once: String)
     /// 首页话题（切换节点）
@@ -73,6 +76,26 @@ enum API {
 }
 
 extension API: TargetType {
+    var headers: [String : String]? {
+        switch self{
+        case .once:
+            let headers = ["Origin": "https://www.v2ex.com",
+                           "Content-Type": "application/x-www-form-urlencoded"]
+            return headers
+        case .captcha(_):
+            let headers = ["Accept": "image/png,image/svg+xml,image/*;q=0.8,*/*;q=0.5",
+                           "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1"]
+            return headers
+        case .login(_, _, _, _, _, _, _):
+            let headers = ["Referer": "https://www.v2ex.com/signin",
+                           "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1"]
+            return headers
+        default:
+            let headers = ["User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1"]
+            return headers
+        }
+    }
+    
     var baseURL: URL {
         return URL(string: "https://www.v2ex.com")!
     }
@@ -80,10 +103,12 @@ extension API: TargetType {
     var task: Task {
         switch self {
         case let .updateAvatar(imageData, once):
-            return .upload(.multipart([MultipartFormData(provider: .data(imageData), name: "avatar", fileName: "avatar.jpeg", mimeType: "image/jpeg"),
-                                       MultipartFormData(provider: .data(once.data(using: .utf8)!), name: "once")]))
+            return .uploadCompositeMultipart([MultipartFormData(provider: .data(imageData), name: "avatar", fileName: "avatar.jpeg", mimeType: "image/jpeg")], urlParameters: ["once" : once])
         default:
-            return .request
+            if let parameters = parameters {
+                return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+            }
+            return .requestPlain
         }
     }
     
@@ -91,10 +116,12 @@ extension API: TargetType {
         switch self {
         case .once():
             return "/signin"
-        case .login(_, _, _, _, _):
+        case .login(_, _, _, _, _, _, _):
             return "/signin"
         case .logout(_):
             return "/signout"
+        case .captcha(_):
+            return "/_captcha"
         case .dailyRewards(_):
             return "/mission/daily/redeem"
         case let .timeline(userHref):
@@ -147,7 +174,7 @@ extension API: TargetType {
     
     var method: Moya.Method {
         switch self {
-        case .login(_, _, _, _, _):
+        case .login(_, _, _, _, _, _, _):
             return .post
         case .updateAvatar(_), .privacy(_, _), .comment(_, _, _), .thank(_, _), .createTopic(_, _, _, _), .twoStepVerify(_, _):
             return .post
@@ -156,15 +183,11 @@ extension API: TargetType {
         }
     }
     
-    var parameterEncoding: ParameterEncoding {
-        return URLEncoding.default
-    }
-    
     var parameters: [String : Any]? {
         switch self {
-        case let .login(userNameKey, passwordKey, userName, password, once):
-            return [userNameKey: userName, passwordKey: password, "once": once, "next": "/"]
-        case let .dailyRewards(once), let .logout(once):
+        case let .login(userNameKey, passwordKey, codeKey, userName, password, code, once):
+            return [userNameKey: userName, passwordKey: password, codeKey: code, "once": once, "next": "/"]
+        case let .dailyRewards(once), let .logout(once), let .captcha(once):
             return ["once": once]
         case let .topics(nodeHref):
             if nodeHref.isEmpty {
@@ -217,25 +240,9 @@ extension API: TargetType {
 }
 
 extension API {
-    static let provider = RxMoyaProvider(endpointClosure: endpointClosure, plugins: [networkActivityPlugin])
-    static func endpointClosure(_ target: API) -> Endpoint<API> {
-        let defaultEndpoint = MoyaProvider<API>.defaultEndpointMapping(for: target)
-        switch target{
-        case .once:
-            let headers = ["Origin": "https://www.v2ex.com",
-                           "Content-Type": "application/x-www-form-urlencoded"]
-            return defaultEndpoint.adding(newHTTPHeaderFields: headers)
-        case .login(_, _, _, _, _):
-            let headers = ["Referer": "https://www.v2ex.com/signin",
-                           "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1"]
-            return defaultEndpoint.adding(newHTTPHeaderFields: headers)
-        default:
-            let headers = ["User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14D27 Safari/602.1"]
-            return defaultEndpoint.adding(newHTTPHeaderFields: headers)
-        }
-    }
-    
-    static let networkActivityPlugin = NetworkActivityPlugin(networkActivityClosure: {(change: NetworkActivityChangeType) in
+    static let provider = MoyaProvider<API>(plugins: [networkActivityPlugin])
+
+    static let networkActivityPlugin = NetworkActivityPlugin(networkActivityClosure: {(change: NetworkActivityChangeType, self) in
         switch change {
         case .began:
             UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -243,4 +250,11 @@ extension API {
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
         }
     })
+}
+
+extension MoyaProvider {
+    
+    func request(_ token: Target) -> Observable<Response> {
+        return rx.request(token).asObservable()
+    }
 }

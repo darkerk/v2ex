@@ -34,7 +34,7 @@ class TopicDetailsCommentCell: UITableViewCell {
     @IBOutlet weak var floorLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var lzFlagLabel: UILabel!
-
+    
     var linkTap: ((TapLink) -> Void)?
     
     var comment: Comment? {
@@ -69,7 +69,7 @@ class TopicDetailsCommentCell: UITableViewCell {
         
         textView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: -18, right: 0)
         textView.textContainer.lineFragmentPadding = 0
-        textView.linkTextAttributes = [NSForegroundColorAttributeName: AppStyle.shared.theme.hyperlinkColor]
+        textView.linkTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: AppStyle.shared.theme.hyperlinkColor]
         textView.delegate = self
         
         avatarView.isUserInteractionEnabled = true
@@ -81,7 +81,7 @@ class TopicDetailsCommentCell: UITableViewCell {
         nameLabel.addGestureRecognizer(nameTap)
         
         let cellTap = UITapGestureRecognizer(target: self, action: #selector(cellTapAction(_:)))
-        addGestureRecognizer(cellTap)
+        textView.addGestureRecognizer(cellTap)
         
         let selectedView = UIView()
         selectedView.backgroundColor = AppStyle.shared.theme.cellSelectedBackgroundColor
@@ -97,13 +97,38 @@ class TopicDetailsCommentCell: UITableViewCell {
         cssText = cssText.replacingOccurrences(of: CSSColorMark.replyContent, with: AppStyle.shared.theme.webTopicTextColorHex)
     }
     
-    func cellTapAction(_ sender: Any) {
-        if let tableView = superview?.superview as? UITableView, let indexPath = tableView.indexPath(for: self) {
+    @objc func cellTapAction(_ sender: UITapGestureRecognizer) {
+        var view = superview
+        while (view != nil && view?.isKind(of: UITableView.self) == false) {
+            view = view?.superview
+        }
+        guard let tableView = view as? UITableView, let indexPath = tableView.indexPath(for: self) else {
+            return
+        }
+        
+        let tapLocation = sender.location(in: textView)
+        guard let textPosition = textView.closestPosition(to: tapLocation),
+            let attributes = textView.textStyling(at: textPosition, in: UITextStorageDirection.forward) else {
+                
+                tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+                
+                return
+        }
+
+        if let url = attributes[NSAttributedStringKey.link.rawValue] as? URL {
+            
+            handleTextViewLink(url: url)
+            
+        }else if let attachment = attributes[NSAttributedStringKey.attachment.rawValue] as? ImageAttachment {
+            if let src = attachment.src, attachment.imageSize.width > 50 {
+                linkTap?(TapLink.image(src: src))
+            }
+        }else {
             tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
         }
     }
     
-    func userTapAction(_ sender: Any) {
+    @objc func userTapAction(_ sender: Any) {
         if let user = comment?.user {
             linkTap?(TapLink.user(info: user))
         }
@@ -119,77 +144,77 @@ class TopicDetailsCommentCell: UITableViewCell {
         timeLabel.text = model.time
         
         var content = model.content
-        
-        guard let html = HTML(html: content, encoding: .utf8) else {
+        do {
+            let html = try HTML(html: content, encoding: .utf8)
+            var imgsrcs: [(id: String, src: String)] = []
+            let srcs = html.xpath("//img").flatMap({$0["src"]})
+            let imgTags = matchImgTags(text: content)
+            imgTags.forEach({img in
+                let id = "\(img.hashValue)"
+                if let index = srcs.index(where: {img.contains($0)}) {
+                    content = content.replacingOccurrences(of: img, with: id)
+                    var src = srcs[index]
+                    if src.hasPrefix("//") {
+                        src = "http:" + src
+                    }
+                    imgsrcs.append((id, src))
+                }
+            })
+            
+            let htmlText = "<style>\(cssText)</style>" + content
+            
+            guard let htmlData = htmlText.data(using: .unicode),
+                let attributedString = try? NSMutableAttributedString(data: htmlData, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) else {
+                    
+                    return
+            }
+            
+            imgsrcs.forEach({ item in
+                let url = URL(string: item.src)!
+                var imgSize = CGSize(width: 100, height: 100)
+                var image: UIImage?
+                var isImageCached = false
+                if let cacheImage = ImageCache.default.retrieveImageInDiskCache(forKey: item.id) {
+                    isImageCached = true
+                    image = cacheImage
+                    imgSize = cacheImage.size
+                }else {
+                    image = UIImage(color: AppStyle.shared.theme.topicCellNodeBackgroundColor, size: imgSize)
+                }
+                
+                let attachment = ImageAttachment()
+                attachment.imageSize = imgSize
+                attachment.image = image
+                attachment.src = item.src
+                
+                let imgString = NSAttributedString(attachment: attachment)
+                if let range = attributedString.string.range(of: item.id) {
+                    let nsRange = attributedString.string.nsRange(from: range)
+                    attributedString.replaceCharacters(in: nsRange, with: imgString)
+                }
+                
+                if !isImageCached {
+                    ImageDownloader.default.downloadImage(with: url, completionHandler: { (newImage, _, _, _) in
+                        if let newImage = newImage {
+                            let smallImage = newImage.thumbnailForMaxPixelSize(200)
+                            attachment.image = smallImage
+                            if smallImage.size != attachment.imageSize {
+                                attachment.imageSize = smallImage.size
+                                self.textView.textContainer.layoutManager?.setNeedsLayout(forAttachment: attachment)
+                            }else {
+                                self.textView.textContainer.layoutManager?.setNeedsDisplay(forAttachment: attachment)
+                            }
+                            ImageCache.default.store(smallImage, forKey: item.id)
+                            SKCache.sharedCache.setImage(newImage, forKey: item.src)
+                        }
+                    })
+                }
+            })
+            textView.attributedText = attributedString
+        } catch {
             textView.text = content
             return
         }
-        
-        var imgsrcs: [(id: String, src: String)] = []
-        let srcs = html.xpath("//img").flatMap({$0["src"]})
-        let imgTags = matchImgTags(text: content)
-        imgTags.forEach({img in
-            let id = "\(img.hashValue)"
-            if let index = srcs.index(where: {img.contains($0)}) {
-                content = content.replacingOccurrences(of: img, with: id)
-                var src = srcs[index]
-                if src.hasPrefix("//") {
-                    src = "http:" + src
-                }
-                imgsrcs.append((id, src))
-            }
-        })
-        
-        let htmlText = "<style>\(cssText)</style>" + content
-        
-        guard let htmlData = htmlText.data(using: .unicode),
-            let attributedString = try? NSMutableAttributedString(data: htmlData, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil) else {
-                
-                return
-        }
-        
-        imgsrcs.forEach({ item in
-            let url = URL(string: item.src)!
-            var imgSize = CGSize(width: 100, height: 100)
-            var image: UIImage?
-            var isImageCached = false
-            if let cacheImage = ImageCache.default.retrieveImageInDiskCache(forKey: item.id) {
-                isImageCached = true
-                image = cacheImage
-                imgSize = cacheImage.size
-            }else {
-                image = UIImage(color: AppStyle.shared.theme.topicCellNodeBackgroundColor, size: imgSize)
-            }
-            
-            let attachment = ImageAttachment()
-            attachment.imageSize = imgSize
-            attachment.image = image
-            attachment.src = item.src
-            
-            let imgString = NSAttributedString(attachment: attachment)
-            if let range = attributedString.string.range(of: item.id) {
-                let nsRange = attributedString.string.nsRange(from: range)
-                attributedString.replaceCharacters(in: nsRange, with: imgString)
-            }
-            
-            if !isImageCached {
-              ImageDownloader.default.downloadImage(with: url, completionHandler: { (newImage, _, _, _) in
-                    if let newImage = newImage {
-                        let smallImage = newImage.thumbnailForMaxPixelSize(200)
-                        attachment.image = smallImage
-                        if smallImage.size != attachment.imageSize {
-                            attachment.imageSize = smallImage.size
-                            self.textView.textContainer.layoutManager?.setNeedsLayout(forAttachment: attachment)
-                        }else {
-                            self.textView.textContainer.layoutManager?.setNeedsDisplay(forAttachment: attachment)
-                        }
-                        ImageCache.default.store(smallImage, forKey: item.id)
-                        SKCache.sharedCache.setImage(newImage, forKey: item.src)
-                    }
-                })
-            }
-        })
-        textView.attributedText = attributedString
     }
     
     func matchImgTags(text: String) -> [String] {
@@ -200,10 +225,26 @@ class TopicDetailsCommentCell: UITableViewCell {
         }
         return results.flatMap({result -> String? in
             if let range = result.range.range(for: text) {
-                return text.substring(with: range)
+                return String(text[range])
             }
             return nil
         })
+    }
+    
+    func handleTextViewLink(url: URL) {
+        let link = url.absoluteString
+        if link.hasPrefix("https://") || link.hasPrefix("http://"){
+            linkTap?(TapLink.web(url: url))
+        }else if link.hasPrefix("applewebdata://") && link.contains("/member/") {
+            let href = url.path
+            let name = href.replacingOccurrences(of: "/member/", with: "")
+            let user = User(name: name, href: href, src: "")
+            linkTap?(TapLink.user(info: user))
+        }else if link.hasPrefix("applewebdata://") && link.contains("/t/") {
+            let href = url.path
+            let topic = Topic(href: href)
+            linkTap?(TapLink.topic(info: topic))
+        }
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -216,19 +257,7 @@ class TopicDetailsCommentCell: UITableViewCell {
 
 extension TopicDetailsCommentCell: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-        let link = URL.absoluteString
-        if link.hasPrefix("https://") || link.hasPrefix("http://"){
-            linkTap?(TapLink.web(url: URL))
-        }else if link.hasPrefix("applewebdata://") && link.contains("/member/") {
-            let href = URL.path
-            let name = href.replacingOccurrences(of: "/member/", with: "")
-            let user = User(name: name, href: href, src: "")
-            linkTap?(TapLink.user(info: user))
-        }else if link.hasPrefix("applewebdata://") && link.contains("/t/") {
-            let href = URL.path
-            let topic = Topic(href: href)
-            linkTap?(TapLink.topic(info: topic))
-        }
+        handleTextViewLink(url: URL)
         return false
     }
     

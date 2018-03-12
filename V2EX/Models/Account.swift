@@ -39,31 +39,33 @@ struct Account {
             }else {
                 return Observable.error(NetError.message(text: "获取once失败"))
             }
-            }.shareReplay(1).subscribe(onNext: { response in
+            }.share(replay: 1).subscribe(onNext: { response in
             
             }, onError: {error in
              
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
     }
     
     func redeemDailyRewards() -> Observable<Bool> {
         return API.provider.request(.once()).flatMapLatest { response -> Observable<Bool> in
             if let once = HTMLParser.shared.once(html: response.data) {
                 return API.provider.request(.dailyRewards(once: once)).flatMapLatest({ resp-> Observable<Bool> in
-                    guard let html = HTML(html: resp.data, encoding: .utf8) else {
+                    do {
+                        let html = try HTML(html: resp.data, encoding: .utf8)
+                        let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='message']")
+                        if let content = path.first?.content, content.contains("已成功领取") {
+                            return Observable.just(true)
+                        }else {
+                            return Observable.error(NetError.message(text: "领取奖励失败"))
+                        }
+                    } catch {
                         return Observable.error(NetError.message(text: "请求获取失败"))
                     }
 
-                    let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='message']")
-                    if let content = path.first?.content, content.contains("已成功领取") {
-                        return Observable.just(true)
-                    }else {
-                        return Observable.error(NetError.message(text: "领取奖励失败"))
-                    }
-                }).shareReplay(1)
+                }).share(replay: 1)
             }else {
                 return Observable.error(NetError.message(text: "获取once失败"))
             }
-            }.shareReplay(1)
+            }.share(replay: 1)
     }
 }

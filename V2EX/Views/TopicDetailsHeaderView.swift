@@ -128,13 +128,13 @@ class TopicDetailsHeaderView: UIView {
         cssText = cssText.replacingOccurrences(of: CSSColorMark.separator, with: AppStyle.shared.theme.webLineColorHex)
     }
     
-    func userTapAction(_ sender: Any) {
+    @objc func userTapAction(_ sender: Any) {
         if let user = topic?.owner {
             linkTap?(TapLink.user(info: user))
         }
     }
     
-    func nodeTapAction(_ sender: Any) {
+    @objc func nodeTapAction(_ sender: Any) {
         if let node = topic?.node {
             linkTap?(TapLink.node(info: node))
         }
@@ -193,14 +193,14 @@ extension TopicDetailsHeaderView: WKNavigationDelegate {
 }
 
 extension Reactive where Base: TopicDetailsHeaderView {
-    var htmlString: UIBindingObserver<Base, String?> {
-        return UIBindingObserver(UIElement: self.base) { view, text in
+    var htmlString: Binder<String?> {
+        return Binder(self.base) { view, text in
             view.htmlString = text
         }
     }
     
-    var topic: UIBindingObserver<Base, Topic?> {
-        return UIBindingObserver(UIElement: self.base) { view, model in
+    var topic: Binder<Topic?> {
+        return Binder(self.base) { view, model in
             view.topic = model
         }
     }

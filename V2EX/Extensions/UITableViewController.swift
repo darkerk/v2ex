@@ -12,15 +12,9 @@ protocol ThemeUpdating {
     func updateTheme()
 }
 
-extension UITableViewController: ThemeUpdating {
-    func updateTheme() {
-        switch tableView.style {
-        case .plain:
-            tableView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
-        case .grouped:
-            tableView.backgroundColor = AppStyle.shared.theme.tableGroupBackgroundColor
-        }
-        tableView.separatorColor = AppStyle.shared.theme.separatorColor
+extension UIViewController: ThemeUpdating {
+    @objc func updateTheme() {
+        
     }
     
     func showLoginAlert(isPopBack: Bool = false) {
@@ -34,7 +28,18 @@ extension UITableViewController: ThemeUpdating {
             self.drawerViewController?.performSegue(withIdentifier: LoginViewController.segueId, sender: nil)
         }))
         present(alert, animated: true, completion: nil)
-
+        
     }
-    
+}
+
+extension UITableViewController {
+    override func updateTheme() {
+        switch tableView.style {
+        case .plain:
+            tableView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+        case .grouped:
+            tableView.backgroundColor = AppStyle.shared.theme.tableGroupBackgroundColor
+        }
+        tableView.separatorColor = AppStyle.shared.theme.separatorColor
+    }
 }

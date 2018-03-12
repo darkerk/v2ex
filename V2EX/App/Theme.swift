@@ -71,7 +71,7 @@ extension Theme {
     var cellSelectedBackgroundColor: UIColor {
         switch self {
         case .normal:
-            return UIColor(colorLiteralRed: 0.901961, green: 0.901961, blue: 0.901961, alpha: 1)
+            return UIColor(red: 0.901961, green: 0.901961, blue: 0.901961, alpha: 1)
         case .night:
             return #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1)
         }
@@ -80,7 +80,7 @@ extension Theme {
     var separatorColor: UIColor {
         switch self {
         case .normal:
-            return UIColor(colorLiteralRed: 0.901961, green: 0.901961, blue: 0.901961, alpha: 1)
+            return UIColor(red: 0.901961, green: 0.901961, blue: 0.901961, alpha: 1)
         case .night:
             return UIColor.black
         }

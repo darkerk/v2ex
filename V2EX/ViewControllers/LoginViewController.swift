@@ -23,6 +23,9 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var sublitLabel: UILabel!
     @IBOutlet weak var line1View: UIImageView!
     @IBOutlet weak var line2View: UIImageView!
+    @IBOutlet weak var line3View: UIImageView!
+    @IBOutlet weak var captchaView: UIImageView!
+    @IBOutlet weak var verifcodeTextField: UITextField!
     
     var viewModel: LoginViewModel = LoginViewModel()
     private let disposeBag = DisposeBag()
@@ -39,13 +42,17 @@ class LoginViewController: UIViewController {
             let lineImage = #imageLiteral(resourceName: "line").imageWithTintColor(UIColor.black)
             line1View.image = lineImage
             line2View.image = lineImage
+            line3View.image = lineImage
             
-            let attributes = [NSForegroundColorAttributeName: #colorLiteral(red: 0.4196078431, green: 0.4901960784, blue: 0.5490196078, alpha: 1)]
+            let attributes = [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 0.4196078431, green: 0.4901960784, blue: 0.5490196078, alpha: 1)]
             usernameTextField.attributedPlaceholder = NSAttributedString(string: "用户名或邮箱", attributes: attributes)
             passwordTextField.attributedPlaceholder = NSAttributedString(string: "密码", attributes: attributes)
+            verifcodeTextField.attributedPlaceholder = NSAttributedString(string: "请输入下图中的验证码", attributes: attributes)
+            
             usernameTextField.textColor = #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)
             passwordTextField.textColor = #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)
-            
+            verifcodeTextField.textColor = #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)
+                
             loginButton.backgroundColor = #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1)
             loginButton.layer.borderColor = #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1).cgColor
             loginButton.setTitleColor(UIColor.white, for: .normal)
@@ -53,6 +60,7 @@ class LoginViewController: UIViewController {
             
             usernameTextField.keyboardAppearance = .dark
             passwordTextField.keyboardAppearance = .dark
+            verifcodeTextField.keyboardAppearance = .dark
         }
         
         if OnePasswordExtension.shared().isAppExtensionAvailable() {
@@ -68,22 +76,26 @@ class LoginViewController: UIViewController {
             
         }
         
-        let usernameValid = usernameTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
-        let passwordValid = passwordTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
-        let allValid = Observable.combineLatest(usernameValid, passwordValid) { $0 && $1 }.shareReplay(1)
-        allValid.bind(to: loginButton.rx.isEnabled).addDisposableTo(disposeBag)
+        let usernameValid = usernameTextField.rx.text.orEmpty.map({$0.isEmpty == false}).share(replay: 1)
+        let passwordValid = passwordTextField.rx.text.orEmpty.map({$0.isEmpty == false}).share(replay: 1)
+       // let codeValid = verifcodeTextField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1)
+        let allValid = Observable.combineLatest(usernameValid, passwordValid) { $0 && $1 }.share(replay: 1)
+        allValid.bind(to: loginButton.rx.isEnabled).disposed(by: disposeBag)
         
         usernameTextField.rx.controlEvent(.editingDidEndOnExit).subscribe(onNext: {[weak self] in
             self?.passwordTextField.becomeFirstResponder()
             
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
-        passwordTextField.rx.controlEvent(.editingDidEndOnExit).subscribe().addDisposableTo(disposeBag)
+        passwordTextField.rx.controlEvent(.editingDidEndOnExit).subscribe().disposed(by: disposeBag)
+        verifcodeTextField.rx.controlEvent(.editingDidEndOnExit).subscribe().disposed(by: disposeBag)
         
-        viewModel.activityIndicator.asObservable().bind(to: PKHUD.sharedHUD.rx.isAnimating).addDisposableTo(disposeBag)
+        viewModel.activityIndicator.asObservable().bind(to: PKHUD.sharedHUD.rx.isAnimating).disposed(by: disposeBag)
+        
+        viewModel.fetchCaptchaImage().asObservable().bind(to: captchaView.rx.image).disposed(by: disposeBag)
     }
     
-    func findLoginFrom1Password(_ sender: Any) {
+    @objc func findLoginFrom1Password(_ sender: Any) {
         view.endEditing(true)
         OnePasswordExtension.shared().findLogin(forURLString: "www.v2ex.com", for: self, sender: sender) { (result, error) in
             if let result = result as? [String: String], let username = result[AppExtensionUsernameKey], let password = result[AppExtensionPasswordKey] {
@@ -104,28 +116,28 @@ class LoginViewController: UIViewController {
         let action = UIAlertAction(title: "登录", style: .default, handler: {_ in
             let code = alert.textFields?.first?.text ?? ""
             
-            self.viewModel.twoStepVerifyLogin(code: code).asObservable().subscribe(onNext: { resp in
+            self.viewModel.twoStepVerifyLogin(code: code).asObservable().subscribe(onNext: {[weak self] resp in
                 let result = HTMLParser.shared.twoStepVerifyResult(html: resp.data)
                 if let user = result.user {
                     Account.shared.user.value = user
                     Account.shared.isLoggedIn.value = true
-                    self.dismiss(animated: true, completion: nil)
+                    self?.dismiss(animated: true, completion: nil)
                 }else {
-                    self.showTwoStepVerify()
+                    self?.showTwoStepVerify()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
                         let errorMsg = result.problem ?? "验证失败，请重新输入验证码"
                         HUD.showText(errorMsg)
                     })
                 }
-            }, onError: {error in
+            }, onError: {[weak self] error in
                 HUD.showText(error.message)
-                self.showTwoStepVerify()
-            }).addDisposableTo(self.disposeBag)
+                self?.showTwoStepVerify()
+            }).disposed(by: self.disposeBag)
         })
         alert.addTextField { textField in
             textField.keyboardType = .numberPad
             textField.placeholder = "验证码"
-            textField.rx.text.orEmpty.map({$0.isEmpty == false}).shareReplay(1).bind(to: action.rx.isEnabled).addDisposableTo(self.disposeBag)
+            textField.rx.text.orEmpty.map({$0.isEmpty == false}).share(replay: 1).bind(to: action.rx.isEnabled).disposed(by: self.disposeBag)
         }
         
         alert.addAction(action)
@@ -133,10 +145,10 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginButtonAction(_ sender: Any) {
-        guard let username = usernameTextField.text, let password = passwordTextField.text else {
+        guard let username = usernameTextField.text, let password = passwordTextField.text, let code = verifcodeTextField.text else {
             return
         }
-        viewModel.loginRequest(username: username, password: password).subscribe(onNext: {[weak self] response in
+        viewModel.loginRequest(username: username, password: password, code: code).subscribe(onNext: {[weak self] response in
             let result = HTMLParser.shared.loginResult(html: response.data)
             if result.isTwoStepVerification {
                 self?.showTwoStepVerify()
@@ -154,7 +166,7 @@ class LoginViewController: UIViewController {
             }
             }, onError: {error in
                 HUD.showText(error.message)
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     @IBAction func googleLoginAction(_ sender: Any) {

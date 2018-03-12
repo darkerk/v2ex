@@ -35,24 +35,24 @@ class ProfileViewController: UITableViewController {
                 self.headerView.updateTheme()
                 self.tableView.reloadData()
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
         
         tableView.delegate = nil
         tableView.dataSource = nil
         
-        Account.shared.user.asObservable().bind(to: headerView.rx.user).addDisposableTo(disposeBag)
+        Account.shared.user.asObservable().bind(to: headerView.rx.user).disposed(by: disposeBag)
         Account.shared.isLoggedIn.asObservable().subscribe(onNext: {isLoggedIn in
             if !isLoggedIn {
                 self.headerView.logout()
             }
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     
         Observable.just(menuItems).bind(to: tableView.rx.items) { (tableView, row, item) in
             let cell: ProfileMenuViewCell = tableView.dequeueReusableCell()
             cell.updateTheme()
             cell.configure(image: item.0, text: item.1)
             return cell
-            }.addDisposableTo(disposeBag)
+            }.disposed(by: disposeBag)
         
         tableView.rx.itemSelected.subscribe(onNext: {[weak self] indexPath in
             guard let `self` = self else { return }
@@ -83,10 +83,10 @@ class ProfileViewController: UITableViewController {
             default: break
             }
             
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
 
         if let cell = tableView.cellForRow(at: IndexPath(item: 1, section: 0)) as? ProfileMenuViewCell {
-            Account.shared.unreadCount.asObservable().bind(to: cell.rx.unread).addDisposableTo(disposeBag)
+            Account.shared.unreadCount.asObservable().bind(to: cell.rx.unread).disposed(by: disposeBag)
         }
 
         Account.shared.isDailyRewards.asObservable().flatMapLatest { canRedeem -> Observable<Bool> in
@@ -94,14 +94,14 @@ class ProfileViewController: UITableViewController {
                 return Account.shared.redeemDailyRewards()
             }
             return Observable.just(false)
-        }.shareReplay(1).delay(1, scheduler: MainScheduler.instance).subscribe(onNext: { success in
+            }.share(replay: 1).delay(1, scheduler: MainScheduler.instance).subscribe(onNext: { success in
             if success {
                 HUD.showText("已领取每日登录奖励！")
                 Account.shared.isDailyRewards.value = false
             }
         }, onError: { error in
             print(error.message)
-        }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
 
     }
     

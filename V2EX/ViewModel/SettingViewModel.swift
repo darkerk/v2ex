@@ -28,7 +28,7 @@ class SettingViewModel {
                 }
             }, onError: {_ in
                 completion?(nil)
-            }).addDisposableTo(disposeBag)
+            }).disposed(by: disposeBag)
     }
     
     func fetchPrivacyStatus(completion: (() -> Void)? = nil) {
@@ -38,9 +38,9 @@ class SettingViewModel {
                 Account.shared.privacy = Privacy(online: status.onlineValue, topic: status.topicValue, search: status.searchValue)
             }
             completion?()
-        }) { error in
+        }, onError: { error in
             completion?()
-        }.addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     func setPrivacy(type: PrivacyType) {
@@ -48,6 +48,6 @@ class SettingViewModel {
 
         }, onError: {error in
             print("error: ", error)
-        }).addDisposableTo(disposeBag)
+        }).disposed(by: disposeBag)
     }
 }

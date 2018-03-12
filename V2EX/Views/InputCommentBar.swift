@@ -14,7 +14,7 @@ class InputCommentBar: UIToolbar {
     fileprivate lazy var textView: GrowingTextView = GrowingTextView()
     fileprivate lazy var sendButton = UIButton()
     private let disposeBag = DisposeBag()
-    
+    private var isSetupSubviews = false
     var shouldBeginEditing: ((Bool) -> Void)?
     
     var atName: String? {
@@ -34,15 +34,20 @@ class InputCommentBar: UIToolbar {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setup()
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = AppStyle.shared.theme.barTintColor
+        isTranslucent = false
+        barTintColor = AppStyle.shared.theme.barTintColor
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        setup()
     }
     
     func setup() {
+        isSetupSubviews = true
+        
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.maxHeight = 80
         textView.placeHolder = "添加回复..."
@@ -60,10 +65,6 @@ class InputCommentBar: UIToolbar {
             textView.keyboardAppearance = .dark
         }
         
-        translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = AppStyle.shared.theme.barTintColor
-        isTranslucent = false
-        barTintColor = AppStyle.shared.theme.barTintColor
         addSubview(textView)
         
         sendButton.translatesAutoresizingMaskIntoConstraints = false
@@ -89,7 +90,7 @@ class InputCommentBar: UIToolbar {
                 return !content.isEmpty && atText != content && !atText.contains(content)
             }
             return !content.isEmpty
-        }.shareReplay(1).bind(to: sendButton.rx.isEnabled).addDisposableTo(disposeBag)
+            }.share(replay: 1).bind(to: sendButton.rx.isEnabled).disposed(by: disposeBag)
         
         
         
@@ -114,6 +115,15 @@ class InputCommentBar: UIToolbar {
     
     override var isFirstResponder: Bool {
         return textView.isFirstResponder
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if let _ = superview, !isSetupSubviews {
+            layoutIfNeeded()
+            setup()
+        }
+        
     }
 }
 
@@ -146,7 +156,7 @@ extension Reactive where Base: InputCommentBar {
     var sendEvent: ControlEvent<(String, String?)> {
         let source = self.base.sendButton.rx.tap.map {_ -> (String, String?) in
             return (self.base.textView.text, self.base.atName)
-        }.shareReplay(1)
+            }.share(replay: 1)
         return ControlEvent(events: source)
     }
 }

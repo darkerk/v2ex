@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         AppStyle.shared.setupBarStyle()
         Fabric.with([Crashlytics.self])
-        MonkeyKing.registerAccount(.weChat(appID: "wx9e26f0dc06b3f030", appKey: nil))
+        MonkeyKing.registerAccount(.weChat(appID: "wx9e26f0dc06b3f030", appKey: nil, miniAppID: nil))
         return true
     }
 
