@@ -49,9 +49,9 @@ class TopicDetailsViewController: UITableViewController {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
-        
+
         inputbar.sizeToFit()
-        
+
         guard let viewModel = viewModel else { return }
         
         headerView.topic = viewModel.topic
@@ -140,6 +140,11 @@ class TopicDetailsViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         becomeFirstResponder()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -354,9 +359,9 @@ extension TopicDetailsViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         switch dataSource[indexPath.section].type {
         case .more:
-            tableView.deselectRow(at: indexPath, animated: true)
             if let cell = tableView.cellForRow(at: indexPath) as? LoadMoreCommentCell {
                 viewModel?.loadMoreActivityIndicator.asObservable().bind(to: cell.activityIndicatorView.rx.isAnimating).disposed(by: disposeBag)
             }
