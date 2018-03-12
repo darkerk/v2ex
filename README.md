@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/darkerk/v2ex.svg?branch=master)](https://travis-ci.org/darkerk/v2ex)
-![Swift](http://img.shields.io/badge/swift-3.1-brightgreen.svg)
+![Swift](http://img.shields.io/badge/swift-4-brightgreen.svg)
 
 ## v2ex
 
@@ -14,8 +14,8 @@ The unofficial V2EX app for iOS
 ## Requirements
 
 - iOS 10.0+
-- Xcode 8.3
-- Swift 3.1
+- Xcode 9.2
+- Swift 4.1
 
 ### Contact
 
