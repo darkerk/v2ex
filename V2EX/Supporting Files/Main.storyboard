@@ -791,6 +791,7 @@
                         <outlet property="googleButton" destination="A7G-t9-9wd" id="5RB-Yc-mPa"/>
                         <outlet property="line1View" destination="KBJ-RE-AjC" id="RFR-Zc-bQ3"/>
                         <outlet property="line2View" destination="usy-hY-n6R" id="VDP-BJ-OsI"/>
+                        <outlet property="line3View" destination="h7X-K6-H2H" id="LYx-hE-6h4"/>
                         <outlet property="loginButton" destination="gF2-S9-wP3" id="FDr-vY-a8G"/>
                         <outlet property="passwordTextField" destination="qrP-wf-hSw" id="PPw-Gq-vES"/>
                         <outlet property="sublitLabel" destination="lnK-Tm-3WQ" id="1NH-0i-Ufu"/>

@@ -302,7 +302,7 @@ struct HTMLParser {
         var content = text
         results.forEach {result in
             if let range = result.range.range(for: text) {
-                let iframe = text.substring(with: range)
+                let iframe = String(text[range])
                 let arr = iframe.components(separatedBy: " ")
                 if let srcIndex = arr.index(where: {$0.contains("src")}) {
                     let srcText = arr[srcIndex]

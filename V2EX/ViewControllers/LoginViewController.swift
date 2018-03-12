@@ -23,6 +23,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var sublitLabel: UILabel!
     @IBOutlet weak var line1View: UIImageView!
     @IBOutlet weak var line2View: UIImageView!
+    @IBOutlet weak var line3View: UIImageView!
     @IBOutlet weak var captchaView: UIImageView!
     @IBOutlet weak var verifcodeTextField: UITextField!
     
@@ -41,13 +42,17 @@ class LoginViewController: UIViewController {
             let lineImage = #imageLiteral(resourceName: "line").imageWithTintColor(UIColor.black)
             line1View.image = lineImage
             line2View.image = lineImage
+            line3View.image = lineImage
             
-            let attributes = [NSForegroundColorAttributeName: #colorLiteral(red: 0.4196078431, green: 0.4901960784, blue: 0.5490196078, alpha: 1)]
+            let attributes = [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 0.4196078431, green: 0.4901960784, blue: 0.5490196078, alpha: 1)]
             usernameTextField.attributedPlaceholder = NSAttributedString(string: "用户名或邮箱", attributes: attributes)
             passwordTextField.attributedPlaceholder = NSAttributedString(string: "密码", attributes: attributes)
+            verifcodeTextField.attributedPlaceholder = NSAttributedString(string: "请输入下图中的验证码", attributes: attributes)
+            
             usernameTextField.textColor = #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)
             passwordTextField.textColor = #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)
-            
+            verifcodeTextField.textColor = #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)
+                
             loginButton.backgroundColor = #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1)
             loginButton.layer.borderColor = #colorLiteral(red: 0.1411764706, green: 0.2039215686, blue: 0.2784313725, alpha: 1).cgColor
             loginButton.setTitleColor(UIColor.white, for: .normal)
@@ -55,6 +60,7 @@ class LoginViewController: UIViewController {
             
             usernameTextField.keyboardAppearance = .dark
             passwordTextField.keyboardAppearance = .dark
+            verifcodeTextField.keyboardAppearance = .dark
         }
         
         if OnePasswordExtension.shared().isAppExtensionAvailable() {
@@ -89,7 +95,7 @@ class LoginViewController: UIViewController {
         viewModel.fetchCaptchaImage().asObservable().bind(to: captchaView.rx.image).disposed(by: disposeBag)
     }
     
-    func findLoginFrom1Password(_ sender: Any) {
+    @objc func findLoginFrom1Password(_ sender: Any) {
         view.endEditing(true)
         OnePasswordExtension.shared().findLogin(forURLString: "www.v2ex.com", for: self, sender: sender) { (result, error) in
             if let result = result as? [String: String], let username = result[AppExtensionUsernameKey], let password = result[AppExtensionPasswordKey] {

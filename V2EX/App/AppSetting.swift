@@ -14,7 +14,7 @@ import SKPhotoBrowser
 
 struct AppSetting {
     static var isCameraEnabled: Bool {
-        let status = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
+        let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         return status != .restricted && status != .denied
     }
     

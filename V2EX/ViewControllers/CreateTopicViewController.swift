@@ -38,7 +38,7 @@ class CreateTopicViewController: UIViewController {
         
         view.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
         textField.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
-        textField.attributedPlaceholder = NSAttributedString(string: "标题", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 15), NSForegroundColorAttributeName: AppStyle.shared.theme.textPlaceHolderColor])
+        textField.attributedPlaceholder = NSAttributedString(string: "标题", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15), NSAttributedStringKey.foregroundColor: AppStyle.shared.theme.textPlaceHolderColor])
         
         textView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
         textView.placeHolderColor = AppStyle.shared.theme.textPlaceHolderColor
@@ -84,7 +84,7 @@ class CreateTopicViewController: UIViewController {
         
     }
     
-    func keyboardWillChangeFrame(_ notification: Notification) {
+    @objc func keyboardWillChangeFrame(_ notification: Notification) {
         guard let info = notification.userInfo as? [String: Any] else {
             return
         }

@@ -91,7 +91,7 @@ class TopicDetailsViewController: UITableViewController {
             return nil
         }
         
-        dataSource.canEditRowAtIndexPath = {_ in
+        dataSource.canEditRowAtIndexPath = {_,_  in
             return Account.shared.isLoggedIn.value
         }
         
@@ -174,7 +174,7 @@ class TopicDetailsViewController: UITableViewController {
         }
     }
     
-    func headerTap(_ sender: Any) {
+    @objc func headerTap(_ sender: Any) {
         if inputbar.isFirstResponder {
             canCancelFirstResponder = true
             inputbar.endEditing()
@@ -184,7 +184,7 @@ class TopicDetailsViewController: UITableViewController {
         }
     }
     
-    func moreAction(_ sender: Any) {
+    @objc func moreAction(_ sender: Any) {
         inputbar.endEditing()
         
         guard Account.shared.isLoggedIn.value else {

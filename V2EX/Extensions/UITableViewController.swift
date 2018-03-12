@@ -13,7 +13,7 @@ protocol ThemeUpdating {
 }
 
 extension UIViewController: ThemeUpdating {
-    func updateTheme() {
+    @objc func updateTheme() {
         
     }
     

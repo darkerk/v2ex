@@ -38,9 +38,9 @@ class SettingViewModel {
                 Account.shared.privacy = Privacy(online: status.onlineValue, topic: status.topicValue, search: status.searchValue)
             }
             completion?()
-        }) { error in
+        }, onError: { error in
             completion?()
-            }.disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
     }
     
     func setPrivacy(type: PrivacyType) {

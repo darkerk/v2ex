@@ -18,7 +18,6 @@ class LoginViewModel {
         return API.provider.request(.once()).flatMapLatest { response -> Observable<UIImage> in
             if let value = HTMLParser.shared.keyAndOnce(html: response.data) {
                 self.keyOnce = value
-                print("----> \(value.once)")
                 return API.provider.request(API.captcha(once: value.once)).flatMapLatest({ resp -> Observable<UIImage> in
                     if let image = UIImage(data: resp.data) {
                         return Observable.just(image)

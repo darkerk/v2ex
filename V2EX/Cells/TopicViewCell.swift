@@ -34,7 +34,7 @@ class TopicViewCell: UITableViewCell, ThemeUpdating {
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.lineSpacing = 3
                 
-                let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 15), NSForegroundColorAttributeName: AppStyle.shared.theme.black102Color, NSParagraphStyleAttributeName: paragraphStyle]
+                let attributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15), NSAttributedStringKey.foregroundColor: AppStyle.shared.theme.black102Color, NSAttributedStringKey.paragraphStyle: paragraphStyle]
                 titleLabel.attributedText = NSAttributedString(string: model.title, attributes: attributes)
             }
         }
@@ -92,13 +92,13 @@ class TopicViewCell: UITableViewCell, ThemeUpdating {
         }
     }
     
-    func userTapAction(_ sender: Any) {
+    @objc func userTapAction(_ sender: Any) {
         if let user = topic?.owner {
             linkTap?(TapLink.user(info: user))
         }
     }
     
-    func nodeTapAction(_ sender: Any) {
+    @objc func nodeTapAction(_ sender: Any) {
         if let node = topic?.node {
             linkTap?(TapLink.node(info: node))
         }

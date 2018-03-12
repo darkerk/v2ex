@@ -128,13 +128,13 @@ class TopicDetailsHeaderView: UIView {
         cssText = cssText.replacingOccurrences(of: CSSColorMark.separator, with: AppStyle.shared.theme.webLineColorHex)
     }
     
-    func userTapAction(_ sender: Any) {
+    @objc func userTapAction(_ sender: Any) {
         if let user = topic?.owner {
             linkTap?(TapLink.user(info: user))
         }
     }
     
-    func nodeTapAction(_ sender: Any) {
+    @objc func nodeTapAction(_ sender: Any) {
         if let node = topic?.node {
             linkTap?(TapLink.node(info: node))
         }

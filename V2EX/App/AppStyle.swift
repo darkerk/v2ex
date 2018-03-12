@@ -48,9 +48,9 @@ struct AppStyle {
         navigationBar.isTranslucent = false
         navigationBar.tintColor = theme.tintColor
         navigationBar.barTintColor = theme.barTintColor
-        navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: theme.navigationBarTitleColor, NSFontAttributeName: UIFont.systemFont(ofSize: 17)]
+        navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: theme.navigationBarTitleColor, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17)]
         navigationBar.backIndicatorImage = #imageLiteral(resourceName: "nav_back")
         navigationBar.backIndicatorTransitionMaskImage = #imageLiteral(resourceName: "nav_back")
-        UIBarButtonItem.appearance().setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: 16)], for: .normal)
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], for: .normal)
     }
 }

@@ -197,7 +197,7 @@ class InfiniteScrollingView: UIView {
         }
     }
     
-    func scrollViewPanGestureUpdate(_ gesture: UIPanGestureRecognizer) {
+    @objc func scrollViewPanGestureUpdate(_ gesture: UIPanGestureRecognizer) {
         if gesture.state == .ended && state == .triggered {
             state = .loading
         }

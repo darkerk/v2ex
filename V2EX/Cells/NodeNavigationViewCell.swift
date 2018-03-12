@@ -26,7 +26,7 @@ class NodeNavigationViewCell: UITableViewCell {
                 let htmlText = "<style>\(css)</style>" + text
                 if let htmlData = htmlText.data(using: .unicode) {
                     do {
-                        let attributedString = try NSMutableAttributedString(data: htmlData, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
+                        let attributedString = try NSMutableAttributedString(data: htmlData, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil)
                         textView.attributedText = attributedString
                     } catch {
                         textView.text = content
@@ -41,11 +41,11 @@ class NodeNavigationViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        textView.linkTextAttributes = [NSForegroundColorAttributeName: #colorLiteral(red: 0.4666666667, green: 0.5019607843, blue: 0.5294117647, alpha: 1)]
+        textView.linkTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: #colorLiteral(red: 0.4666666667, green: 0.5019607843, blue: 0.5294117647, alpha: 1)]
         textView.delegate = self
         
         if AppStyle.shared.theme == .night {
-            textView.linkTextAttributes = [NSForegroundColorAttributeName: #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)]
+            textView.linkTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)]
         }
         backgroundColor = AppStyle.shared.theme.cellBackgroundColor
         contentView.backgroundColor = backgroundColor
@@ -67,7 +67,7 @@ extension NodeNavigationViewCell: UITextViewDelegate {
             var name = URL.lastPathComponent
             let text = textView.attributedText.string
             if let range = characterRange.range(for: text) {
-                name = text.substring(with: range)
+                name = String(text[range])
             }
             let node = Node(name: name, href: href)
             linkTap?(TapLink.node(info: node))

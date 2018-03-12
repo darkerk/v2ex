@@ -102,7 +102,7 @@ class TimelineViewController: UITableViewController {
         }
     }
     
-    func moreAction(_ sender: Any) {
+    @objc func moreAction(_ sender: Any) {
         guard Account.shared.isLoggedIn.value else {
             self.showLoginAlert()
             return

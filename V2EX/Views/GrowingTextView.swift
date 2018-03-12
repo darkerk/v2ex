@@ -121,12 +121,12 @@ open class GrowingTextView: UITextView {
                               width:   frame.size.width - textContainerInset.left - textContainerInset.right,
                               height: frame.size.height)
             
-            var attributes: [String: Any] = [
-                NSForegroundColorAttributeName: placeHolderColor,
-                NSParagraphStyleAttributeName: paragraphStyle
+            var attributes: [NSAttributedStringKey: Any] = [
+                NSAttributedStringKey.foregroundColor: placeHolderColor,
+                NSAttributedStringKey.paragraphStyle: paragraphStyle
             ]
             if let font = font {
-                attributes[NSFontAttributeName] = font
+                attributes[NSAttributedStringKey.font] = font
             }
             
             placeHolder.draw(in: rect, withAttributes: attributes)
@@ -134,7 +134,7 @@ open class GrowingTextView: UITextView {
     }
     
     // Trim white space and new line characters when end editing.
-    func textDidEndEditing(notification: Notification) {
+    @objc func textDidEndEditing(notification: Notification) {
         if let notificationObject = notification.object as? GrowingTextView {
             if notificationObject === self {
                 if trimWhiteSpaceWhenEndEditing {
@@ -146,13 +146,13 @@ open class GrowingTextView: UITextView {
     }
     
     // Limit the length of text
-    func textDidChange(notification: Notification) {
+    @objc func textDidChange(notification: Notification) {
         if let notificationObject = notification.object as? GrowingTextView {
             if notificationObject === self {
                 if maxLength > 0 && text.count > maxLength {
                     
                     let endIndex = text.index(text.startIndex, offsetBy: maxLength)
-                    text = text.substring(to: endIndex)
+                    text = String(text[..<endIndex])
                     undoManager?.removeAllActions()
                 }
                 setNeedsDisplay()

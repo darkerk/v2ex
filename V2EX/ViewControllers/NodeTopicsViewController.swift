@@ -91,7 +91,7 @@ class NodeTopicsViewController: UITableViewController {
         }).disposed(by: disposeBag)
     }
 
-    func moreAction(_ sender: Any) {
+    @objc func moreAction(_ sender: Any) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         let isFavorite = viewModel.isFavorited

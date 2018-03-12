@@ -34,7 +34,7 @@ class TopicDetailsCommentCell: UITableViewCell {
     @IBOutlet weak var floorLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var lzFlagLabel: UILabel!
-
+    
     var linkTap: ((TapLink) -> Void)?
     
     var comment: Comment? {
@@ -69,7 +69,7 @@ class TopicDetailsCommentCell: UITableViewCell {
         
         textView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: -18, right: 0)
         textView.textContainer.lineFragmentPadding = 0
-        textView.linkTextAttributes = [NSForegroundColorAttributeName: AppStyle.shared.theme.hyperlinkColor]
+        textView.linkTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: AppStyle.shared.theme.hyperlinkColor]
         textView.delegate = self
         
         avatarView.isUserInteractionEnabled = true
@@ -97,17 +97,38 @@ class TopicDetailsCommentCell: UITableViewCell {
         cssText = cssText.replacingOccurrences(of: CSSColorMark.replyContent, with: AppStyle.shared.theme.webTopicTextColorHex)
     }
     
-    func cellTapAction(_ sender: Any) {
+    @objc func cellTapAction(_ sender: UITapGestureRecognizer) {
         var view = superview
         while (view != nil && view?.isKind(of: UITableView.self) == false) {
             view = view?.superview
         }
-        if let tableView = view as? UITableView, let indexPath = tableView.indexPath(for: self) {
+        guard let tableView = view as? UITableView, let indexPath = tableView.indexPath(for: self) else {
+            return
+        }
+        
+        let tapLocation = sender.location(in: textView)
+        guard let textPosition = textView.closestPosition(to: tapLocation),
+            let attributes = textView.textStyling(at: textPosition, in: UITextStorageDirection.forward) else {
+                
+                tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+                
+                return
+        }
+
+        if let url = attributes[NSAttributedStringKey.link.rawValue] as? URL {
+            
+            handleTextViewLink(url: url)
+            
+        }else if let attachment = attributes[NSAttributedStringKey.attachment.rawValue] as? ImageAttachment {
+            if let src = attachment.src, attachment.imageSize.width > 50 {
+                linkTap?(TapLink.image(src: src))
+            }
+        }else {
             tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
         }
     }
     
-    func userTapAction(_ sender: Any) {
+    @objc func userTapAction(_ sender: Any) {
         if let user = comment?.user {
             linkTap?(TapLink.user(info: user))
         }
@@ -143,7 +164,7 @@ class TopicDetailsCommentCell: UITableViewCell {
             let htmlText = "<style>\(cssText)</style>" + content
             
             guard let htmlData = htmlText.data(using: .unicode),
-                let attributedString = try? NSMutableAttributedString(data: htmlData, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil) else {
+                let attributedString = try? NSMutableAttributedString(data: htmlData, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) else {
                     
                     return
             }
@@ -204,10 +225,26 @@ class TopicDetailsCommentCell: UITableViewCell {
         }
         return results.flatMap({result -> String? in
             if let range = result.range.range(for: text) {
-                return text.substring(with: range)
+                return String(text[range])
             }
             return nil
         })
+    }
+    
+    func handleTextViewLink(url: URL) {
+        let link = url.absoluteString
+        if link.hasPrefix("https://") || link.hasPrefix("http://"){
+            linkTap?(TapLink.web(url: url))
+        }else if link.hasPrefix("applewebdata://") && link.contains("/member/") {
+            let href = url.path
+            let name = href.replacingOccurrences(of: "/member/", with: "")
+            let user = User(name: name, href: href, src: "")
+            linkTap?(TapLink.user(info: user))
+        }else if link.hasPrefix("applewebdata://") && link.contains("/t/") {
+            let href = url.path
+            let topic = Topic(href: href)
+            linkTap?(TapLink.topic(info: topic))
+        }
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -220,19 +257,7 @@ class TopicDetailsCommentCell: UITableViewCell {
 
 extension TopicDetailsCommentCell: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-        let link = URL.absoluteString
-        if link.hasPrefix("https://") || link.hasPrefix("http://"){
-            linkTap?(TapLink.web(url: URL))
-        }else if link.hasPrefix("applewebdata://") && link.contains("/member/") {
-            let href = URL.path
-            let name = href.replacingOccurrences(of: "/member/", with: "")
-            let user = User(name: name, href: href, src: "")
-            linkTap?(TapLink.user(info: user))
-        }else if link.hasPrefix("applewebdata://") && link.contains("/t/") {
-            let href = URL.path
-            let topic = Topic(href: href)
-            linkTap?(TapLink.topic(info: topic))
-        }
+        handleTextViewLink(url: URL)
         return false
     }
     
