@@ -1,60 +1,73 @@
 PODS:
   - 1PasswordExtension (1.8.5)
-  - Alamofire (4.7.0)
-  - Crashlytics (3.10.1):
-    - Fabric (~> 1.7.5)
-  - Differentiator (3.0.2)
-  - Fabric (1.7.5)
-  - Kanna (4.0.0)
-  - Kingfisher (4.6.3)
-  - MonkeyKing (1.5.0)
-  - Moya/Core (11.0.1):
+  - Alamofire (4.8.1)
+  - Differentiator (3.1.0)
+  - Kanna (4.0.3)
+  - Kingfisher (5.3.0)
+  - MonkeyKing (1.13.0)
+  - Moya/Core (12.0.1):
     - Alamofire (~> 4.1)
-    - Result (~> 3.0)
-  - Moya/RxSwift (11.0.1):
+    - Result (~> 4.0)
+  - Moya/RxSwift (12.0.1):
     - Moya/Core
     - RxSwift (~> 4.0)
-  - PKHUD (5.0.0)
-  - Result (3.2.4)
-  - RxCocoa (4.1.2):
-    - RxSwift (~> 4.0)
-  - RxDataSources (3.0.2):
+  - PKHUD (5.2.1)
+  - Result (4.1.0)
+  - RxAtomic (4.4.2)
+  - RxCocoa (4.4.2):
+    - RxSwift (>= 4.4.2, ~> 4.4)
+  - RxDataSources (3.1.0):
     - Differentiator (~> 3.0)
     - RxCocoa (~> 4.0)
     - RxSwift (~> 4.0)
-  - RxSwift (4.1.2)
-  - SKPhotoBrowser (5.0.5)
+  - RxSwift (4.4.2):
+    - RxAtomic (>= 4.4.2, ~> 4.4)
+  - SKPhotoBrowser (6.0.0)
 
 DEPENDENCIES:
   - 1PasswordExtension (~> 1.8.5)
-  - Crashlytics (~> 3.10.1)
-  - Fabric (~> 1.7.5)
-  - Kanna (~> 4.0.0)
-  - Kingfisher (~> 4.6.3)
-  - MonkeyKing (~> 1.5.0)
-  - Moya/RxSwift (~> 11.0.1)
-  - PKHUD (~> 5.0.0)
-  - RxCocoa (~> 4.1.2)
-  - RxDataSources (~> 3.0.2)
-  - SKPhotoBrowser (~> 5.0.5)
+  - Kanna (~> 4.0.3)
+  - Kingfisher (~> 5.3.0)
+  - MonkeyKing (~> 1.13.0)
+  - Moya/RxSwift (~> 12.0.1)
+  - PKHUD (~> 5.2.1)
+  - RxCocoa (~> 4.4.2)
+  - RxDataSources (~> 3.1.0)
+  - SKPhotoBrowser (~> 6.0.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - 1PasswordExtension
+    - Alamofire
+    - Differentiator
+    - Kanna
+    - Kingfisher
+    - MonkeyKing
+    - Moya
+    - PKHUD
+    - Result
+    - RxAtomic
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
+    - SKPhotoBrowser
 
 SPEC CHECKSUMS:
   1PasswordExtension: 0e95bdea64ec8ff2f4f693be5467a09fac42a83d
-  Alamofire: 907e0a98eb68cdb7f9d1f541a563d6ac5dc77b25
-  Crashlytics: aee1a064cbbf99b32efa3f056a5f458d846bc8ff
-  Differentiator: a87be69eba49ec4ab460c7671143ee3a9eececfd
-  Fabric: ae7146a5f505ea370a1e44820b4b1dc8890e2890
-  Kanna: d5ae2a26472f7e7a474e7f36a9cd8aa2c8c63ad3
-  Kingfisher: 98e6d5b5e807645743e8ed5ececd25d688d38452
-  MonkeyKing: 6e1230a0d3cc41cc5b2a46fb9f4076f38a266704
-  Moya: 3d594ada51a21cc02b18739ab578a1984f900c8a
-  PKHUD: 3c001512c6e002091184197a8de7a20420786e3b
-  Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
-  RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
-  RxDataSources: cb7c31e652a87ebb919da45f716bbb87b3765f6b
-  RxSwift: e49536837d9901277638493ea537394d4b55f570
-  SKPhotoBrowser: 5969c3813727f11fe37bea74a40425cafcb32f61
+  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
+  Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
+  Kanna: 0ebbdd0e7e3308f0aafbd569e79c8cadc5eb877c
+  Kingfisher: 4692c783ffb99e9e2e40a6eb3e518c3b96c6fa8c
+  MonkeyKing: cdaa3e93d4802464eceea619aba87f70c31db2e1
+  Moya: cf730b3cd9e005401ef37a85143aa141a12fd38f
+  PKHUD: 4e6162c4c39ac367c6934e9855c6b4762ee16256
+  Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
+  RxAtomic: d00e97c10db88c6f08540e0bf2752fc5a2404167
+  RxCocoa: 477990dc3b4c3ff55fb0ac77e1cc06244e0aaec8
+  RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
+  RxSwift: 74c29b693c8e42b0f64400e8b06564575742d649
+  SKPhotoBrowser: 76eb862685761707b5745fde7762757966565e07
 
-PODFILE CHECKSUM: d475360f887632367e53eb7aab98abca66c86960
+PODFILE CHECKSUM: dbd3d12fb911bc1564dae9743dbb0a8230fbf649
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.5.3

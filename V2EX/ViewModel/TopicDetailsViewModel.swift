@@ -114,7 +114,7 @@ class TopicDetailsViewModel {
     }
     
     func sendComment(content: String, atName: String? = nil, completion: ((Swift.Error?) -> Void)? = nil) {
-        API.provider.request(.once()).flatMap { response -> Observable<Response> in
+        API.provider.request(.once).flatMap { response -> Observable<Response> in
             if let once = HTMLParser.shared.once(html: response.data) {
                 return API.provider.request(API.comment(topicHref: self.topic.href, content: content, once: once))
             }else {
@@ -139,7 +139,7 @@ class TopicDetailsViewModel {
     }
     
     func sendIgnore(completion: ((Bool) -> Void)? = nil) {
-        API.provider.request(.once()).flatMap { response -> Observable<Response> in
+        API.provider.request(.once).flatMap { response -> Observable<Response> in
             if let once = HTMLParser.shared.once(html: response.data) {
                 return API.provider.request(API.ignoreTopic(id: self.topic.id, once: once))
             }else {

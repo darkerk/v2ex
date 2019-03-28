@@ -14,7 +14,7 @@ enum Theme {
 }
 
 extension Theme {
-    var activityIndicatorStyle: UIActivityIndicatorViewStyle {
+    var activityIndicatorStyle: UIActivityIndicatorView.Style {
         switch self {
         case .normal:
             return .gray

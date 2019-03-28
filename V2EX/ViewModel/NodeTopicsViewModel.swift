@@ -64,7 +64,7 @@ class NodeTopicsViewModel {
         let isCancel = isFavorited
         let text = favoriteHref.components(separatedBy: "/node/").last
         let id = text?.components(separatedBy: "?").first ?? ""
-        API.provider.request(.once()).flatMap { response -> Observable<Response> in
+        API.provider.request(.once).flatMap { response -> Observable<Response> in
             if let once = HTMLParser.shared.once(html: response.data) {
                 return API.provider.request(.favorite(type: .node(id: id, once: once), isCancel: isCancel))
             }else {

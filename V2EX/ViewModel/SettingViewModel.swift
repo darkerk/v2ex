@@ -14,7 +14,7 @@ class SettingViewModel {
     private let disposeBag = DisposeBag()
 
     func uploadAvatar(imageData: Data, completion: ((_ newURLString: String?) -> Void)? = nil) {
-        API.provider.request(.once()).flatMap { response -> Observable<Response> in
+        API.provider.request(.once).flatMap { response -> Observable<Response> in
             if let once = HTMLParser.shared.once(html: response.data) {
                 return API.provider.request(API.updateAvatar(imageData: imageData, once: once))
             }else {
@@ -32,7 +32,7 @@ class SettingViewModel {
     }
     
     func fetchPrivacyStatus(completion: (() -> Void)? = nil) {
-        API.provider.request(API.privacyOnce()).subscribe(onNext: { response in
+        API.provider.request(API.privacyOnce).subscribe(onNext: { response in
             if let status = HTMLParser.shared.privacyStatus(html: response.data) {
                 self.once = status.once
                 Account.shared.privacy = Privacy(online: status.onlineValue, topic: status.topicValue, search: status.searchValue)

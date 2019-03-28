@@ -96,7 +96,7 @@ enum InfiniteScrollingState {
 
 class InfiniteScrollingView: UIView {
     lazy var activityIndicatorView: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        let view = UIActivityIndicatorView(style: .gray)
         return view
     }()
     

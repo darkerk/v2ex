@@ -43,7 +43,7 @@ open class GrowingTextView: UITextView {
         }
     }
     
-    fileprivate weak var heightConstraint: NSLayoutConstraint?
+    fileprivate var heightConstraint: NSLayoutConstraint?
     
     // Initialize
     override public init(frame: CGRect, textContainer: NSTextContainer?) {
@@ -57,7 +57,7 @@ open class GrowingTextView: UITextView {
     }
     
     open override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIViewNoIntrinsicMetric, height: 30)
+        return CGSize(width: UIView.noIntrinsicMetric, height: 30)
     }
     
     func associateConstraints() {
@@ -76,8 +76,8 @@ open class GrowingTextView: UITextView {
     fileprivate func commonInit() {
         self.contentMode = .redraw
         associateConstraints()
-        NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: NSNotification.Name.UITextViewTextDidChange, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(textDidEndEditing), name: NSNotification.Name.UITextViewTextDidEndEditing, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: UITextView.textDidChangeNotification, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(textDidEndEditing), name: UITextView.textDidEndEditingNotification, object: self)
     }
     
     // Remove notification observer when deinit
@@ -121,12 +121,12 @@ open class GrowingTextView: UITextView {
                               width:   frame.size.width - textContainerInset.left - textContainerInset.right,
                               height: frame.size.height)
             
-            var attributes: [NSAttributedStringKey: Any] = [
-                NSAttributedStringKey.foregroundColor: placeHolderColor,
-                NSAttributedStringKey.paragraphStyle: paragraphStyle
+            var attributes: [NSAttributedString.Key: Any] = [
+                NSAttributedString.Key.foregroundColor: placeHolderColor,
+                NSAttributedString.Key.paragraphStyle: paragraphStyle
             ]
             if let font = font {
-                attributes[NSAttributedStringKey.font] = font
+                attributes[NSAttributedString.Key.font] = font
             }
             
             placeHolder.draw(in: rect, withAttributes: attributes)

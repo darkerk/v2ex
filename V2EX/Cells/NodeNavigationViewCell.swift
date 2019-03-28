@@ -41,11 +41,11 @@ class NodeNavigationViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        textView.linkTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: #colorLiteral(red: 0.4666666667, green: 0.5019607843, blue: 0.5294117647, alpha: 1)]
+        textView.linkTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: #colorLiteral(red: 0.4666666667, green: 0.5019607843, blue: 0.5294117647, alpha: 1)])
         textView.delegate = self
         
         if AppStyle.shared.theme == .night {
-            textView.linkTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)]
+            textView.linkTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: #colorLiteral(red: 0.6078431373, green: 0.6862745098, blue: 0.8, alpha: 1)])
         }
         backgroundColor = AppStyle.shared.theme.cellBackgroundColor
         contentView.backgroundColor = backgroundColor
@@ -74,4 +74,10 @@ extension NodeNavigationViewCell: UITextViewDelegate {
         }
         return false
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

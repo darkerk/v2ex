@@ -11,7 +11,7 @@ import ImageIO
 
 extension UIImage {
     func thumbnailForMaxPixelSize(_ size: UInt) -> UIImage {
-        if let imageData = UIImageJPEGRepresentation(self, 1.0),
+        if let imageData = self.jpegData(compressionQuality: 1.0),
             let sourceRef = CGImageSourceCreateWithData(imageData as CFData, nil) {
             
             let options: [NSString: Any] = [

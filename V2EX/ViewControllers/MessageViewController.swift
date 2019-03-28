@@ -20,7 +20,7 @@ class MessageViewController: UITableViewController {
         
         tableView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
         tableView.separatorColor = AppStyle.shared.theme.separatorColor
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
         
@@ -38,7 +38,7 @@ class MessageViewController: UITableViewController {
         }
         
         if AppStyle.shared.theme == .night {
-            tableView.infiniteScrollingView?.activityIndicatorView.activityIndicatorViewStyle = .white
+            tableView.infiniteScrollingView?.activityIndicatorView.style = .white
         }
         
         viewModel.loadMoreEnabled.asObservable().bind(to: tableView.rx.showsInfiniteScrolling).disposed(by: disposeBag)

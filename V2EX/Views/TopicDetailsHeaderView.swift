@@ -51,7 +51,7 @@ class TopicDetailsHeaderView: UIView {
         willSet {
             if let content = newValue {
                 if content.isEmpty {
-                    let headHeight = titleView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+                    let headHeight = titleView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
                     var rect = self.frame
                     rect.size.height = headHeight
                     self.frame = rect
@@ -146,7 +146,7 @@ extension TopicDetailsHeaderView: WKNavigationDelegate {
         
         webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: {(result, _) in
             if let height = result as? CGFloat {
-                let headHeight = self.titleView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+                let headHeight = self.titleView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
                 var rect = self.frame
                 rect.size.height = headHeight + height
                 self.frame = rect

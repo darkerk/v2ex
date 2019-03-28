@@ -33,7 +33,7 @@ struct Account {
             HTTPCookieStorage.shared.deleteCookie(cookie)
         })
         
-        API.provider.request(.once()).flatMapLatest { response -> Observable<Response> in
+        API.provider.request(.once).flatMapLatest { response -> Observable<Response> in
             if let once = HTMLParser.shared.once(html: response.data) {
                 return API.provider.request(API.logout(once: once))
             }else {
@@ -47,7 +47,7 @@ struct Account {
     }
     
     func redeemDailyRewards() -> Observable<Bool> {
-        return API.provider.request(.once()).flatMapLatest { response -> Observable<Bool> in
+        return API.provider.request(.once).flatMapLatest { response -> Observable<Bool> in
             if let once = HTMLParser.shared.once(html: response.data) {
                 return API.provider.request(.dailyRewards(once: once)).flatMapLatest({ resp-> Observable<Bool> in
                     do {

@@ -38,7 +38,7 @@ class HomeViewModel {
         if sections.value.isEmpty {
             return
         }
-        if let index = sections.value[0].topics.index(where: {$0.id == id}) {
+        if let index = sections.value[0].topics.firstIndex(where: {$0.id == id}) {
             sections.value[0].topics.remove(at: index)
         }
     }

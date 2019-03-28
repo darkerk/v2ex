@@ -21,7 +21,7 @@ class TimelineHeaderView: UIView {
             if let content = newValue {
                 textLabel.text = content
                 layoutIfNeeded()
-                let headHeight = self.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+                let headHeight = self.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
                 var rect = self.frame
                 rect.size.height = headHeight
                 self.frame = rect

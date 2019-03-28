@@ -52,7 +52,7 @@ struct HTMLParser {
                 }
             }
             
-            let nodes = nodePath.flatMap({e -> Node? in
+            let nodes = nodePath.compactMap({e -> Node? in
                 if let href = e["href"], let name = e.content, let className = e.className {
                     return Node(name: name, href: href, isCurrent: className.hasSuffix("current"))
                 }
@@ -169,7 +169,7 @@ struct HTMLParser {
                 Account.shared.unreadCount.value = count
             }
             
-            let items = path.first?.xpath("./div[@class='cell item']").flatMap({e -> Topic? in
+            let items = path.first?.xpath("./div[@class='cell item']").compactMap({e -> Topic? in
                 if let userSrc = e.xpath(".//td[1]/a/img").first?["src"],
                     let nodeHref = e.xpath(".//td[3]/span[1]/a").first?["href"],
                     let nodeName = e.xpath(".//td[3]/span[1]/a").first?.content,
@@ -205,7 +205,7 @@ struct HTMLParser {
         do {
             let html = try HTML(html: data, encoding: .utf8)
             let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][last()]/div[position()>1]")
-            let items = path.flatMap { e -> (name: String, content: String)? in
+            let items = path.compactMap { e -> (name: String, content: String)? in
                 if let name = e.xpath("./table/tr/td[1]/span").first?.content,
                     let content = e.xpath("./table/tr/td[2]").first?.innerHTML {
                     return (name, content)
@@ -235,7 +235,7 @@ struct HTMLParser {
             
             let contentPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell']/div[@class='topic_content']")
             let subtlePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='subtle']")
-            let subtle =  subtlePath.flatMap({$0.toHTML}).joined(separator: "")
+            let subtle =  subtlePath.compactMap({$0.toHTML}).joined(separator: "")
             let content = (contentPath.first?.toHTML ?? "") + subtle
             
             let replyTimePath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][2]/div[@class='cell'][1]")
@@ -264,7 +264,7 @@ struct HTMLParser {
             let title = headerPath.first?.xpath("./h1").first?.content ?? ""
             
             let replyContentPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][2]/div[contains(@id,'r_')]")
-            let comments = replyContentPath.flatMap({e -> Comment? in
+            let comments = replyContentPath.compactMap({e -> Comment? in
                 if let src = e.xpath("./table/tr/td[1]/img").first?["src"],
                     let userHref = e.xpath("./table/tr/td[3]/strong/a").first?["href"],
                     let userName = e.xpath("./table/tr/td[3]/strong/a").first?.content,
@@ -304,7 +304,7 @@ struct HTMLParser {
             if let range = result.range.range(for: text) {
                 let iframe = String(text[range])
                 let arr = iframe.components(separatedBy: " ")
-                if let srcIndex = arr.index(where: {$0.contains("src")}) {
+                if let srcIndex = arr.firstIndex(where: {$0.contains("src")}) {
                     let srcText = arr[srcIndex]
                     let href = srcText.replacingOccurrences(of: "src", with: "href")
                     let urlString = srcText.replacingOccurrences(of: "src=", with: "").replacingOccurrences(of: "\"", with: "")
@@ -327,7 +327,7 @@ struct HTMLParser {
             let topicPrivacy = privacyPath.first?.content ?? ""
             
             let topicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']//div[@class='cell item']")
-            let topicItems = topicPath.flatMap({e -> Topic? in
+            let topicItems = topicPath.compactMap({e -> Topic? in
                 if let nodeHref = e.xpath("./table/tr/td[1]/span[1]/a[@class='node']").first?["href"],
                     let nodeName = e.xpath("./table/tr/td[1]/span[1]/a[@class='node']").first?.content,
                     let topicHref = e.xpath("./table/tr/td[1]/span[@class='item_title']/a").first?["href"],
@@ -352,7 +352,7 @@ struct HTMLParser {
             let replyTopicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][last()]/div[@class='dock_area']")
             let replyContentPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][last()]//div[@class='reply_content']")
             
-            let replyItems = replyTopicPath.enumerated().flatMap { (i, e) -> Reply? in
+            let replyItems = replyTopicPath.enumerated().compactMap { (i, e) -> Reply? in
                 if let time = e.xpath("./table/tr[1]/td/div[@class='fr']/span[@class='fade']").first?.content,
                     let topicTitle = e.xpath("./table/tr[1]/td/span[@class='gray']").first?.content,
                     let topicHref = e.xpath("./table/tr[1]/td/span[@class='gray']/a").first?["href"] {
@@ -397,7 +397,7 @@ struct HTMLParser {
             let totalCount = totalPath.first?.content ?? "0"
             
             let topicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='cell item']")
-            let topicItems = topicPath.flatMap({e -> Topic? in
+            let topicItems = topicPath.compactMap({e -> Topic? in
                 if let nodeHref = e.xpath("./table/tr/td[1]/span[1]/a[@class='node']").first?["href"],
                     let nodeName = e.xpath("./table/tr/td[1]/span[1]/a[@class='node']").first?.content,
                     let topicHref = e.xpath("./table/tr/td[1]/span[@class='item_title']/a").first?["href"],
@@ -440,7 +440,7 @@ struct HTMLParser {
             let replyTopicPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='dock_area']")
             let replyContentPath = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']//div[@class='reply_content']")
             
-            let replyItems = replyTopicPath.enumerated().flatMap { (i, e) -> Reply? in
+            let replyItems = replyTopicPath.enumerated().compactMap { (i, e) -> Reply? in
                 if let time = e.xpath("./table/tr[1]/td/div[@class='fr']/span[@class='fade']").first?.content,
                     let topicTitle = e.xpath("./table/tr[1]/td/span[@class='gray']").first?.content,
                     let topicHref = e.xpath("./table/tr[1]/td/span[@class='gray']/a").first?["href"] {
@@ -472,7 +472,7 @@ struct HTMLParser {
         do {
             let html = try HTML(html: data, encoding: .utf8)
             let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='cell']")
-            let items = path.flatMap { e -> Message? in
+            let items = path.compactMap { e -> Message? in
                 if let userSrc = e.xpath("./table/tr/td[1]/a/img").first?["src"],
                     let userHref = e.xpath("./table/tr/td[1]/a").first?["href"],
                     let userName = e.xpath("./table/tr/td[2]/span[@class='fade']/a[1]/strong").first?.content,
@@ -509,7 +509,7 @@ struct HTMLParser {
             let totalPage = pagePath.count
             
             let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@class='cell item']")
-            let items = path.flatMap({e -> Topic? in
+            let items = path.compactMap({e -> Topic? in
                 if let userSrc = e.xpath("./table/tr/td[1]/a/img").first?["src"],
                     let nodeHref = e.xpath("./table/tr/td[3]/span[@class='small fade']/a[@class='node']").first?["href"],
                     let nodeName = e.xpath("./table/tr/td[3]/span[@class='small fade']/a[@class='node']").first?.content,
@@ -547,7 +547,7 @@ struct HTMLParser {
         do {
             let html = try HTML(html: data, encoding: .utf8)
             let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box']/div[@id='MyNodes']/a[@class='grid_item']")
-            let items = path.flatMap({e -> Node? in
+            let items = path.compactMap({e -> Node? in
                 if let href = e["href"],
                     let icon = e.xpath("./div/img").first?["src"],
                     let name = e.xpath("./div").first?.content,
@@ -576,7 +576,7 @@ struct HTMLParser {
             }
             
             let path = html.xpath("//body/div[@id='Wrapper']/div[@class='content']/div[@class='box'][1]/div[@class='cell']")
-            let items = path.flatMap({e -> Topic? in
+            let items = path.compactMap({e -> Topic? in
                 if let userSrc = e.xpath("./table/tr/td[1]/a/img").first?["src"],
                     let userHref = e.xpath("./table/tr/td[1]/a").first?["href"],
                     let username = e.xpath("./table/tr/td[3]/span[@class='small fade']/strong").first?.content,

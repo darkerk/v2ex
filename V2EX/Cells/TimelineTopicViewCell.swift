@@ -24,7 +24,7 @@ class TimelineTopicViewCell: UITableViewCell {
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.lineSpacing = 3
                 
-                let attributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15), NSAttributedStringKey.foregroundColor: AppStyle.shared.theme.black102Color, NSAttributedStringKey.paragraphStyle: paragraphStyle]
+                let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15), NSAttributedString.Key.foregroundColor: AppStyle.shared.theme.black102Color, NSAttributedString.Key.paragraphStyle: paragraphStyle]
                 titleLabel.attributedText = NSAttributedString(string: model.title, attributes: attributes)
             }
         }

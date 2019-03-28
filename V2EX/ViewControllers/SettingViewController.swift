@@ -122,7 +122,7 @@ class SettingViewController: UITableViewController {
             }else {
                 let alert = UIAlertController(title: "请在iPhone的“设置－隐私－相机”选项中，允许V2EX访问您的相机", message: nil, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "好", style: .default, handler: {action in
-                    UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!)
+                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                 }))
                 self.present(alert, animated: true, completion: nil)
             }
@@ -138,7 +138,7 @@ class SettingViewController: UITableViewController {
             }else {
                 let alert = UIAlertController(title: "请在iPhone的“设置－隐私－照片”选项中，允许V2EX访问您的照片", message: nil, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "好", style: .default, handler: {action in
-                    UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!)
+                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                 }))
                 self.present(alert, animated: true, completion: nil)
             }
@@ -164,7 +164,7 @@ class SettingViewController: UITableViewController {
         
         drawerViewController?.setNeedsStatusBarAppearanceUpdate()
         AppStyle.shared.setupBarStyle(navigationController!.navigationBar)
-        updateTheme()
+       // updateTheme()
         tableView.reloadData()
     }
     
@@ -188,12 +188,15 @@ extension SettingViewController: UIImagePickerControllerDelegate, UINavigationCo
         picker.dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         picker.dismiss(animated: true, completion: nil)
         
-        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+        if let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as? UIImage {
             let smallImage = image.size.width > 300 && image.size.height > 300 ? image.thumbnailForMaxPixelSize(300) : image
-            let data = UIImageJPEGRepresentation(smallImage, 0.8)!
+            let data = smallImage.jpegData(compressionQuality: 0.8)!
 
             HUD.show()
             viewModel.uploadAvatar(imageData: data, completion: {[weak avatarView] newURLString in
@@ -307,4 +310,14 @@ extension SettingViewController {
             present(alert, animated: true, completion: nil)
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
 }

@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import Fabric
-import Crashlytics
 import MonkeyKing
 
 @UIApplicationMain
@@ -16,10 +14,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         AppStyle.shared.setupBarStyle()
-        Fabric.with([Crashlytics.self])
         MonkeyKing.registerAccount(.weChat(appID: "wx9e26f0dc06b3f030", appKey: nil, miniAppID: nil))
         return true
     }
@@ -47,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     
-    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         return MonkeyKing.handleOpenURL(url)
         
 //        return GIDSignIn.sharedInstance().handle(url, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplicationOpenURLOptionsKey.annotation])

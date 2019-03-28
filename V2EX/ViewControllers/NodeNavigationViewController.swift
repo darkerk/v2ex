@@ -25,7 +25,7 @@ class NodeNavigationViewController: UITableViewController {
         
         tableView.backgroundColor = AppStyle.shared.theme.tableGroupBackgroundColor
         tableView.separatorColor = AppStyle.shared.theme.separatorColor
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 90
     }
 

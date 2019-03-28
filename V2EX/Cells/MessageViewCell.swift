@@ -28,11 +28,11 @@ class MessageViewCell: UITableViewCell {
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.lineSpacing = 3
                 
-                let attributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13), NSAttributedStringKey.foregroundColor: AppStyle.shared.theme.black102Color, NSAttributedStringKey.paragraphStyle: paragraphStyle]
+                let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13), NSAttributedString.Key.foregroundColor: AppStyle.shared.theme.black102Color, NSAttributedString.Key.paragraphStyle: paragraphStyle]
                 replyLabel.attributedText = NSAttributedString(string: model.content, attributes: attributes)
                 
                 if let title = model.topic?.title {
-                    let titleAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15), NSAttributedStringKey.foregroundColor: AppStyle.shared.theme.black102Color, NSAttributedStringKey.paragraphStyle: paragraphStyle]
+                    let titleAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15), NSAttributedString.Key.foregroundColor: AppStyle.shared.theme.black102Color, NSAttributedString.Key.paragraphStyle: paragraphStyle]
                     topicLabel.attributedText = NSAttributedString(string: title, attributes: titleAttributes)
                 }
             }

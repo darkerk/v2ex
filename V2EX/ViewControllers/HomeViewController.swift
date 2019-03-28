@@ -36,7 +36,7 @@ class HomeViewController: UITableViewController {
             return cell
         })
         
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 90
         tableView.delegate = nil
         tableView.dataSource = nil

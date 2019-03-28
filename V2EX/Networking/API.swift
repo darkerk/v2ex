@@ -28,7 +28,7 @@ enum FavoriteType {
 
 enum API {
     /// once凭证
-    case once()
+    case once
     /// 机器图片验证码
     case captcha(once: String)
     /// 登录
@@ -54,7 +54,7 @@ enum API {
     /// 更换头像
     case updateAvatar(imageData: Data, once: String)
     /// 隐私设置once凭证
-    case privacyOnce()
+    case privacyOnce
     /// 隐私设置
     case privacy(type: PrivacyType, once: String)
     /// 评论回复
@@ -114,7 +114,7 @@ extension API: TargetType {
     
     var path: String {
         switch self {
-        case .once():
+        case .once:
             return "/signin"
         case .login(_, _, _, _, _, _, _):
             return "/signin"
@@ -141,7 +141,7 @@ extension API: TargetType {
             return "/my/following"
         case .updateAvatar(_):
             return "/settings/avatar"
-        case .privacy(_, _), .privacyOnce():
+        case .privacy(_, _), .privacyOnce:
             return "/settings/privacy"
         case let .thank(type, _):
             switch type {

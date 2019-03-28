@@ -67,9 +67,14 @@ class TopicDetailsCommentCell: UITableViewCell {
         avatarView.clipsToBounds = true
         avatarView.layer.cornerRadius = 4.0
         
+        if #available(iOS 11.0, *) {
+            textView.textDragInteraction?.isEnabled = false
+        } else {
+            // Fallback on earlier versions
+        };
         textView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: -18, right: 0)
         textView.textContainer.lineFragmentPadding = 0
-        textView.linkTextAttributes = [NSAttributedStringKey.foregroundColor.rawValue: AppStyle.shared.theme.hyperlinkColor]
+        textView.linkTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.foregroundColor.rawValue: AppStyle.shared.theme.hyperlinkColor])
         textView.delegate = self
         
         avatarView.isUserInteractionEnabled = true
@@ -108,18 +113,18 @@ class TopicDetailsCommentCell: UITableViewCell {
         
         let tapLocation = sender.location(in: textView)
         guard let textPosition = textView.closestPosition(to: tapLocation),
-            let attributes = textView.textStyling(at: textPosition, in: UITextStorageDirection.forward) else {
+            let attributes = convertFromOptionalNSAttributedStringKeyDictionary(textView.textStyling(at: textPosition, in: UITextStorageDirection.forward)) else {
                 
                 tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
                 
                 return
         }
 
-        if let url = attributes[NSAttributedStringKey.link.rawValue] as? URL {
+        if let url = attributes[NSAttributedString.Key.link.rawValue] as? URL {
             
             handleTextViewLink(url: url)
             
-        }else if let attachment = attributes[NSAttributedStringKey.attachment.rawValue] as? ImageAttachment {
+        }else if let attachment = attributes[NSAttributedString.Key.attachment.rawValue] as? ImageAttachment {
             if let src = attachment.src, attachment.imageSize.width > 50 {
                 linkTap?(TapLink.image(src: src))
             }
@@ -147,11 +152,11 @@ class TopicDetailsCommentCell: UITableViewCell {
         do {
             let html = try HTML(html: content, encoding: .utf8)
             var imgsrcs: [(id: String, src: String)] = []
-            let srcs = html.xpath("//img").flatMap({$0["src"]})
+            let srcs = html.xpath("//img").compactMap({$0["src"]})
             let imgTags = matchImgTags(text: content)
             imgTags.forEach({img in
                 let id = "\(img.hashValue)"
-                if let index = srcs.index(where: {img.contains($0)}) {
+                if let index = srcs.firstIndex(where: {img.contains($0)}) {
                     content = content.replacingOccurrences(of: img, with: id)
                     var src = srcs[index]
                     if src.hasPrefix("//") {
@@ -174,13 +179,20 @@ class TopicDetailsCommentCell: UITableViewCell {
                 var imgSize = CGSize(width: 100, height: 100)
                 var image: UIImage?
                 var isImageCached = false
-                if let cacheImage = ImageCache.default.retrieveImageInDiskCache(forKey: item.id) {
-                    isImageCached = true
-                    image = cacheImage
-                    imgSize = cacheImage.size
-                }else {
-                    image = UIImage(color: AppStyle.shared.theme.topicCellNodeBackgroundColor, size: imgSize)
-                }
+                ImageCache.default.retrieveImage(forKey: item.id, completionHandler: { result in
+                    switch result {
+                    case .success(let value):
+                        if let cacheImage = value.image {
+                            isImageCached = true
+                            image = cacheImage
+                            imgSize = cacheImage.size
+                        }else {
+                            image = UIImage(color: AppStyle.shared.theme.topicCellNodeBackgroundColor, size: imgSize)
+                        }
+                    case .failure(let error):
+                        print("retrieveImage: \(error.localizedDescription)")
+                    }
+                })
                 
                 let attachment = ImageAttachment()
                 attachment.imageSize = imgSize
@@ -194,9 +206,10 @@ class TopicDetailsCommentCell: UITableViewCell {
                 }
                 
                 if !isImageCached {
-                    ImageDownloader.default.downloadImage(with: url, completionHandler: { (newImage, _, _, _) in
-                        if let newImage = newImage {
-                            let smallImage = newImage.thumbnailForMaxPixelSize(200)
+                    ImageDownloader.default.downloadImage(with: url, completionHandler: { result in
+                        switch result {
+                        case .success(let value):
+                            let smallImage = value.image.thumbnailForMaxPixelSize(200)
                             attachment.image = smallImage
                             if smallImage.size != attachment.imageSize {
                                 attachment.imageSize = smallImage.size
@@ -205,7 +218,9 @@ class TopicDetailsCommentCell: UITableViewCell {
                                 self.textView.textContainer.layoutManager?.setNeedsDisplay(forAttachment: attachment)
                             }
                             ImageCache.default.store(smallImage, forKey: item.id)
-                            SKCache.sharedCache.setImage(newImage, forKey: item.src)
+                            SKCache.sharedCache.setImage(value.image, forKey: item.src)
+                        case .failure(let error):
+                            print("downloadImage: \(error.localizedDescription)")
                         }
                     })
                 }
@@ -223,7 +238,7 @@ class TopicDetailsCommentCell: UITableViewCell {
         guard let results = regx?.matches(in: text, options: .reportProgress, range: text.nsRange) else {
             return []
         }
-        return results.flatMap({result -> String? in
+        return results.compactMap({result -> String? in
             if let range = result.range.range(for: text) {
                 return String(text[range])
             }
@@ -271,4 +286,16 @@ extension TopicDetailsCommentCell: UITextViewDelegate {
         }
         return true
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromOptionalNSAttributedStringKeyDictionary(_ input: [NSAttributedString.Key: Any]?) -> [String: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
 }

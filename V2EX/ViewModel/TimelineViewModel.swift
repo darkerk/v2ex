@@ -47,7 +47,7 @@ class TimelineViewModel {
     
     func sendFollow(completion: ((Bool) -> Void)? = nil) {
         let isCancel = isFollowed
-        API.provider.request(.once()).flatMap { response -> Observable<Response> in
+        API.provider.request(.once).flatMap { response -> Observable<Response> in
             if let once = HTMLParser.shared.once(html: response.data) {
                 return API.provider.request(.follow(id: self.idValue, once: once, isCancel: isCancel))
             }else {

@@ -25,7 +25,7 @@ class LoadMoreCommentCell: UITableViewCell {
         contentView.backgroundColor = backgroundColor
         
         if AppStyle.shared.theme == .night {
-            activityIndicatorView.activityIndicatorViewStyle = .white
+            activityIndicatorView.style = .white
             titleLabel.textColor = #colorLiteral(red: 0.1137254902, green: 0.631372549, blue: 0.9490196078, alpha: 1)
         }
     }

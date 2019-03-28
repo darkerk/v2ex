@@ -16,7 +16,7 @@ extension NSLayoutManager {
         }
         let range = NSRange(location: 0, length: textStorage.length)
         var ranges: [NSRange] = []
-        textStorage.enumerateAttribute(NSAttributedStringKey.attachment, in: range, options: []) { (value, effectiveRange, nil) in
+        textStorage.enumerateAttribute(NSAttributedString.Key.attachment, in: range, options: []) { (value, effectiveRange, nil) in
             if let value = value as? NSTextAttachment, value == attachment {
                 ranges.append(effectiveRange)
             }

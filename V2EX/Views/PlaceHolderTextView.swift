@@ -30,7 +30,7 @@ class PlaceHolderTextView: UITextView {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: NSNotification.Name.UITextViewTextDidChange, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: UITextView.textDidChangeNotification, object: self)
     }
     
     @objc func textDidChange(notification: Notification) {
@@ -53,12 +53,12 @@ class PlaceHolderTextView: UITextView {
                               width:   frame.size.width - textContainerInset.left - textContainerInset.right,
                               height: frame.size.height)
             
-            var attributes: [NSAttributedStringKey: Any] = [
-                NSAttributedStringKey.foregroundColor: placeHolderColor,
-                NSAttributedStringKey.paragraphStyle: paragraphStyle
+            var attributes: [NSAttributedString.Key: Any] = [
+                NSAttributedString.Key.foregroundColor: placeHolderColor,
+                NSAttributedString.Key.paragraphStyle: paragraphStyle
             ]
             if let font = font {
-                attributes[NSAttributedStringKey.font] = font
+                attributes[NSAttributedString.Key.font] = font
             }
             placeHolder.draw(in: rect, withAttributes: attributes)
         }

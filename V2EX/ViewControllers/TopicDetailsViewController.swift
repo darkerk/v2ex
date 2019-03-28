@@ -46,7 +46,7 @@ class TopicDetailsViewController: UITableViewController {
         tableView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
         tableView.separatorColor = AppStyle.shared.theme.separatorColor
         tableView.keyboardDismissMode = .onDrag
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
 
@@ -101,7 +101,7 @@ class TopicDetailsViewController: UITableViewController {
         viewModel.loadingActivityIndicator.asObservable().subscribe(onNext: {[weak self] isLoading in
             guard let `self` = self else { return }
             if isLoading {
-                let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: AppStyle.shared.theme.activityIndicatorStyle)
+                let activityIndicator = UIActivityIndicatorView(style: AppStyle.shared.theme.activityIndicatorStyle)
                 activityIndicator.startAnimating()
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
             }else {

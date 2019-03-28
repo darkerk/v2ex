@@ -15,7 +15,7 @@ class LoginViewModel {
     private var keyOnce: (usernameKey: String, passwordKey: String, codeKey: String, once: String) = ("", "", "", "")
     
     func fetchCaptchaImage() -> Observable<UIImage> {
-        return API.provider.request(.once()).flatMapLatest { response -> Observable<UIImage> in
+        return API.provider.request(.once).flatMapLatest { response -> Observable<UIImage> in
             if let value = HTMLParser.shared.keyAndOnce(html: response.data) {
                 self.keyOnce = value
                 return API.provider.request(API.captcha(once: value.once)).flatMapLatest({ resp -> Observable<UIImage> in

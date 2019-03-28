@@ -156,9 +156,9 @@ class DrawerViewController: UIViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue is DrawerSegue {
-            addChildViewController(segue.destination)
+            addChild(segue.destination)
             view.addSubview(segue.destination.view)
-            segue.destination.didMove(toParentViewController: self)
+            segue.destination.didMove(toParent: self)
             
             if segue.destination is ProfileViewController {
                 let controller = segue.destination as! ProfileViewController

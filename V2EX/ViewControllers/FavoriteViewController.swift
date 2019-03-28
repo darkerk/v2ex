@@ -24,7 +24,7 @@ class FavoriteViewController: UITableViewController {
         
         tableView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
         tableView.separatorColor = AppStyle.shared.theme.separatorColor
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 90
         tableView.dataSource = nil
         

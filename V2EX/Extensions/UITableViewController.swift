@@ -36,10 +36,12 @@ extension UITableViewController {
     override func updateTheme() {
         switch tableView.style {
         case .plain:
-            tableView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
+            tableView?.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
         case .grouped:
-            tableView.backgroundColor = AppStyle.shared.theme.tableGroupBackgroundColor
+            tableView?.backgroundColor = AppStyle.shared.theme.tableGroupBackgroundColor
+        default:
+            break
         }
-        tableView.separatorColor = AppStyle.shared.theme.separatorColor
+        tableView?.separatorColor = AppStyle.shared.theme.separatorColor
     }
 }

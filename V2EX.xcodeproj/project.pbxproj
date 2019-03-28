@@ -87,7 +87,6 @@
 		CAF418F61E8B509F005F26AF /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF418F51E8B509F005F26AF /* Error.swift */; };
 		CAF418FA1E8BADAE005F26AF /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF418F91E8BADAE005F26AF /* HomeViewModel.swift */; };
 		CAF418FD1E8BB063005F26AF /* TopicListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF418FC1E8BB063005F26AF /* TopicListSection.swift */; };
-		FB75C65071812F7B4CDBC4BA /* Pods_V2EX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B07A087CCC03573424A85B18 /* Pods_V2EX.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -184,7 +183,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C6109F9FE20B54D835601FDA /* Pods_V2EX.framework in Frameworks */,
-				FB75C65071812F7B4CDBC4BA /* Pods_V2EX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,9 +413,7 @@
 				CA86BE041E5EBAC10038DE1D /* Frameworks */,
 				CA86BE051E5EBAC10038DE1D /* Resources */,
 				6D3B1DE75A07926405DCD5C8 /* [CP] Embed Pods Frameworks */,
-				CA5982A4C883D6BEB192AEBF /* [CP] Copy Pods Resources */,
 				CADE11B41E9763E10044DCBC /* ShellScript */,
-				CA8851C91E9F332F00A8E879 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -435,20 +431,20 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = darker;
 				TargetAttributes = {
 					CA86BE061E5EBAC10038DE1D = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = EA9SPTEHTA;
-						LastSwiftMigration = 0920;
+						DevelopmentTeam = VE7H86BMP3;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
 			buildConfigurationList = CA86BE021E5EBAC10038DE1D /* Build configuration list for PBXProject "V2EX" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -517,6 +513,7 @@
 				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
 				"${BUILT_PRODUCTS_DIR}/PKHUD/PKHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxAtomic/RxAtomic.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
@@ -533,6 +530,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PKHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAtomic.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
@@ -542,34 +540,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-V2EX/Pods-V2EX-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		CA5982A4C883D6BEB192AEBF /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-V2EX/Pods-V2EX-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CA8851C91E9F332F00A8E879 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" 1f93a016591ae96727c4cc87fb5ab34e2e629a49 955c402129e57e7ae448b80c2e303a882e9193778f9f8aa31438b8845ed055a1";
 		};
 		CADE11B41E9763E10044DCBC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -582,7 +552,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "appBuild=`git rev-list --all |wc -l`\nif [ $CONFIGURATION = \"Debug\" ]; then\nbranchName=`git rev-parse --abbrev-ref HEAD`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${INFOPLIST_FILE}\"\nelse\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${INFOPLIST_FILE}\"\nfi\necho \"Updated ${INFOPLIST_FILE}\"";
+			shellScript = "appBuild=`git rev-list --all |wc -l`\nif [ $CONFIGURATION = \"Debug\" ]; then\nbranchName=`git rev-parse --abbrev-ref HEAD`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${INFOPLIST_FILE}\"\nelse\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${INFOPLIST_FILE}\"\nfi\necho \"Updated ${INFOPLIST_FILE}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -672,6 +642,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -681,6 +652,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -688,6 +660,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -728,6 +701,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -737,6 +711,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -744,6 +719,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -780,16 +756,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = EA9SPTEHTA;
+				DEVELOPMENT_TEAM = VE7H86BMP3;
 				INFOPLIST_FILE = "$(SRCROOT)/V2EX/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.darker.v2exios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wghv2exios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -799,15 +774,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = EA9SPTEHTA;
+				DEVELOPMENT_TEAM = VE7H86BMP3;
 				INFOPLIST_FILE = "$(SRCROOT)/V2EX/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.darker.v2exios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wghv2exios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

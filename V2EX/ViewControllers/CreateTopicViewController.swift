@@ -38,7 +38,7 @@ class CreateTopicViewController: UIViewController {
         
         view.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
         textField.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
-        textField.attributedPlaceholder = NSAttributedString(string: "标题", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15), NSAttributedStringKey.foregroundColor: AppStyle.shared.theme.textPlaceHolderColor])
+        textField.attributedPlaceholder = NSAttributedString(string: "标题", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15), NSAttributedString.Key.foregroundColor: AppStyle.shared.theme.textPlaceHolderColor])
         
         textView.backgroundColor = AppStyle.shared.theme.tableBackgroundColor
         textView.placeHolderColor = AppStyle.shared.theme.textPlaceHolderColor
@@ -57,7 +57,7 @@ class CreateTopicViewController: UIViewController {
             textView?.becomeFirstResponder()
         }).disposed(by: disposeBag)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         
         textField.becomeFirstResponder()
     }
@@ -68,7 +68,7 @@ class CreateTopicViewController: UIViewController {
         }
         view.endEditing(true)
         HUD.show()
-        API.provider.request(.once()).flatMap { response -> Observable<Response> in
+        API.provider.request(.once).flatMap { response -> Observable<Response> in
             if let once = HTMLParser.shared.once(html: response.data) {
                 return API.provider.request(.createTopic(nodeHref: self.nodeHref, title: titleText, content: content, once: once))
             }else {
@@ -89,10 +89,10 @@ class CreateTopicViewController: UIViewController {
             return
         }
         
-        let frameEnd = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        let duration = (info[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
-        let curve = (info[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).uintValue
-        let options = UIViewAnimationOptions(rawValue: curve << 16)
+        let frameEnd = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+        let curve = (info[UIResponder.keyboardAnimationCurveUserInfoKey] as! NSNumber).uintValue
+        let options = UIView.AnimationOptions(rawValue: curve << 16)
         
         self.textViewBottom.constant = frameEnd.height
         

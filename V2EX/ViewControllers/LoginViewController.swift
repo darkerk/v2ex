@@ -44,7 +44,7 @@ class LoginViewController: UIViewController {
             line2View.image = lineImage
             line3View.image = lineImage
             
-            let attributes = [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 0.4196078431, green: 0.4901960784, blue: 0.5490196078, alpha: 1)]
+            let attributes = [NSAttributedString.Key.foregroundColor: #colorLiteral(red: 0.4196078431, green: 0.4901960784, blue: 0.5490196078, alpha: 1)]
             usernameTextField.attributedPlaceholder = NSAttributedString(string: "用户名或邮箱", attributes: attributes)
             passwordTextField.attributedPlaceholder = NSAttributedString(string: "密码", attributes: attributes)
             verifcodeTextField.attributedPlaceholder = NSAttributedString(string: "请输入下图中的验证码", attributes: attributes)

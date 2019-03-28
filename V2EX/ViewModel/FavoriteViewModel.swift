@@ -142,7 +142,7 @@ class FavoriteViewModel {
     func removeItem(id: String) {
         switch type {
         case .topic:
-            if let index = topics.index(where: {data -> Bool in
+            if let index = topics.firstIndex(where: {data -> Bool in
                 switch data {
                 case let .topicItem(item):
                     return item.id == id
@@ -153,7 +153,7 @@ class FavoriteViewModel {
                 topics.remove(at: index)
             }
             
-            if let index = dataItems.value.index(where: {data -> Bool in
+            if let index = dataItems.value.firstIndex(where: {data -> Bool in
                 switch data {
                 case let .topicItem(item):
                     return item.id == id
